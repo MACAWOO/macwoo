@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { jobs } from '~/data/careers'
+const { jobs } = useCareers()
 
 useSeoMeta({
   title: 'Careers — Macawoo',

@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { caseStudies } from '~/data/case-studies'
+const { caseStudies } = useCaseStudies()
 
 const route = useRoute()
 const slug = route.params.slug as string
-const study = caseStudies.find(s => s.slug === slug)
+const study = computed(() => caseStudies.value.find(s => s.slug === slug))
 
-if (!study) {
-  throw createError({ statusCode: 404, message: 'Case study not found' })
+if (!study.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Case study not found', fatal: true })
 }
 
 useSeoMeta({
-  title: `${study.title} — Macawoo Case Study`,
-  description: study.challenge.slice(0, 160)
+  title: () => study.value ? `${study.value.title} — Macawoo Case Study` : 'Macawoo Case Study',
+  description: () => study.value ? study.value.challenge.slice(0, 160) : ''
 })
 </script>
 

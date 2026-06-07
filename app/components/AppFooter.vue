@@ -154,7 +154,12 @@
         <p class="text-white/50 text-xs">
           All Rights Reserved @ Macawoo
         </p>
-        <div class="flex gap-4">
+        <div class="flex items-center gap-4 flex-wrap justify-center sm:justify-end">
+          <NuxtLink
+            to="/admin"
+            class="text-white/50 text-xs hover:text-brand-yellow-500 transition-colors"
+          >Admin Panel</NuxtLink>
+          <span class="text-white/30 text-xs">|</span>
           <a
             href="#"
             class="text-white/50 text-xs hover:text-white transition-colors"
