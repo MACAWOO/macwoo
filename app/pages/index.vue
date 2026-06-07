@@ -5,6 +5,27 @@ useSeoMeta({
   title: 'Macawoo — Feel The Woo',
   description: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.'
 })
+
+const containerRef = ref<HTMLElement | null>(null)
+
+onMounted(() => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('reveal-active')
+        observer.unobserve(entry.target)
+      }
+    })
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  })
+
+  if (containerRef.value) {
+    const cards = containerRef.value.querySelectorAll('.reveal-card')
+    cards.forEach((card) => observer.observe(card))
+  }
+})
 </script>
 
 <template>
@@ -78,12 +99,16 @@ useSeoMeta({
         </h2>
 
         <!-- Cards — equal width, fixed 492px height, ~13px gap -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-[13px]">
+        <div
+          ref="containerRef"
+          class="grid grid-cols-1 md:grid-cols-3 gap-[13px]"
+        >
 
           <!-- Branding & Design -->
           <NuxtLink
             to="/services/branding-design"
-            class="relative rounded-[10px] overflow-hidden group block h-[320px] md:h-[492px]"
+            class="relative rounded-[10px] overflow-hidden group block h-[320px] md:h-[492px] reveal-card"
+            style="transition-delay: 0ms;"
           >
             <img
               src="/Images/Branding.jpeg"
@@ -113,7 +138,8 @@ useSeoMeta({
           <!-- Digital Marketing -->
           <NuxtLink
             to="/services/digital-marketing"
-            class="relative rounded-[10px] overflow-hidden group block h-[320px] md:h-[492px]"
+            class="relative rounded-[10px] overflow-hidden group block h-[320px] md:h-[492px] reveal-card"
+            style="transition-delay: 150ms;"
           >
             <img
               src="/Images/Digital Marketing.jpeg"
@@ -142,7 +168,8 @@ useSeoMeta({
           <!-- Video Production -->
           <NuxtLink
             to="/services/video-production"
-            class="relative rounded-[10px] overflow-hidden group block h-[320px] md:h-[492px]"
+            class="relative rounded-[10px] overflow-hidden group block h-[320px] md:h-[492px] reveal-card"
+            style="transition-delay: 300ms;"
           >
             <img
               src="/Images/Video Production.jpeg"
