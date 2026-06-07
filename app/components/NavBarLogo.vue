@@ -3,12 +3,12 @@
     <img
       src="/Images/Logo_letters.png"
       alt="Macawoo"
-      class="w-[192px] h-[59px] object-contain md:block hidden"
+      class="w-[150px] h-[46px] object-contain md:block hidden"
     >
     <img
       src="/Images/Logo_letters.png"
       alt="Macawoo"
-      class="h-10 w-auto md:hidden block"
+      class="h-7 w-auto md:hidden block"
     >
   </div>
 </template>

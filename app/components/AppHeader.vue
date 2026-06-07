@@ -88,7 +88,7 @@ watch(() => route.path, () => {
 </script>
 
 <template>
-  <header class="fixed left-0 right-0 z-50 top-[32px] w-full pointer-events-none">
+  <header class="fixed left-0 right-0 z-50 top-[24px] w-full pointer-events-none">
     <div class="w-full mx-auto px-8 md:px-16 lg:px-20 pointer-events-auto flex items-center justify-between gap-8">
 
       <!-- ── LOGO (fades out on scroll) ── -->
@@ -102,7 +102,7 @@ watch(() => route.path, () => {
 
       <!-- ═══════════════════════ DESKTOP NAV PILL ═══════════════════════ -->
       <nav
-        class="hidden md:flex items-center gap-1 px-3 h-[56px] rounded-full"
+        class="hidden md:flex items-center gap-1 px-2.5 h-[46px] rounded-full"
         style="
           background: linear-gradient(90deg, #2094BA 0%, #2AA4C9 50%, #2095BB 100%);
           border: 1px solid rgba(255,255,255,0.18);
@@ -173,11 +173,11 @@ watch(() => route.path, () => {
             to="/"
             aria-label="Home"
             :data-nav-active="isPathActive('/')"
-            class="relative z-10 flex items-center justify-center w-[52px] h-[46px] rounded-full transition-colors duration-200 group/home"
+            class="relative z-10 flex items-center justify-center w-[44px] h-[38px] rounded-full transition-colors duration-200 group/home"
             @mouseenter="moveGlassTo($event)"
           >
             <svg
-              class="w-[22px] h-[22px] text-white transition-transform duration-300 group-hover/home:scale-110"
+              class="w-[18px] h-[18px] text-white transition-transform duration-300 group-hover/home:scale-110"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -198,7 +198,7 @@ watch(() => route.path, () => {
             <NuxtLink
               to="/services/branding-design"
               :data-nav-active="isPathActive('/services')"
-              class="relative z-10 flex items-center justify-center px-5 h-[46px] rounded-full text-white text-[20px] font-normal select-none"
+              class="relative z-10 flex items-center justify-center px-4 h-[38px] rounded-full text-white text-[16px] font-normal select-none"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
               @mouseenter="moveGlassTo($event)"
             >
@@ -236,7 +236,7 @@ watch(() => route.path, () => {
           <NuxtLink
             to="/portfolio"
             :data-nav-active="isPathActive('/portfolio')"
-            class="relative z-10 flex items-center justify-center px-5 h-[46px] rounded-full text-white text-[20px] font-normal select-none"
+            class="relative z-10 flex items-center justify-center px-4 h-[38px] rounded-full text-white text-[16px] font-normal select-none"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
             @mouseenter="moveGlassTo($event)"
           >
@@ -247,7 +247,7 @@ watch(() => route.path, () => {
           <NuxtLink
             to="/case-studies"
             :data-nav-active="isPathActive('/case-studies')"
-            class="relative z-10 flex items-center justify-center px-5 h-[46px] rounded-full text-white text-[20px] font-normal select-none"
+            class="relative z-10 flex items-center justify-center px-4 h-[38px] rounded-full text-white text-[16px] font-normal select-none"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
             @mouseenter="moveGlassTo($event)"
           >
@@ -258,7 +258,7 @@ watch(() => route.path, () => {
           <NuxtLink
             to="/about"
             :data-nav-active="isPathActive('/about')"
-            class="relative z-10 flex items-center justify-center px-5 h-[46px] rounded-full text-white text-[20px] font-normal select-none"
+            class="relative z-10 flex items-center justify-center px-4 h-[38px] rounded-full text-white text-[16px] font-normal select-none"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
             @mouseenter="moveGlassTo($event)"
           >
@@ -270,14 +270,14 @@ watch(() => route.path, () => {
         <!-- ── RIGHT: Get in Touch CTA ── -->
         <NuxtLink
           to="/contact"
-          class="shrink-0 flex items-center justify-between pl-7 pr-6 h-[40px] rounded-full bg-white text-black transition-all duration-300 ease-out group/cta ml-2 hover:-translate-y-[1px]"
+          class="shrink-0 flex items-center justify-between pl-5 pr-4 h-[32px] rounded-full bg-white text-black transition-all duration-300 ease-out group/cta ml-1 hover:-translate-y-[1px]"
         >
           <span
-            class="font-bold text-[20px] leading-none whitespace-nowrap select-none mr-5"
+            class="font-bold text-[16px] leading-none whitespace-nowrap select-none mr-3"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
           >Get in Touch</span>
           <svg
-            class="w-[16px] h-[16px] shrink-0 transition-transform duration-300 ease-out group-hover/cta:translate-x-[2px] group-hover/cta:-translate-y-[2px]"
+            class="w-[12px] h-[12px] shrink-0 transition-transform duration-300 ease-out group-hover/cta:translate-x-[2px] group-hover/cta:-translate-y-[2px]"
             viewBox="0 0 12 12"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -290,19 +290,19 @@ watch(() => route.path, () => {
 
       <!-- ═══════════════════════ MOBILE NAV ═══════════════════════ -->
       <div
-        class="md:hidden flex items-center justify-between px-4 h-[58px] rounded-full w-full"
+        class="md:hidden flex items-center justify-between px-4 h-[46px] rounded-full w-full"
         style="background: linear-gradient(90deg, #2094BA 0%, #2AA4C9 50%, #2095BB 100%); border:1px solid rgba(255,255,255,0.18);"
       >
         <NavBarLogo class="shrink-0" />
         <button
-          class="text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+          class="text-white p-1.5 rounded-full hover:bg-white/10 transition-colors"
           aria-label="Toggle menu"
           @click="isMenuOpen = !isMenuOpen"
         >
-          <svg v-if="!isMenuOpen" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <svg v-if="!isMenuOpen" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
-          <svg v-else class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <svg v-else class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
