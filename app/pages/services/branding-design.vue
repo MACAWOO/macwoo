@@ -8,6 +8,7 @@ const prevTo = '/services/video-production'
 const nextTo = '/services/digital-marketing'
 
 const containerRef = ref<HTMLElement | null>(null)
+const methodologyRef = ref<HTMLElement | null>(null)
 
 onMounted(() => {
   const observer = new IntersectionObserver((entries) => {
@@ -24,6 +25,11 @@ onMounted(() => {
 
   if (containerRef.value) {
     const cards = containerRef.value.querySelectorAll('.reveal-card')
+    cards.forEach((card) => observer.observe(card))
+  }
+
+  if (methodologyRef.value) {
+    const cards = methodologyRef.value.querySelectorAll('.reveal-card')
     cards.forEach((card) => observer.observe(card))
   }
 })
@@ -226,12 +232,16 @@ const logos = [
           The Methodology
         </h2>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div
+          ref="methodologyRef"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+        >
           <div
-            v-for="step in steps"
+            v-for="(step, idx) in steps"
             :key="step.number"
             class="bg-[#1D96B8] rounded-[8px] p-6 flex flex-col"
-            style="border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(2px); min-height: 218px;"
+            :class="idx > 0 ? 'reveal-card' : ''"
+            :style="[idx > 0 ? { transitionDelay: ((idx - 1) * 150) + 'ms' } : {}, { border: '1px solid rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(2px)', minHeight: '218px' }]"
           >
             <!-- Number -->
             <p
