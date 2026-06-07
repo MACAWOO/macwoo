@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Fredoka:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@import "@nuxt/ui";
+
+@theme static {
+  --font-sans: 'Bricolage Grotesque', 'Plus Jakarta Sans', sans-serif;
+  --font-fredoka: 'Fredoka', sans-serif;
+
+  /* Brand Yellow */
+  --color-brand-yellow-50:  #FEFCE8;
+  --color-brand-yellow-100: #FEF9C3;
+  --color-brand-yellow-200: #FEF08A;
+  --color-brand-yellow-300: #FDE047;
+  --color-brand-yellow-400: #FACC15;
+  --color-brand-yellow-500: #EDE000;
+  --color-brand-yellow-600: #CA8A04;
+  --color-brand-yellow-700: #A16207;
+  --color-brand-yellow-800: #854D0E;
+  --color-brand-yellow-900: #713F12;
+  --color-brand-yellow-950: #422006;
+
+  /* Brand Teal */
+  --color-brand-teal-50:  #ECFEFF;
+  --color-brand-teal-100: #CFFAFE;
+  --color-brand-teal-200: #A5F3FC;
+  --color-brand-teal-300: #67E8F9;
+  --color-brand-teal-400: #22D3EE;
+  --color-brand-teal-500: #009CB8;
+  --color-brand-teal-600: #0891B2;
+  --color-brand-teal-700: #007080;
+  --color-brand-teal-800: #155E75;
+  --color-brand-teal-900: #164E63;
+  --color-brand-teal-950: #083344;
+
+  /* Flat tokens */
+  --color-brand-dark: #0A1628;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+  }
+}
