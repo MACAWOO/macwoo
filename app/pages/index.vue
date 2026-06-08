@@ -23,7 +23,7 @@ onMounted(() => {
 
   if (containerRef.value) {
     const cards = containerRef.value.querySelectorAll('.reveal-card')
-    cards.forEach((card) => observer.observe(card))
+    cards.forEach(card => observer.observe(card))
   }
 })
 </script>
@@ -41,12 +41,11 @@ onMounted(() => {
     <section class="bg-[#1D96B8] py-16 md:py-20">
       <div class="max-w-[1266px] mx-auto px-6 md:px-8">
         <div class="flex flex-col md:flex-row gap-12 md:gap-20 items-start">
-
           <!-- Left column -->
           <div class="md:w-[340px] shrink-0 flex flex-col gap-6">
             <!-- ABOUT US label -->
             <div class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-[#E8F600] inline-block shrink-0"></span>
+              <span class="w-2 h-2 rounded-full bg-[#E8F600] inline-block shrink-0" />
               <span
                 class="text-[#E8F600] text-xs font-semibold uppercase tracking-[0.18em]"
                 style="font-family: 'Bricolage Grotesque', sans-serif;"
@@ -80,16 +79,13 @@ onMounted(() => {
               At Macawoo, we create brands that connect, campaigns that perform, and stories that leave a lasting impression. Through branding, marketing, and storytelling, we help businesses stand out, stay relevant, and grow with purpose.
             </p>
           </div>
-
         </div>
       </div>
     </section>
 
-
     <!-- What We Do -->
     <section class="py-16 md:py-20 bg-white">
       <div class="max-w-[1201px] mx-auto px-6 md:px-0">
-
         <!-- Title — Fredoka 48px / 500 weight per Figma -->
         <h2
           class="text-center text-[#1D96B8] text-[36px] md:text-[48px] leading-[58px] font-medium mb-[63px]"
@@ -103,7 +99,6 @@ onMounted(() => {
           ref="containerRef"
           class="grid grid-cols-1 md:grid-cols-3 gap-[13px]"
         >
-
           <!-- Branding & Design -->
           <NuxtLink
             to="/services/branding-design"
@@ -119,11 +114,11 @@ onMounted(() => {
             <div
               class="absolute inset-x-0 bottom-0 rounded-b-[10px]"
               style="top: 39.84%; background: linear-gradient(360deg, #000000 0%, rgba(0,0,0,0) 100%);"
-            ></div>
+            />
             <!-- Hover overlay -->
             <div
               class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
-            ></div>
+            />
             <!-- label centered bottom by default, moves to center on hover -->
             <div class="absolute inset-0 flex items-center justify-center">
               <p
@@ -149,11 +144,11 @@ onMounted(() => {
             <div
               class="absolute inset-x-0 bottom-0 rounded-b-[10px]"
               style="top: 39.84%; background: linear-gradient(360deg, #000000 0%, rgba(0,0,0,0) 100%);"
-            ></div>
+            />
             <!-- Hover overlay -->
             <div
               class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
-            ></div>
+            />
             <!-- label centered bottom by default, moves to center on hover -->
             <div class="absolute inset-0 flex items-center justify-center">
               <p
@@ -179,11 +174,11 @@ onMounted(() => {
             <div
               class="absolute inset-x-0 bottom-0 rounded-b-[10px]"
               style="top: 39.84%; background: linear-gradient(360deg, #000000 0%, rgba(0,0,0,0) 100%);"
-            ></div>
+            />
             <!-- Hover overlay -->
             <div
               class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
-            ></div>
+            />
             <!-- label centered bottom by default, moves to center on hover -->
             <div class="absolute inset-0 flex items-center justify-center">
               <p

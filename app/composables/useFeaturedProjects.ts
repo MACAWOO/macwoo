@@ -28,4 +28,3 @@ export function useFeaturedProjects() {
     error: ref<Error | null>(null)
   }
 }
-

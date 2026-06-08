@@ -71,21 +71,65 @@ withDefaults(defineProps<Props>(), {
       :to="prevTo"
       class="absolute left-4 md:left-[120px] top-1/2 -translate-y-1/2 z-20 w-[48px] h-[48px] md:w-[68px] md:h-[68px] flex items-center justify-center hover:scale-105 transition-transform"
     >
-      <svg class="w-full h-full -scale-x-100" viewBox="0 0 76 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        class="w-full h-full -scale-x-100"
+        viewBox="0 0 76 76"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <g filter="url(#filterLeftArrowPH)">
-          <circle cx="38" cy="38" r="34" fill="white"/>
+          <circle
+            cx="38"
+            cy="38"
+            r="34"
+            fill="white"
+          />
         </g>
-        <path d="M23.7001 36.4138L23.6507 40.3664L42.405 40.4601C38.1352 43.0818 35.5561 47.7211 34.7762 52.9509L38.9181 52.9934C39.8606 46.005 44.9759 40.3433 52.2592 40.4165L52.3021 36.9405C45.0189 36.8673 40.0452 31.1047 39.2744 24.0972L35.134 24.0561C35.7836 29.2988 38.2492 33.9901 42.4503 36.6991L23.7001 36.4138Z" fill="#141111"/>
+        <path
+          d="M23.7001 36.4138L23.6507 40.3664L42.405 40.4601C38.1352 43.0818 35.5561 47.7211 34.7762 52.9509L38.9181 52.9934C39.8606 46.005 44.9759 40.3433 52.2592 40.4165L52.3021 36.9405C45.0189 36.8673 40.0452 31.1047 39.2744 24.0972L35.134 24.0561C35.7836 29.2988 38.2492 33.9901 42.4503 36.6991L23.7001 36.4138Z"
+          fill="#141111"
+        />
         <defs>
-          <filter id="filterLeftArrowPH" x="0" y="0" width="76" height="76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-            <feOffset/>
-            <feGaussianBlur stdDeviation="2"/>
-            <feComposite in2="hardAlpha" operator="out"/>
-            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_165_405"/>
-            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_165_405" result="shape"/>
+          <filter
+            id="filterLeftArrowPH"
+            x="0"
+            y="0"
+            width="76"
+            height="76"
+            filterUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB"
+          >
+            <feFlood
+              flood-opacity="0"
+              result="BackgroundImageFix"
+            />
+            <feColorMatrix
+              in="SourceAlpha"
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+              result="hardAlpha"
+            />
+            <feOffset />
+            <feGaussianBlur stdDeviation="2" />
+            <feComposite
+              in2="hardAlpha"
+              operator="out"
+            />
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+            />
+            <feBlend
+              mode="normal"
+              in2="BackgroundImageFix"
+              result="effect1_dropShadow_165_405"
+            />
+            <feBlend
+              mode="normal"
+              in="SourceGraphic"
+              in2="effect1_dropShadow_165_405"
+              result="shape"
+            />
           </filter>
         </defs>
       </svg>
@@ -97,21 +141,65 @@ withDefaults(defineProps<Props>(), {
       :to="nextTo"
       class="absolute right-4 md:right-[120px] top-1/2 -translate-y-1/2 z-20 w-[48px] h-[48px] md:w-[68px] md:h-[68px] flex items-center justify-center hover:scale-105 transition-transform"
     >
-      <svg class="w-full h-full" viewBox="0 0 76 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        class="w-full h-full"
+        viewBox="0 0 76 76"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <g filter="url(#filterRightArrowPH)">
-          <circle cx="38" cy="38" r="34" fill="white"/>
+          <circle
+            cx="38"
+            cy="38"
+            r="34"
+            fill="white"
+          />
         </g>
-        <path d="M23.7001 36.4138L23.6507 40.3664L42.405 40.4601C38.1352 43.0818 35.5561 47.7211 34.7762 52.9509L38.9181 52.9934C39.8606 46.005 44.9759 40.3433 52.2592 40.4165L52.3021 36.9405C45.0189 36.8673 40.0452 31.1047 39.2744 24.0972L35.134 24.0561C35.7836 29.2988 38.2492 33.9901 42.4503 36.6991L23.7001 36.4138Z" fill="#141111"/>
+        <path
+          d="M23.7001 36.4138L23.6507 40.3664L42.405 40.4601C38.1352 43.0818 35.5561 47.7211 34.7762 52.9509L38.9181 52.9934C39.8606 46.005 44.9759 40.3433 52.2592 40.4165L52.3021 36.9405C45.0189 36.8673 40.0452 31.1047 39.2744 24.0972L35.134 24.0561C35.7836 29.2988 38.2492 33.9901 42.4503 36.6991L23.7001 36.4138Z"
+          fill="#141111"
+        />
         <defs>
-          <filter id="filterRightArrowPH" x="0" y="0" width="76" height="76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-            <feOffset/>
-            <feGaussianBlur stdDeviation="2"/>
-            <feComposite in2="hardAlpha" operator="out"/>
-            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_165_405"/>
-            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_165_405" result="shape"/>
+          <filter
+            id="filterRightArrowPH"
+            x="0"
+            y="0"
+            width="76"
+            height="76"
+            filterUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB"
+          >
+            <feFlood
+              flood-opacity="0"
+              result="BackgroundImageFix"
+            />
+            <feColorMatrix
+              in="SourceAlpha"
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+              result="hardAlpha"
+            />
+            <feOffset />
+            <feGaussianBlur stdDeviation="2" />
+            <feComposite
+              in2="hardAlpha"
+              operator="out"
+            />
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+            />
+            <feBlend
+              mode="normal"
+              in2="BackgroundImageFix"
+              result="effect1_dropShadow_165_405"
+            />
+            <feBlend
+              mode="normal"
+              in="SourceGraphic"
+              in2="effect1_dropShadow_165_405"
+              result="shape"
+            />
           </filter>
         </defs>
       </svg>

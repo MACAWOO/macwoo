@@ -152,7 +152,10 @@
       <!-- Bottom strip -->
       <div class="border-t border-white/20 pt-6 mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-y-2 gap-x-8 text-xs md:text-sm text-white">
         <p>
-          All right Reserved @ <NuxtLink to="/admin" class="hover:underline transition-all">Macawoo</NuxtLink>
+          All right Reserved @ <NuxtLink
+            to="/admin"
+            class="hover:underline transition-all"
+          >Macawoo</NuxtLink>
         </p>
         <div class="flex items-center gap-2">
           <a

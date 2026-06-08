@@ -60,7 +60,7 @@ const blogForm = ref({
   date: new Date().toISOString().split('T')[0] || '',
   readTime: '5 Min Read',
   image: '/Images/Branding.jpeg',
-  body: [] as { heading?: string; content: string }[]
+  body: [] as { heading?: string, content: string }[]
 })
 
 const portfolioForm = ref({
@@ -87,7 +87,7 @@ const caseStudyForm = ref({
   challenge: '',
   approach: '',
   solution: [] as string[],
-  results: [] as { metric: string; label: string }[]
+  results: [] as { metric: string, label: string }[]
 })
 
 const careerForm = ref({
@@ -323,7 +323,6 @@ const resetAllDynamicState = () => {
     <!-- Main Section — Light layout mirroring public listings -->
     <section class="bg-zinc-50 py-16 md:py-20 text-brand-dark">
       <div class="max-w-[1266px] mx-auto px-6 md:px-8">
-        
         <!-- Controls Row -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 border-b border-zinc-200 pb-6">
           <h2 class="text-2xl font-bold font-sans text-brand-dark">
@@ -354,14 +353,18 @@ const resetAllDynamicState = () => {
 
         <!-- Tab Content Area -->
         <div class="mt-6">
-          
           <!-- TAB 1: DASHBOARD -->
-          <div v-if="activeTab === 'dashboard'" class="space-y-8">
+          <div
+            v-if="activeTab === 'dashboard'"
+            class="space-y-8"
+          >
             <!-- Welcome Info Box (Teal Banner) -->
-            <div 
+            <div
               class="p-8 rounded-2xl text-white border border-brand-teal-700 bg-brand-teal-500 shadow-sm"
             >
-              <h3 class="text-2xl font-bold font-fredoka text-[#E8F600] mb-3">Welcome to your Macawoo Studio Admin Panel</h3>
+              <h3 class="text-2xl font-bold font-fredoka text-[#E8F600] mb-3">
+                Welcome to your Macawoo Studio Admin Panel
+              </h3>
               <p class="text-white/95 leading-relaxed text-sm max-w-4xl">
                 This Console allows you to update, remove, or insert content dynamically. All mutations are stored locally inside your browser's client-side database (`localStorage`). This lets you review complete design variations, preview copy adjustments, or prototype layouts before committing them to a production backend.
               </p>
@@ -395,7 +398,9 @@ const resetAllDynamicState = () => {
 
             <!-- Guide Section -->
             <div class="bg-white border border-zinc-200 shadow-sm rounded-2xl p-8">
-              <h3 class="font-bold text-brand-dark text-lg mb-4">Front-End Persistence Guide</h3>
+              <h3 class="font-bold text-brand-dark text-lg mb-4">
+                Front-End Persistence Guide
+              </h3>
               <ul class="space-y-3.5 text-sm text-zinc-600">
                 <li class="flex items-start gap-2.5">
                   <span class="text-brand-teal-500 font-bold text-base">✓</span>
@@ -414,9 +419,14 @@ const resetAllDynamicState = () => {
           </div>
 
           <!-- TAB 2: BLOGS -->
-          <div v-if="activeTab === 'blogs'" class="space-y-6">
+          <div
+            v-if="activeTab === 'blogs'"
+            class="space-y-6"
+          >
             <div class="flex items-center justify-between">
-              <h2 class="text-2xl font-bold font-sans text-brand-dark">Manage Journal Posts</h2>
+              <h2 class="text-2xl font-bold font-sans text-brand-dark">
+                Manage Journal Posts
+              </h2>
               <button
                 class="px-6 py-2.5 bg-brand-teal-500 hover:bg-brand-teal-600 text-white text-sm font-bold rounded-full transition shadow-sm"
                 @click="openCreateModal('blog')"
@@ -433,10 +443,17 @@ const resetAllDynamicState = () => {
                 class="flex items-center justify-between bg-white border border-zinc-200 rounded-2xl p-5 hover:shadow-md transition gap-4"
               >
                 <div class="flex items-center gap-4 min-w-0">
-                  <img :src="post.image" class="w-16 h-12 object-cover rounded-lg bg-zinc-100 shrink-0 border border-zinc-200" />
+                  <img
+                    :src="post.image"
+                    class="w-16 h-12 object-cover rounded-lg bg-zinc-100 shrink-0 border border-zinc-200"
+                  >
                   <div class="min-w-0">
-                    <h3 class="font-bold text-brand-dark truncate text-base">{{ post.title }}</h3>
-                    <p class="text-xs text-zinc-400 truncate mt-1">/blog/{{ post.slug }} · {{ post.date }}</p>
+                    <h3 class="font-bold text-brand-dark truncate text-base">
+                      {{ post.title }}
+                    </h3>
+                    <p class="text-xs text-zinc-400 truncate mt-1">
+                      /blog/{{ post.slug }} · {{ post.date }}
+                    </p>
                   </div>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
@@ -458,9 +475,14 @@ const resetAllDynamicState = () => {
           </div>
 
           <!-- TAB 3: PORTFOLIO & FEATURED WORKS -->
-          <div v-if="activeTab === 'portfolio'" class="space-y-6">
+          <div
+            v-if="activeTab === 'portfolio'"
+            class="space-y-6"
+          >
             <div class="flex items-center justify-between">
-              <h2 class="text-2xl font-bold font-sans text-brand-dark">Manage Portfolio Projects</h2>
+              <h2 class="text-2xl font-bold font-sans text-brand-dark">
+                Manage Portfolio Projects
+              </h2>
               <button
                 class="px-6 py-2.5 bg-brand-teal-500 hover:bg-brand-teal-600 text-white text-sm font-bold rounded-full transition shadow-sm"
                 @click="openCreateModal('portfolio')"
@@ -477,19 +499,29 @@ const resetAllDynamicState = () => {
 
               <div class="space-y-4">
                 <div
-                  v-for="(project, idx) in [...portfolio].sort((a,b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))"
+                  v-for="(project, idx) in [...portfolio].sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))"
                   :key="project.slug"
                   class="bg-white border rounded-2xl p-5 transition flex flex-col md:flex-row md:items-center justify-between gap-4"
                   :class="project.featured !== false ? 'border-brand-yellow-500/50 shadow-sm' : 'border-zinc-200'"
                 >
                   <div class="flex items-center gap-4 min-w-0">
-                    <img :src="project.image" class="w-16 h-12 object-cover rounded-lg bg-zinc-100 shrink-0 border border-zinc-200" />
+                    <img
+                      :src="project.image"
+                      class="w-16 h-12 object-cover rounded-lg bg-zinc-100 shrink-0 border border-zinc-200"
+                    >
                     <div class="min-w-0">
                       <div class="flex items-center gap-2 flex-wrap">
-                        <h3 class="font-bold text-brand-dark text-base leading-snug">{{ project.title }}</h3>
-                        <span v-if="project.featured !== false" class="text-[10px] bg-brand-yellow-500 text-brand-dark font-bold px-2.5 py-0.5 rounded-full select-none shrink-0 uppercase tracking-wider">Featured</span>
+                        <h3 class="font-bold text-brand-dark text-base leading-snug">
+                          {{ project.title }}
+                        </h3>
+                        <span
+                          v-if="project.featured !== false"
+                          class="text-[10px] bg-brand-yellow-500 text-brand-dark font-bold px-2.5 py-0.5 rounded-full select-none shrink-0 uppercase tracking-wider"
+                        >Featured</span>
                       </div>
-                      <p class="text-xs text-zinc-400 truncate mt-1">{{ project.category }} · Slug: {{ project.slug }}</p>
+                      <p class="text-xs text-zinc-400 truncate mt-1">
+                        {{ project.category }} · Slug: {{ project.slug }}
+                      </p>
                     </div>
                   </div>
 
@@ -534,9 +566,14 @@ const resetAllDynamicState = () => {
           </div>
 
           <!-- TAB 4: CASE STUDIES -->
-          <div v-if="activeTab === 'case-studies'" class="space-y-6">
+          <div
+            v-if="activeTab === 'case-studies'"
+            class="space-y-6"
+          >
             <div class="flex items-center justify-between">
-              <h2 class="text-2xl font-bold font-sans text-brand-dark">Manage Case Studies</h2>
+              <h2 class="text-2xl font-bold font-sans text-brand-dark">
+                Manage Case Studies
+              </h2>
               <button
                 class="px-6 py-2.5 bg-brand-teal-500 hover:bg-brand-teal-600 text-white text-sm font-bold rounded-full transition shadow-sm"
                 @click="openCreateModal('case-study')"
@@ -553,10 +590,17 @@ const resetAllDynamicState = () => {
                 class="flex items-center justify-between bg-white border border-zinc-200 rounded-2xl p-5 hover:shadow-md transition gap-4"
               >
                 <div class="flex items-center gap-4 min-w-0">
-                  <img :src="study.image" class="w-16 h-12 object-cover rounded-lg bg-zinc-100 shrink-0 border border-zinc-200" />
+                  <img
+                    :src="study.image"
+                    class="w-16 h-12 object-cover rounded-lg bg-zinc-100 shrink-0 border border-zinc-200"
+                  >
                   <div class="min-w-0">
-                    <h3 class="font-bold text-brand-dark truncate text-base">{{ study.title }}</h3>
-                    <p class="text-xs text-zinc-400 truncate mt-1">Client: {{ study.client }} · /case-studies/{{ study.slug }}</p>
+                    <h3 class="font-bold text-brand-dark truncate text-base">
+                      {{ study.title }}
+                    </h3>
+                    <p class="text-xs text-zinc-400 truncate mt-1">
+                      Client: {{ study.client }} · /case-studies/{{ study.slug }}
+                    </p>
                   </div>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
@@ -578,9 +622,14 @@ const resetAllDynamicState = () => {
           </div>
 
           <!-- TAB 5: CAREERS (OPEN ROLES) -->
-          <div v-if="activeTab === 'careers'" class="space-y-6">
+          <div
+            v-if="activeTab === 'careers'"
+            class="space-y-6"
+          >
             <div class="flex items-center justify-between">
-              <h2 class="text-2xl font-bold font-sans text-brand-dark">Manage Open Roles</h2>
+              <h2 class="text-2xl font-bold font-sans text-brand-dark">
+                Manage Open Roles
+              </h2>
               <button
                 class="px-6 py-2.5 bg-brand-teal-500 hover:bg-brand-teal-600 text-white text-sm font-bold rounded-full transition shadow-sm"
                 @click="openCreateModal('career')"
@@ -597,7 +646,9 @@ const resetAllDynamicState = () => {
                 class="flex items-center justify-between bg-white border border-zinc-200 rounded-2xl p-5 hover:shadow-md transition gap-4"
               >
                 <div class="min-w-0">
-                  <h3 class="font-bold text-brand-teal-500 text-lg leading-snug">{{ job.title }}</h3>
+                  <h3 class="font-bold text-brand-teal-500 text-lg leading-snug">
+                    {{ job.title }}
+                  </h3>
                   <p class="text-xs text-zinc-400 truncate mt-1">
                     {{ job.department }} · {{ job.location }} · {{ job.type }} · {{ job.experience }}
                   </p>
@@ -619,7 +670,6 @@ const resetAllDynamicState = () => {
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>
@@ -629,9 +679,12 @@ const resetAllDynamicState = () => {
       v-if="isModalOpen"
       class="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto"
     >
-      <div class="absolute inset-0 bg-brand-dark/60 backdrop-blur-md" @click="isModalOpen = false" />
+      <div
+        class="absolute inset-0 bg-brand-dark/60 backdrop-blur-md"
+        @click="isModalOpen = false"
+      />
 
-      <div 
+      <div
         class="relative bg-white border border-zinc-200 text-brand-dark rounded-3xl w-full max-w-3xl p-8 max-h-[85vh] overflow-y-auto shadow-2xl space-y-6"
       >
         <!-- Modal Close Button -->
@@ -649,10 +702,15 @@ const resetAllDynamicState = () => {
           </h2>
         </div>
 
-        <form @submit.prevent="handleFormSubmit" class="space-y-5">
-          
+        <form
+          class="space-y-5"
+          @submit.prevent="handleFormSubmit"
+        >
           <!-- ── FORM FOR BLOGS ── -->
-          <div v-if="modalType === 'blog'" class="space-y-4">
+          <div
+            v-if="modalType === 'blog'"
+            class="space-y-4"
+          >
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">Blog Title</label>
@@ -662,7 +720,7 @@ const resetAllDynamicState = () => {
                   required
                   placeholder="e.g. Scaling Brand Identity in 2026"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">URL Slug</label>
@@ -673,7 +731,7 @@ const resetAllDynamicState = () => {
                   placeholder="e.g. scaling-brand-identity-2026"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
                   :disabled="modalMode === 'edit'"
-                />
+                >
               </div>
             </div>
 
@@ -696,7 +754,7 @@ const resetAllDynamicState = () => {
                   type="date"
                   required
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">Read Time</label>
@@ -706,7 +764,7 @@ const resetAllDynamicState = () => {
                   required
                   placeholder="e.g. 6 Min Read"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">Cover Image Path / URL</label>
@@ -715,7 +773,7 @@ const resetAllDynamicState = () => {
                   type="text"
                   required
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
             </div>
 
@@ -726,15 +784,29 @@ const resetAllDynamicState = () => {
                 class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 text-xs focus:outline-none"
                 @change="blogForm.image = ($event.target as HTMLSelectElement).value"
               >
-                <option value="" disabled selected>-- Choose local template asset --</option>
-                <option v-for="img in templateImages" :key="img.value" :value="img.value">{{ img.label }}</option>
+                <option
+                  value=""
+                  disabled
+                  selected
+                >
+                  -- Choose local template asset --
+                </option>
+                <option
+                  v-for="img in templateImages"
+                  :key="img.value"
+                  :value="img.value"
+                >
+                  {{ img.label }}
+                </option>
               </select>
             </div>
 
             <!-- Dynamic Blog Content Sections -->
             <div class="border-t border-zinc-200 pt-4 space-y-4">
               <div class="flex items-center justify-between">
-                <h3 class="text-sm font-bold text-zinc-800">Blog Body Sections</h3>
+                <h3 class="text-sm font-bold text-zinc-800">
+                  Blog Body Sections
+                </h3>
                 <button
                   type="button"
                   class="text-xs px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-brand-dark rounded-lg transition border border-zinc-200"
@@ -745,8 +817,8 @@ const resetAllDynamicState = () => {
               </div>
 
               <div class="space-y-4">
-                <div 
-                  v-for="(section, idx) in blogForm.body" 
+                <div
+                  v-for="(section, idx) in blogForm.body"
                   :key="idx"
                   class="p-4 bg-zinc-50 border border-zinc-200 rounded-xl space-y-3 relative"
                 >
@@ -764,7 +836,7 @@ const resetAllDynamicState = () => {
                       type="text"
                       placeholder="e.g. The Psychology of Color"
                       class="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-brand-dark text-xs"
-                    />
+                    >
                   </div>
                   <div>
                     <label class="block text-xs text-zinc-500 mb-1">Section Content</label>
@@ -782,7 +854,10 @@ const resetAllDynamicState = () => {
           </div>
 
           <!-- ── FORM FOR PORTFOLIO ── -->
-          <div v-if="modalType === 'portfolio'" class="space-y-4">
+          <div
+            v-if="modalType === 'portfolio'"
+            class="space-y-4"
+          >
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">Project Title</label>
@@ -792,7 +867,7 @@ const resetAllDynamicState = () => {
                   required
                   placeholder="e.g. Lecrown"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">URL Slug</label>
@@ -803,7 +878,7 @@ const resetAllDynamicState = () => {
                   placeholder="e.g. lecrown"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
                   :disabled="modalMode === 'edit'"
-                />
+                >
               </div>
             </div>
 
@@ -816,7 +891,7 @@ const resetAllDynamicState = () => {
                   required
                   placeholder="e.g. Branding & Marketing"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">Category</label>
@@ -824,9 +899,15 @@ const resetAllDynamicState = () => {
                   v-model="portfolioForm.category"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
                 >
-                  <option value="Branding">Branding</option>
-                  <option value="Marketing">Marketing</option>
-                  <option value="Video Production">Video Production</option>
+                  <option value="Branding">
+                    Branding
+                  </option>
+                  <option value="Marketing">
+                    Marketing
+                  </option>
+                  <option value="Video Production">
+                    Video Production
+                  </option>
                 </select>
               </div>
             </div>
@@ -839,7 +920,7 @@ const resetAllDynamicState = () => {
                   type="text"
                   required
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">Hero Image Path</label>
@@ -848,7 +929,7 @@ const resetAllDynamicState = () => {
                   type="text"
                   required
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
             </div>
 
@@ -860,8 +941,20 @@ const resetAllDynamicState = () => {
                   class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 text-xs focus:outline-none"
                   @change="portfolioForm.image = ($event.target as HTMLSelectElement).value"
                 >
-                  <option value="" disabled selected>-- Choose cover asset --</option>
-                  <option v-for="img in templateImages" :key="img.value" :value="img.value">{{ img.label }}</option>
+                  <option
+                    value=""
+                    disabled
+                    selected
+                  >
+                    -- Choose cover asset --
+                  </option>
+                  <option
+                    v-for="img in templateImages"
+                    :key="img.value"
+                    :value="img.value"
+                  >
+                    {{ img.label }}
+                  </option>
                 </select>
               </div>
               <div>
@@ -870,8 +963,20 @@ const resetAllDynamicState = () => {
                   class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 text-xs focus:outline-none"
                   @change="portfolioForm.heroImage = ($event.target as HTMLSelectElement).value"
                 >
-                  <option value="" disabled selected>-- Choose hero asset --</option>
-                  <option v-for="img in templateImages" :key="img.value" :value="img.value">{{ img.label }}</option>
+                  <option
+                    value=""
+                    disabled
+                    selected
+                  >
+                    -- Choose hero asset --
+                  </option>
+                  <option
+                    v-for="img in templateImages"
+                    :key="img.value"
+                    :value="img.value"
+                  >
+                    {{ img.label }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -883,7 +988,7 @@ const resetAllDynamicState = () => {
                 type="text"
                 placeholder="Branding, Designing, Video Production"
                 class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-              />
+              >
             </div>
 
             <div>
@@ -893,7 +998,7 @@ const resetAllDynamicState = () => {
                 type="text"
                 placeholder="/Images/Lecrown- 1.png, /Images/Lecrown.png"
                 class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-              />
+              >
             </div>
 
             <div>
@@ -914,15 +1019,21 @@ const resetAllDynamicState = () => {
                 v-model="portfolioForm.featured"
                 type="checkbox"
                 class="w-4 h-4 rounded text-brand-teal-500 focus:ring-brand-teal-500 border-zinc-200 bg-white"
-              />
-              <label for="feat-checkbox" class="text-sm font-semibold select-none cursor-pointer text-zinc-700">
+              >
+              <label
+                for="feat-checkbox"
+                class="text-sm font-semibold select-none cursor-pointer text-zinc-700"
+              >
                 Feature this project on the Homepage
               </label>
             </div>
           </div>
 
           <!-- ── FORM FOR CASE STUDIES ── -->
-          <div v-if="modalType === 'case-study'" class="space-y-4">
+          <div
+            v-if="modalType === 'case-study'"
+            class="space-y-4"
+          >
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">Case Study Title</label>
@@ -932,7 +1043,7 @@ const resetAllDynamicState = () => {
                   required
                   placeholder="e.g. Le Crown Vagamon Campaign"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">URL Slug</label>
@@ -943,7 +1054,7 @@ const resetAllDynamicState = () => {
                   placeholder="e.g. le-crown-vagamon"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
                   :disabled="modalMode === 'edit'"
-                />
+                >
               </div>
             </div>
 
@@ -956,7 +1067,7 @@ const resetAllDynamicState = () => {
                   required
                   placeholder="e.g. Le Crown Vagamon"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">Tags (Comma Separated)</label>
@@ -966,7 +1077,7 @@ const resetAllDynamicState = () => {
                   required
                   placeholder="Resorts & Hospitality, Branding"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
             </div>
 
@@ -978,7 +1089,7 @@ const resetAllDynamicState = () => {
                   type="text"
                   required
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">Hero Image URL</label>
@@ -987,7 +1098,7 @@ const resetAllDynamicState = () => {
                   type="text"
                   required
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
             </div>
 
@@ -1016,7 +1127,9 @@ const resetAllDynamicState = () => {
             <!-- Dynamic solutions section -->
             <div class="border-t border-zinc-200 pt-4 space-y-3">
               <div class="flex items-center justify-between">
-                <h3 class="text-sm font-bold text-zinc-800">The Solutions Bullet Points</h3>
+                <h3 class="text-sm font-bold text-zinc-800">
+                  The Solutions Bullet Points
+                </h3>
                 <button
                   type="button"
                   class="text-xs px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-brand-dark rounded-lg transition border border-zinc-200"
@@ -1027,14 +1140,18 @@ const resetAllDynamicState = () => {
               </div>
 
               <div class="space-y-2">
-                <div v-for="(point, index) in caseStudyForm.solution" :key="index" class="flex gap-2 items-center">
+                <div
+                  v-for="(point, index) in caseStudyForm.solution"
+                  :key="index"
+                  class="flex gap-2 items-center"
+                >
                   <input
                     v-model="caseStudyForm.solution[index]"
                     type="text"
                     required
                     placeholder="e.g. Professional photography and videography capturing the property"
                     class="flex-1 px-3 py-2 rounded-lg border border-zinc-200 bg-zinc-50 text-brand-dark text-xs"
-                  />
+                  >
                   <button
                     type="button"
                     class="p-2 text-red-500 hover:text-red-600 font-bold"
@@ -1049,7 +1166,9 @@ const resetAllDynamicState = () => {
             <!-- Dynamic results metrics section -->
             <div class="border-t border-zinc-200 pt-4 space-y-3">
               <div class="flex items-center justify-between">
-                <h3 class="text-sm font-bold text-zinc-800">Results & Metrics</h3>
+                <h3 class="text-sm font-bold text-zinc-800">
+                  Results & Metrics
+                </h3>
                 <button
                   type="button"
                   class="text-xs px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-brand-dark rounded-lg transition border border-zinc-200"
@@ -1060,7 +1179,11 @@ const resetAllDynamicState = () => {
               </div>
 
               <div class="space-y-2">
-                <div v-for="(metric, idx) in caseStudyForm.results" :key="idx" class="flex gap-3 items-center bg-zinc-50 p-3 rounded-lg border border-zinc-200">
+                <div
+                  v-for="(metric, idx) in caseStudyForm.results"
+                  :key="idx"
+                  class="flex gap-3 items-center bg-zinc-50 p-3 rounded-lg border border-zinc-200"
+                >
                   <div class="flex-1 grid grid-cols-2 gap-2">
                     <input
                       v-model="metric.metric"
@@ -1068,14 +1191,14 @@ const resetAllDynamicState = () => {
                       required
                       placeholder="e.g. +180% or 3.2x"
                       class="px-3 py-2 rounded-lg border border-zinc-200 bg-white text-brand-dark text-xs"
-                    />
+                    >
                     <input
                       v-model="metric.label"
                       type="text"
                       required
                       placeholder="e.g. Growth in Social Reach"
                       class="px-3 py-2 rounded-lg border border-zinc-200 bg-white text-brand-dark text-xs"
-                    />
+                    >
                   </div>
                   <button
                     type="button"
@@ -1090,7 +1213,10 @@ const resetAllDynamicState = () => {
           </div>
 
           <!-- ── FORM FOR CAREERS ── -->
-          <div v-if="modalType === 'career'" class="space-y-4">
+          <div
+            v-if="modalType === 'career'"
+            class="space-y-4"
+          >
             <div>
               <label class="block text-xs font-bold text-zinc-700 mb-1.5">Job Title</label>
               <input
@@ -1099,7 +1225,7 @@ const resetAllDynamicState = () => {
                 required
                 placeholder="e.g. Senior Copywriter"
                 class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-              />
+              >
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1111,7 +1237,7 @@ const resetAllDynamicState = () => {
                   required
                   placeholder="e.g. Marketing"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">Location</label>
@@ -1121,7 +1247,7 @@ const resetAllDynamicState = () => {
                   required
                   placeholder="e.g. Kochi (Hybrid / Onsite)"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
             </div>
 
@@ -1134,7 +1260,7 @@ const resetAllDynamicState = () => {
                   required
                   placeholder="e.g. Full-Time or Internship"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
               <div>
                 <label class="block text-xs font-bold text-zinc-700 mb-1.5">Experience Requirement</label>
@@ -1144,7 +1270,7 @@ const resetAllDynamicState = () => {
                   required
                   placeholder="e.g. 2+ Years Experience"
                   class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                />
+                >
               </div>
             </div>
           </div>
@@ -1165,7 +1291,6 @@ const resetAllDynamicState = () => {
               {{ modalMode === 'create' ? 'Save New Item' : 'Save Changes' }}
             </button>
           </div>
-
         </form>
       </div>
     </div>
