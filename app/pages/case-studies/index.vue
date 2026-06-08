@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { caseStudies } from '~/data/case-studies'
+const { caseStudies } = useCaseStudies()
 
 useSeoMeta({
   title: 'Case Studies — Macawoo',

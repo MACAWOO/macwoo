@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { posts } from '~/data/blog'
+const { posts } = useBlogs()
 
 useSeoMeta({
   title: 'Blog — Macawoo',

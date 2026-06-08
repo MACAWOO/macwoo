@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { posts } from '~/data/blog'
+const { posts } = useBlogs()
 
 const route = useRoute()
 const slug = route.params.slug as string
-const post = posts.find(p => p.slug === slug)
+const post = computed(() => posts.value.find(p => p.slug === slug))
 
-if (!post) {
-  throw createError({ statusCode: 404, message: 'Post not found' })
+if (!post.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Post not found', fatal: true })
 }
 
 useSeoMeta({
-  title: `${post.title} — Macawoo Blog`,
-  description: post.excerpt
+  title: () => post.value ? `${post.value.title} — Macawoo Blog` : 'Macawoo Blog',
+  description: () => post.value ? post.value.excerpt : ''
 })
 
-const recommended = computed(() => posts.filter(p => p.slug !== slug).slice(0, 3))
+const recommended = computed(() => posts.value.filter(p => p.slug !== slug).slice(0, 3))
 </script>
 
 <template>

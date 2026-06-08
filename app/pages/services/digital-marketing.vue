@@ -4,114 +4,353 @@ useSeoMeta({
   description: 'Data-driven campaigns that reach the right audience, tell the right story, and deliver measurable results.'
 })
 
-const serviceOrder = ['/services/branding-design', '/services/digital-marketing', '/services/video-production']
-const currentIndex = 1
-const prevTo = serviceOrder[(currentIndex - 1 + 3) % 3]
-const nextTo = serviceOrder[(currentIndex + 1) % 3]
+const prevTo = '/services/branding-design'
+const nextTo = '/services/video-production'
+
+const containerRef = ref<HTMLElement | null>(null)
+
+onMounted(() => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('reveal-active')
+        observer.unobserve(entry.target)
+      }
+    })
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  })
+
+  if (containerRef.value) {
+    const cards = containerRef.value.querySelectorAll('.reveal-card')
+    cards.forEach(card => observer.observe(card))
+  }
+})
 
 const subServices = [
-  { icon: '/Icons/File%20Search@4x.png', title: 'Content Marketing', description: 'Strategic content that educates, engages, and builds lasting trust with your audience.' },
-  { icon: '/Icons/Chart%20Spline@4x.png', title: 'Performance Marketing', description: 'Paid campaigns optimised for maximum ROI across Google, Meta, and beyond.' },
-  { icon: '/Icons/Chart%20No%20Axes%20Combined@4x.png', title: 'Organic Growth', description: 'SEO and organic strategies that compound over time and drive sustainable traffic.' },
-  { icon: '/Icons/Megaphone@4x.png', title: 'Social Media Marketing', description: 'Platform-native content and community strategies that grow engaged audiences.' },
-  { icon: '/Icons/Device%20Mobile@4x.png', title: 'Influencer Marketing', description: 'Strategic collaborations with creators that amplify your brand to new audiences.' },
-  { icon: '/Icons/Brain@4x.png', title: 'Strategy & Analytics', description: 'Data-driven insights and reporting that inform every marketing decision.' }
+  { icon: '/Icons/Film%20Strip@4x.png', title: 'Content Marketing', description: 'Create valuable content that attracts, educates, and converts your target audience across multiple digital channels.' },
+  { icon: '/Icons/Chart%20Spline@4x.png', title: 'Performance Marketing', description: 'Run data-driven advertising campaigns across Google, Meta, LinkedIn, and other platforms to maximize ROI.' },
+  { icon: '/Icons/File%20Search@4x.png', title: 'Organic Marketing', description: 'Improve your website\'s visibility on search engines and attract high-intent organic traffic that drives long-term growth.' },
+  { icon: '/Icons/Megaphone@4x.png', title: 'Social Media Marketing', description: 'Build brand awareness, engage your audience, and create meaningful connections through strategic content and campaigns across leading social media platforms.' }
+]
+
+const logos = [
+  { src: '/Images/Client_Logo/le crown brown-01 1@2x.png', alt: 'Le Crown', h: 'h-[39px]' },
+  { src: '/Images/Client_Logo/COLOR 2 1@2x.png', alt: 'Take My Family', h: 'h-[42px]' },
+  { src: '/Images/Client_Logo/IMG_3097 1@2x.png', alt: 'TAB', h: 'h-[38px]' },
+  { src: '/Images/Client_Logo/Twins Abroad Logo - Reel Cover Logo Overlay b&w 1@2x.png', alt: 'Twins Abroad', h: 'h-[50px]' },
+  { src: '/Images/Client_Logo/Pink Label logo 1@2x.png', alt: 'Pinklabel', h: 'h-[45px]' },
+  { src: '/Images/Client_Logo/Asset 1@500x 1@2x.png', alt: 'Piok English', h: 'h-[52px]' },
+  { src: '/Images/Client_Logo/Asset 1@500x 2@2x.png', alt: 'Go German', h: 'h-[54px]' }
 ]
 </script>
 
 <template>
-  <div>
-    <PageHero
-      title-html="Digital Marketing"
-      image="/Images/Digital%20Marketing.jpeg"
-      eyebrow="SERVICES"
-      description="Data-driven campaigns that reach the right audience, tell the right story, and deliver measurable results."
-      :show-arrows="true"
-      :prev-to="prevTo"
-      :next-to="nextTo"
-    />
-
-    <!-- Sub-services grid -->
-    <section class="py-20 bg-brand-teal-500 relative overflow-hidden">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-          <ServiceCard
-            v-for="s in subServices"
-            :key="s.title"
-            :icon="s.icon"
-            :title="s.title"
-            :description="s.description"
-          />
-        </div>
+  <div class="bg-white">
+    <!-- ═══════════════════════════════════════════
+         HERO BANNER (386px)
+         ═══════════════════════════════════════════ -->
+    <section class="relative h-[300px] md:h-[386px] overflow-hidden">
+      <!-- Background image + dark overlay -->
+      <div class="absolute inset-0">
+        <img
+          src="/Images/Digital%20Marketing.jpeg"
+          alt=""
+          class="w-full h-full object-cover"
+        >
+        <div class="absolute inset-0 bg-black/40" />
       </div>
-      <div class="absolute top-8 right-8 w-16 h-16 bg-brand-yellow-500 rounded-2xl flex items-center justify-center opacity-80">
-        <span class="text-brand-dark font-bold text-3xl leading-none">m</span>
-      </div>
-    </section>
 
-    <!-- Client logos -->
-    <section class="py-14 bg-white">
-      <div class="max-w-7xl mx-auto px-6">
-        <p class="text-center text-zinc-400 text-xs font-semibold uppercase tracking-widest mb-8">
-          Brands We've Grown
+      <!-- Content -->
+      <div class="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+        <p
+          class="text-white text-[14px] md:text-[18px] font-normal tracking-wide mb-1"
+          style="font-family: 'Bricolage Grotesque', sans-serif;"
+        >
+          SERVICES
         </p>
-        <ClientLogos />
+        <h1
+          class="text-[#F4ED18] text-[32px] md:text-[48px] leading-[58px] font-medium mb-2"
+          style="font-family: 'Fredoka', sans-serif;"
+        >
+          Digital Marketing
+        </h1>
+        <p
+          class="text-white text-[14px] md:text-[18px] font-normal leading-[28px] max-w-[910px]"
+          style="font-family: 'Bricolage Grotesque', sans-serif;"
+        >
+          Growth Isn't Luck. It's Strategy.
+        </p>
       </div>
+
+      <!-- Left Arrow -->
+      <NuxtLink
+        :to="prevTo"
+        class="absolute left-4 md:left-[120px] top-1/2 -translate-y-1/2 z-20 w-[48px] h-[48px] md:w-[68px] md:h-[68px] flex items-center justify-center hover:scale-105 transition-transform"
+      >
+        <svg
+          class="w-full h-full -scale-x-100"
+          viewBox="0 0 76 76"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g filter="url(#filterLeftArrowDM)">
+            <circle
+              cx="38"
+              cy="38"
+              r="34"
+              fill="white"
+            />
+          </g>
+          <path
+            d="M23.7001 36.4138L23.6507 40.3664L42.405 40.4601C38.1352 43.0818 35.5561 47.7211 34.7762 52.9509L38.9181 52.9934C39.8606 46.005 44.9759 40.3433 52.2592 40.4165L52.3021 36.9405C45.0189 36.8673 40.0452 31.1047 39.2744 24.0972L35.134 24.0561C35.7836 29.2988 38.2492 33.9901 42.4503 36.6991L23.7001 36.4138Z"
+            fill="#141111"
+          />
+          <defs>
+            <filter
+              id="filterLeftArrowDM"
+              x="0"
+              y="0"
+              width="76"
+              height="76"
+              filterUnits="userSpaceOnUse"
+              color-interpolation-filters="sRGB"
+            >
+              <feFlood
+                flood-opacity="0"
+                result="BackgroundImageFix"
+              />
+              <feColorMatrix
+                in="SourceAlpha"
+                type="matrix"
+                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                result="hardAlpha"
+              />
+              <feOffset />
+              <feGaussianBlur stdDeviation="2" />
+              <feComposite
+                in2="hardAlpha"
+                operator="out"
+              />
+              <feColorMatrix
+                type="matrix"
+                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+              />
+              <feBlend
+                mode="normal"
+                in2="BackgroundImageFix"
+                result="effect1_dropShadow_165_405"
+              />
+              <feBlend
+                mode="normal"
+                in="SourceGraphic"
+                in2="effect1_dropShadow_165_405"
+                result="shape"
+              />
+            </filter>
+          </defs>
+        </svg>
+      </NuxtLink>
+
+      <!-- Right Arrow -->
+      <NuxtLink
+        :to="nextTo"
+        class="absolute right-4 md:right-[120px] top-1/2 -translate-y-1/2 z-20 w-[48px] h-[48px] md:w-[68px] md:h-[68px] flex items-center justify-center hover:scale-105 transition-transform"
+      >
+        <svg
+          class="w-full h-full"
+          viewBox="0 0 76 76"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g filter="url(#filterRightArrowDM)">
+            <circle
+              cx="38"
+              cy="38"
+              r="34"
+              fill="white"
+            />
+          </g>
+          <path
+            d="M23.7001 36.4138L23.6507 40.3664L42.405 40.4601C38.1352 43.0818 35.5561 47.7211 34.7762 52.9509L38.9181 52.9934C39.8606 46.005 44.9759 40.3433 52.2592 40.4165L52.3021 36.9405C45.0189 36.8673 40.0452 31.1047 39.2744 24.0972L35.134 24.0561C35.7836 29.2988 38.2492 33.9901 42.4503 36.6991L23.7001 36.4138Z"
+            fill="#141111"
+          />
+          <defs>
+            <filter
+              id="filterRightArrowDM"
+              x="0"
+              y="0"
+              width="76"
+              height="76"
+              filterUnits="userSpaceOnUse"
+              color-interpolation-filters="sRGB"
+            >
+              <feFlood
+                flood-opacity="0"
+                result="BackgroundImageFix"
+              />
+              <feColorMatrix
+                in="SourceAlpha"
+                type="matrix"
+                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                result="hardAlpha"
+              />
+              <feOffset />
+              <feGaussianBlur stdDeviation="2" />
+              <feComposite
+                in2="hardAlpha"
+                operator="out"
+              />
+              <feColorMatrix
+                type="matrix"
+                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+              />
+              <feBlend
+                mode="normal"
+                in2="BackgroundImageFix"
+                result="effect1_dropShadow_165_405"
+              />
+              <feBlend
+                mode="normal"
+                in="SourceGraphic"
+                in2="effect1_dropShadow_165_405"
+                result="shape"
+              />
+            </filter>
+          </defs>
+        </svg>
+      </NuxtLink>
     </section>
 
-    <!-- Methodology -->
-    <section class="py-20 bg-brand-yellow-500">
-      <div class="max-w-7xl mx-auto px-6">
-        <h2 class="text-2xl md:text-3xl font-bold text-brand-dark mb-12">
-          The Methodology
-        </h2>
-        <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
+    <!-- ═══════════════════════════════════════════
+         SUB-SERVICES CARDS (Teal Background)
+         ═══════════════════════════════════════════ -->
+    <section class="bg-[#1D96B8] relative overflow-hidden pt-16 md:pt-20 pb-20 md:pb-24">
+      <div class="max-w-[1120px] mx-auto px-6">
+        <div
+          ref="containerRef"
+          class="grid grid-cols-1 md:grid-cols-2 gap-x-[18px] gap-y-[28px]"
+        >
           <div
-            v-for="(step, i) in ['Discover', 'Define', 'Design', 'Deliver']"
-            :key="step"
-            class="bg-brand-dark rounded-2xl p-6"
+            v-for="(s, i) in subServices"
+            :key="s.title"
+            class="bg-white rounded-[10px] flex overflow-hidden h-auto md:h-[231px] reveal-card"
+            :style="{ transitionDelay: (i % 2) * 150 + 'ms' }"
           >
-            <p class="text-brand-yellow-500 text-3xl font-bold mb-4">
-              0{{ i + 1 }}
-            </p>
-            <h3 class="text-white font-bold text-lg mb-2">
-              {{ step }}
-            </h3>
-            <p class="text-white/60 text-xs leading-relaxed">
-              <template v-if="i === 0">
-                Understanding your audience, market, and objectives in depth.
-              </template>
-              <template v-else-if="i === 1">
-                Defining the channels, tactics, and KPIs that matter.
-              </template>
-              <template v-else-if="i === 2">
-                Creating compelling campaigns and content.
-              </template>
-              <template v-else>
-                Launching, optimising, and scaling for performance.
-              </template>
-            </p>
+            <!-- Gradient left strip -->
+            <div
+              class="w-[60px] md:w-[78px] shrink-0 flex items-start justify-center pt-8 md:pt-9"
+              style="background: linear-gradient(180deg, #F4ED18 0%, #1D96B8 100%); border-radius: 10px 0 0 10px;"
+            >
+              <img
+                :src="s.icon"
+                :alt="s.title"
+                class="w-[34px] h-[34px] md:w-[40px] md:h-[40px] object-contain"
+              >
+            </div>
+            <!-- Content -->
+            <div class="flex-1 flex flex-col justify-center px-5 md:px-9 py-6 md:py-0">
+              <h3
+                class="text-[#1D96B8] text-[24px] md:text-[32px] font-bold leading-[38px] mb-3 md:mb-[19px]"
+                style="font-family: 'Bricolage Grotesque', sans-serif;"
+              >
+                {{ s.title }}
+              </h3>
+              <p
+                class="text-black text-[15px] md:text-[18px] font-normal leading-[26px] md:leading-[28px]"
+                style="font-family: 'Bricolage Grotesque', sans-serif;"
+              >
+                {{ s.description }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CTA -->
-    <section class="py-20 bg-white text-center">
-      <div class="max-w-xl mx-auto px-6">
-        <h2 class="text-3xl md:text-4xl font-bold text-brand-dark mb-3">
-          Growth Isn't Luck. It's Strategy.
+    <!-- ═══════════════════════════════════════════
+         CLIENT LOGO MARQUEE
+         ═══════════════════════════════════════════ -->
+    <section class="py-3 bg-white overflow-hidden relative">
+      <!-- Fade edges -->
+      <div class="absolute left-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+      <div class="absolute right-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+
+      <!-- Scrolling logos -->
+      <div class="flex animate-marquee items-center py-3">
+        <!-- Repeat 3 sets for seamless loop -->
+        <template
+          v-for="set in 3"
+          :key="set"
+        >
+          <img
+            v-for="logo in logos"
+            :key="`${set}-${logo.alt}`"
+            :src="logo.src"
+            :alt="logo.alt"
+            :class="[logo.h, 'w-auto shrink-0 object-contain mx-[30px] md:mx-[51px]']"
+          >
+        </template>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         BUILD YOUR BRAND CTA
+         ═══════════════════════════════════════════ -->
+    <section class="py-16 md:py-20 bg-white text-center">
+      <div class="max-w-[524px] mx-auto px-6">
+        <h2
+          class="text-black text-[40px] md:text-[64px] leading-[1.2] font-medium mb-0"
+          style="font-family: 'Fredoka', sans-serif;"
+        >
+          Growth Isn't Luck.<br>
+          <span class="text-[#1D96B8]">It's Strategy</span>
         </h2>
-        <p class="text-zinc-500 text-sm mb-8">
-          Let's build a marketing engine that performs.
+        <p
+          class="text-black text-[16px] md:text-[18px] leading-[28px] font-normal mt-2 mb-[30px]"
+          style="font-family: 'Bricolage Grotesque', sans-serif;"
+        >
+          Let's Build Something Powerful.
         </p>
         <NuxtLink
           to="/contact"
-          class="inline-flex items-center gap-2 px-8 py-4 bg-brand-yellow-500 text-brand-dark font-bold rounded-full text-sm hover:bg-brand-yellow-400 transition-colors"
+          class="inline-flex items-center justify-center gap-[5px] px-6 md:px-8 py-2.5 bg-[#F4ED18] text-[#201F1F] text-[16px] md:text-[20px] font-bold rounded-full hover:brightness-95 transition-all"
+          style="font-family: 'Bricolage Grotesque', sans-serif; box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);"
         >
-          Start Your Project →
+          <span>Start Your Project</span>
+          <svg
+            class="w-[20px] h-[19px] md:w-[25px] md:h-[23px]"
+            viewBox="0 0 12 12"
+            fill="none"
+          >
+            <path
+              d="M0.0349998 9.348L1.305 10.74L7.879 4.679C7.243 6.979 7.854 9.432 9.285 11.506L10.744 10.175C8.797 7.436 8.738 3.803 11.303 1.462L10.186 0.238C7.621 2.579 4.009 2.189 1.458 0L0 1.331C1.934 2.945 4.322 3.777 6.67 3.355L0.0349998 9.348Z"
+              fill="#141111"
+            />
+          </svg>
         </NuxtLink>
       </div>
     </section>
   </div>
 </template>
+
+<style scoped>
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+  width: max-content;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+</style>

@@ -24,14 +24,29 @@
 
       <!-- Cards Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        
         <!-- Card 1 -->
         <div class="bg-[#1D96B8] rounded-[16px] p-8 flex flex-col h-full">
           <!-- Icon -->
           <div class="w-[52px] h-[52px] rounded-full bg-[#E8F600] flex items-center justify-center mb-8 shrink-0">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1D96B8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <polyline points="3 12 8 12 11 6 14 18 17 12 21 12"></polyline>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#1D96B8"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect
+                x="3"
+                y="3"
+                width="18"
+                height="18"
+                rx="2"
+                ry="2"
+              />
+              <polyline points="3 12 8 12 11 6 14 18 17 12 21 12" />
             </svg>
           </div>
           <!-- Title -->
@@ -56,11 +71,32 @@
         <div class="bg-[#1D96B8] rounded-[16px] p-8 flex flex-col h-full">
           <!-- Icon -->
           <div class="w-[52px] h-[52px] rounded-full bg-[#E8F600] flex items-center justify-center mb-8 shrink-0">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="#1D96B8">
-              <circle cx="12" cy="5" r="3.5"/>
-              <circle cx="12" cy="19" r="3.5"/>
-              <circle cx="5" cy="12" r="3.5"/>
-              <circle cx="19" cy="12" r="3.5"/>
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="#1D96B8"
+            >
+              <circle
+                cx="12"
+                cy="5"
+                r="3.5"
+              />
+              <circle
+                cx="12"
+                cy="19"
+                r="3.5"
+              />
+              <circle
+                cx="5"
+                cy="12"
+                r="3.5"
+              />
+              <circle
+                cx="19"
+                cy="12"
+                r="3.5"
+              />
             </svg>
           </div>
           <!-- Title -->
@@ -85,9 +121,17 @@
         <div class="bg-[#1D96B8] rounded-[16px] p-8 flex flex-col h-full">
           <!-- Icon -->
           <div class="w-[52px] h-[52px] rounded-full bg-[#E8F600] flex items-center justify-center mb-8 shrink-0">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="#1D96B8">
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="#1D96B8"
+            >
               <path d="M12 1.5l2.6 8.3h8.7l-7 5.1 2.7 8.3-7-5.2-7 5.2 2.7-8.3-7-5.1h8.7z" />
-              <path d="M4 3l1.5 4.6h4.8l-3.9 2.8 1.5 4.6-3.9-2.9-3.9 2.9 1.5-4.6-3.9-2.8h4.8z" opacity="0.8"/>
+              <path
+                d="M4 3l1.5 4.6h4.8l-3.9 2.8 1.5 4.6-3.9-2.9-3.9 2.9 1.5-4.6-3.9-2.8h4.8z"
+                opacity="0.8"
+              />
             </svg>
           </div>
           <!-- Title -->
@@ -112,10 +156,29 @@
         <div class="bg-[#1D96B8] rounded-[16px] p-8 flex flex-col h-full">
           <!-- Icon -->
           <div class="w-[52px] h-[52px] rounded-full bg-[#E8F600] flex items-center justify-center mb-8 shrink-0 relative">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="#1D96B8" stroke="#1D96B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-              <line x1="4" y1="22" x2="4" y2="15"></line>
-              <circle cx="16" cy="19" r="3" fill="#1D96B8"></circle>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="#1D96B8"
+              stroke="#1D96B8"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+              <line
+                x1="4"
+                y1="22"
+                x2="4"
+                y2="15"
+              />
+              <circle
+                cx="16"
+                cy="19"
+                r="3"
+                fill="#1D96B8"
+              />
             </svg>
           </div>
           <!-- Title -->
@@ -135,7 +198,6 @@
             Planning that creates clarity and turns vision into action.
           </p>
         </div>
-
       </div>
     </div>
   </section>

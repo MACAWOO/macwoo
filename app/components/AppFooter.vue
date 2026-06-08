@@ -1,47 +1,47 @@
 <template>
-  <footer class="bg-brand-teal-700">
-    <div class="max-w-7xl mx-auto px-6 pt-16 pb-8">
+  <footer class="bg-white px-4 md:px-10 py-16 md:py-24">
+    <div class="max-w-[1400px] mx-auto bg-[#1D96B8] rounded-[2.5rem] px-8 pt-16 pb-8 md:px-16 md:pt-20 md:pb-12 text-white">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
         <!-- Navigation -->
         <div>
-          <h4 class="text-white font-bold text-sm mb-5">
+          <h4 class="text-white font-bold text-base md:text-lg mb-5">
             Navigation
           </h4>
           <ul class="space-y-3">
             <li>
               <NuxtLink
                 to="/"
-                class="text-white/70 text-sm hover:text-white transition-colors"
+                class="text-white text-sm md:text-base hover:opacity-80 transition-opacity"
               >Home</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/about"
-                class="text-white/70 text-sm hover:text-white transition-colors"
+                class="text-white text-sm md:text-base hover:opacity-80 transition-opacity"
               >About</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/portfolio"
-                class="text-white/70 text-sm hover:text-white transition-colors"
+                class="text-white text-sm md:text-base hover:opacity-80 transition-opacity"
               >Portfolio</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/case-studies"
-                class="text-white/70 text-sm hover:text-white transition-colors"
+                class="text-white text-sm md:text-base hover:opacity-80 transition-opacity"
               >Case Studies</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/blog"
-                class="text-white/70 text-sm hover:text-white transition-colors"
+                class="text-white text-sm md:text-base hover:opacity-80 transition-opacity"
               >Blog</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/careers"
-                class="text-white/70 text-sm hover:text-white transition-colors"
+                class="text-white text-sm md:text-base hover:opacity-80 transition-opacity"
               >Careers</NuxtLink>
             </li>
           </ul>
@@ -49,26 +49,26 @@
 
         <!-- Services -->
         <div>
-          <h4 class="text-white font-bold text-sm mb-5">
+          <h4 class="text-white font-bold text-base md:text-lg mb-5">
             Services
           </h4>
           <ul class="space-y-3">
             <li>
               <NuxtLink
                 to="/services/branding-design"
-                class="text-white/70 text-sm hover:text-white transition-colors"
+                class="text-white text-sm md:text-base hover:opacity-80 transition-opacity"
               >Branding & Designing</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/services/digital-marketing"
-                class="text-white/70 text-sm hover:text-white transition-colors"
+                class="text-white text-sm md:text-base hover:opacity-80 transition-opacity"
               >Digital Marketing</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/services/video-production"
-                class="text-white/70 text-sm hover:text-white transition-colors"
+                class="text-white text-sm md:text-base hover:opacity-80 transition-opacity"
               >Video Production</NuxtLink>
             </li>
           </ul>
@@ -76,20 +76,20 @@
 
         <!-- Contact -->
         <div>
-          <h4 class="text-white font-bold text-sm mb-5">
+          <h4 class="text-white font-bold text-base md:text-lg mb-5">
             Contact
           </h4>
           <ul class="space-y-3">
-            <li class="text-white/70 text-sm">
+            <li class="text-white text-sm md:text-base">
               Phone Number:
             </li>
-            <li class="text-white/70 text-sm">
+            <li class="text-white text-sm md:text-base">
               +91 9747477502
             </li>
-            <li class="text-white/70 text-sm mt-2">
-              Email id:
+            <li class="text-white text-sm md:text-base pt-2">
+              Email Id:
             </li>
-            <li class="text-white/70 text-sm break-all">
+            <li class="text-white text-sm md:text-base break-all">
               macawooofficial@gmail.com
             </li>
           </ul>
@@ -97,18 +97,18 @@
 
         <!-- Address + Social -->
         <div>
-          <div class="flex items-start justify-between gap-4 mb-5">
-            <h4 class="text-white font-bold text-sm">
+          <div class="flex items-center justify-between gap-4 mb-5">
+            <h4 class="text-white font-bold text-base md:text-lg">
               Address
             </h4>
-            <div class="flex gap-3">
+            <div class="flex items-center gap-3">
               <a
                 href="#"
                 aria-label="Facebook"
-                class="text-white/70 hover:text-white transition-colors"
+                class="text-white hover:opacity-80 transition-opacity"
               >
                 <svg
-                  class="w-5 h-5"
+                  class="w-5.5 h-5.5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -118,10 +118,10 @@
               <a
                 href="#"
                 aria-label="Instagram"
-                class="text-white/70 hover:text-white transition-colors"
+                class="text-white hover:opacity-80 transition-opacity"
               >
                 <svg
-                  class="w-5 h-5"
+                  class="w-5.5 h-5.5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -131,10 +131,10 @@
               <a
                 href="#"
                 aria-label="LinkedIn"
-                class="text-white/70 hover:text-white transition-colors"
+                class="text-white hover:opacity-80 transition-opacity"
               >
                 <svg
-                  class="w-5 h-5"
+                  class="w-5.5 h-5.5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -143,26 +143,29 @@
               </a>
             </div>
           </div>
-          <p class="text-white/70 text-sm">
+          <p class="text-white text-sm md:text-base">
             Kerala | UAE
           </p>
         </div>
       </div>
 
       <!-- Bottom strip -->
-      <div class="border-t border-white/20 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-        <p class="text-white/50 text-xs">
-          All Rights Reserved @ Macawoo
+      <div class="border-t border-white/20 pt-6 mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-y-2 gap-x-8 text-xs md:text-sm text-white">
+        <p>
+          All right Reserved @ <NuxtLink
+            to="/admin"
+            class="hover:underline transition-all"
+          >Macawoo</NuxtLink>
         </p>
-        <div class="flex gap-4">
+        <div class="flex items-center gap-2">
           <a
             href="#"
-            class="text-white/50 text-xs hover:text-white transition-colors"
+            class="hover:underline"
           >Privacy</a>
-          <span class="text-white/30 text-xs">|</span>
+          <span class="text-white/50">|</span>
           <a
             href="#"
-            class="text-white/50 text-xs hover:text-white transition-colors"
+            class="hover:underline"
           >Terms & Conditions</a>
         </div>
       </div>

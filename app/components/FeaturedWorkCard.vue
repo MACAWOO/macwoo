@@ -15,7 +15,7 @@ defineProps<Props>()
     class="group block"
   >
     <!-- Image container — matching reference size ratios -->
-    <div 
+    <div
       class="overflow-hidden rounded-[16px] w-full"
       :class="isLarge ? 'aspect-[680/662]' : 'aspect-[470/550]'"
     >

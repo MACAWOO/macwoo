@@ -13,7 +13,7 @@ const isHovering = ref(false)
 const services = [
   { label: 'Branding & Design', to: '/services/branding-design' },
   { label: 'Digital Marketing', to: '/services/digital-marketing' },
-  { label: 'Video Production', to: '/services/video-production' },
+  { label: 'Video Production', to: '/services/video-production' }
 ]
 
 const route = useRoute()
@@ -25,7 +25,7 @@ const isPathActive = (path: string) => {
 
 // Move glass pill to hovered element
 const moveGlassTo = (event: MouseEvent) => {
-  const target = (event.currentTarget as HTMLElement)
+  const target = event.currentTarget as HTMLElement
   const container = navLinksRef.value
   if (!target || !container) return
 
@@ -88,9 +88,8 @@ watch(() => route.path, () => {
 </script>
 
 <template>
-  <header class="fixed left-0 right-0 z-50 top-[32px] w-full pointer-events-none">
+  <header class="fixed left-0 right-0 z-50 top-[24px] w-full pointer-events-none">
     <div class="w-full mx-auto px-8 md:px-16 lg:px-20 pointer-events-auto flex items-center justify-between gap-8">
-
       <!-- ── LOGO (fades out on scroll) ── -->
       <NuxtLink
         to="/"
@@ -102,7 +101,7 @@ watch(() => route.path, () => {
 
       <!-- ═══════════════════════ DESKTOP NAV PILL ═══════════════════════ -->
       <nav
-        class="hidden md:flex items-center gap-1 px-3 h-[56px] rounded-full"
+        class="hidden md:flex items-center gap-1 px-2.5 h-[46px] rounded-full"
         style="
           background: linear-gradient(90deg, #2094BA 0%, #2AA4C9 50%, #2095BB 100%);
           border: 1px solid rgba(255,255,255,0.18);
@@ -111,14 +110,12 @@ watch(() => route.path, () => {
             0 4px 24px rgba(0,0,0,0.10);
         "
       >
-
         <!-- ── Nav links wrapper (relative for glass pill) ── -->
         <div
           ref="navLinksRef"
           class="relative flex items-center gap-1"
           @mouseleave="resetGlass"
         >
-
           <!-- ▓▓ SLIDING GLASS PILL ▓▓ -->
           <div
             class="absolute top-0 h-full rounded-full pointer-events-none z-0 overflow-hidden"
@@ -133,39 +130,39 @@ watch(() => route.path, () => {
               border: '1px solid rgba(255,255,255,0.20)',
               backdropFilter: 'blur(40px) saturate(160%)',
               WebkitBackdropFilter: 'blur(40px) saturate(160%)',
-              boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.25), inset 0 -1px 1px rgba(255,255,255,0.04), 0 0 0 0.5px rgba(255,255,255,0.10), 0 8px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.10)',
+              boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.25), inset 0 -1px 1px rgba(255,255,255,0.04), 0 0 0 0.5px rgba(255,255,255,0.10), 0 8px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.10)'
             }"
           >
             <!-- top shine — soft diffused highlight -->
             <div
               class="absolute inset-x-0 top-0 h-[6px] rounded-t-full"
               style="background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 100%);"
-            ></div>
+            />
             <!-- inner refraction glow — primary -->
             <div
               class="absolute inset-0 rounded-full"
               style="background: radial-gradient(ellipse at 50% -30%, rgba(255,255,255,0.22) 0%, transparent 55%);"
-            ></div>
+            />
             <!-- refraction band — side-lit caustic -->
             <div
               class="absolute inset-0 rounded-full"
               style="background: linear-gradient(135deg, rgba(255,255,255,0.10) 0%, transparent 30%, transparent 70%, rgba(255,255,255,0.06) 100%);"
-            ></div>
+            />
             <!-- prismatic color shift — subtle rainbow refraction -->
             <div
               class="absolute inset-0 rounded-full opacity-[0.07]"
               style="background: linear-gradient(105deg, rgba(120,180,255,0.8) 0%, rgba(255,255,255,0) 25%, rgba(255,255,255,0) 75%, rgba(255,200,120,0.6) 100%);"
-            ></div>
+            />
             <!-- bottom reflection bar -->
             <div
               class="absolute inset-x-4 bottom-[2px] h-[1px] rounded-full opacity-35"
               style="background: linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.6) 50%, transparent 90%);"
-            ></div>
+            />
             <!-- edge light (outer ring glow) -->
             <div
               class="absolute -inset-[0.5px] rounded-full opacity-50 pointer-events-none"
               style="background: transparent; box-shadow: inset 0 0 6px rgba(255,255,255,0.15);"
-            ></div>
+            />
           </div>
 
           <!-- Home icon -->
@@ -173,11 +170,11 @@ watch(() => route.path, () => {
             to="/"
             aria-label="Home"
             :data-nav-active="isPathActive('/')"
-            class="relative z-10 flex items-center justify-center w-[52px] h-[46px] rounded-full transition-colors duration-200 group/home"
+            class="relative z-10 flex items-center justify-center w-[44px] h-[38px] rounded-full transition-colors duration-200 group/home"
             @mouseenter="moveGlassTo($event)"
           >
             <svg
-              class="w-[22px] h-[22px] text-white transition-transform duration-300 group-hover/home:scale-110"
+              class="w-[18px] h-[18px] text-white transition-transform duration-300 group-hover/home:scale-110"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -198,7 +195,7 @@ watch(() => route.path, () => {
             <NuxtLink
               to="/services/branding-design"
               :data-nav-active="isPathActive('/services')"
-              class="relative z-10 flex items-center justify-center px-5 h-[46px] rounded-full text-white text-[20px] font-normal select-none"
+              class="relative z-10 flex items-center justify-center px-4 h-[38px] rounded-full text-white text-[16px] font-normal select-none"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
               @mouseenter="moveGlassTo($event)"
             >
@@ -236,7 +233,7 @@ watch(() => route.path, () => {
           <NuxtLink
             to="/portfolio"
             :data-nav-active="isPathActive('/portfolio')"
-            class="relative z-10 flex items-center justify-center px-5 h-[46px] rounded-full text-white text-[20px] font-normal select-none"
+            class="relative z-10 flex items-center justify-center px-4 h-[38px] rounded-full text-white text-[16px] font-normal select-none"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
             @mouseenter="moveGlassTo($event)"
           >
@@ -247,7 +244,7 @@ watch(() => route.path, () => {
           <NuxtLink
             to="/case-studies"
             :data-nav-active="isPathActive('/case-studies')"
-            class="relative z-10 flex items-center justify-center px-5 h-[46px] rounded-full text-white text-[20px] font-normal select-none"
+            class="relative z-10 flex items-center justify-center px-4 h-[38px] rounded-full text-white text-[16px] font-normal select-none"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
             @mouseenter="moveGlassTo($event)"
           >
@@ -258,52 +255,75 @@ watch(() => route.path, () => {
           <NuxtLink
             to="/about"
             :data-nav-active="isPathActive('/about')"
-            class="relative z-10 flex items-center justify-center px-5 h-[46px] rounded-full text-white text-[20px] font-normal select-none"
+            class="relative z-10 flex items-center justify-center px-4 h-[38px] rounded-full text-white text-[16px] font-normal select-none"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
             @mouseenter="moveGlassTo($event)"
           >
             About
           </NuxtLink>
-
         </div>
 
         <!-- ── RIGHT: Get in Touch CTA ── -->
         <NuxtLink
           to="/contact"
-          class="shrink-0 flex items-center justify-between pl-7 pr-6 h-[40px] rounded-full bg-white text-black transition-all duration-300 ease-out group/cta ml-2 hover:-translate-y-[1px]"
+          class="shrink-0 flex items-center justify-between pl-5 pr-4 h-[32px] rounded-full bg-white text-black transition-all duration-300 ease-out group/cta ml-1 hover:-translate-y-[1px]"
         >
           <span
-            class="font-bold text-[20px] leading-none whitespace-nowrap select-none mr-5"
+            class="font-bold text-[16px] leading-none whitespace-nowrap select-none mr-3"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
           >Get in Touch</span>
           <svg
-            class="w-[16px] h-[16px] shrink-0 transition-transform duration-300 ease-out group-hover/cta:translate-x-[2px] group-hover/cta:-translate-y-[2px]"
+            class="w-[12px] h-[12px] shrink-0 transition-transform duration-300 ease-out group-hover/cta:translate-x-[2px] group-hover/cta:-translate-y-[2px]"
             viewBox="0 0 12 12"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M0.0349998 9.348L1.305 10.74L7.879 4.679C7.243 6.979 7.854 9.432 9.285 11.506L10.744 10.175C8.797 7.436 8.738 3.803 11.303 1.462L10.186 0.238C7.621 2.579 4.009 2.189 1.458 0L0 1.331C1.934 2.945 4.322 3.777 6.67 3.355L0.0349998 9.348Z" fill="currentColor" />
+            <path
+              d="M0.0349998 9.348L1.305 10.74L7.879 4.679C7.243 6.979 7.854 9.432 9.285 11.506L10.744 10.175C8.797 7.436 8.738 3.803 11.303 1.462L10.186 0.238C7.621 2.579 4.009 2.189 1.458 0L0 1.331C1.934 2.945 4.322 3.777 6.67 3.355L0.0349998 9.348Z"
+              fill="currentColor"
+            />
           </svg>
         </NuxtLink>
-
       </nav>
 
       <!-- ═══════════════════════ MOBILE NAV ═══════════════════════ -->
       <div
-        class="md:hidden flex items-center justify-between px-4 h-[58px] rounded-full w-full"
+        class="md:hidden flex items-center justify-between px-4 h-[46px] rounded-full w-full"
         style="background: linear-gradient(90deg, #2094BA 0%, #2AA4C9 50%, #2095BB 100%); border:1px solid rgba(255,255,255,0.18);"
       >
         <NavBarLogo class="shrink-0" />
         <button
-          class="text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+          class="text-white p-1.5 rounded-full hover:bg-white/10 transition-colors"
           aria-label="Toggle menu"
           @click="isMenuOpen = !isMenuOpen"
         >
-          <svg v-if="!isMenuOpen" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          <svg
+            v-if="!isMenuOpen"
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
           </svg>
-          <svg v-else class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          <svg
+            v-else
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
@@ -322,8 +342,14 @@ watch(() => route.path, () => {
           class="md:hidden mt-2 rounded-2xl overflow-hidden px-4 py-4 flex flex-col gap-2"
           style="background:rgba(18,40,70,0.92);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.12);"
         >
-          <NuxtLink to="/" class="text-white/80 hover:text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-white/8 transition-colors" @click="isMenuOpen = false">Home</NuxtLink>
-          <div class="text-white/40 text-xs font-semibold uppercase tracking-widest px-3 pt-1">Services</div>
+          <NuxtLink
+            to="/"
+            class="text-white/80 hover:text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-white/8 transition-colors"
+            @click="isMenuOpen = false"
+          >Home</NuxtLink>
+          <div class="text-white/40 text-xs font-semibold uppercase tracking-widest px-3 pt-1">
+            Services
+          </div>
           <NuxtLink
             v-for="service in services"
             :key="service.to"
@@ -332,9 +358,21 @@ watch(() => route.path, () => {
             @click="isMenuOpen = false"
           >{{ service.label }}</NuxtLink>
           <div class="border-t border-white/10 my-1" />
-          <NuxtLink to="/portfolio" class="text-white/80 hover:text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-white/8 transition-colors" @click="isMenuOpen = false">Portfolio</NuxtLink>
-          <NuxtLink to="/case-studies" class="text-white/80 hover:text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-white/8 transition-colors" @click="isMenuOpen = false">Case Studies</NuxtLink>
-          <NuxtLink to="/about" class="text-white/80 hover:text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-white/8 transition-colors" @click="isMenuOpen = false">About</NuxtLink>
+          <NuxtLink
+            to="/portfolio"
+            class="text-white/80 hover:text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-white/8 transition-colors"
+            @click="isMenuOpen = false"
+          >Portfolio</NuxtLink>
+          <NuxtLink
+            to="/case-studies"
+            class="text-white/80 hover:text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-white/8 transition-colors"
+            @click="isMenuOpen = false"
+          >Case Studies</NuxtLink>
+          <NuxtLink
+            to="/about"
+            class="text-white/80 hover:text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-white/8 transition-colors"
+            @click="isMenuOpen = false"
+          >About</NuxtLink>
           <div class="border-t border-white/10 my-1" />
           <NuxtLink
             to="/contact"
@@ -348,12 +386,14 @@ watch(() => route.path, () => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path d="M0.0349998 9.348L1.305 10.74L7.879 4.679C7.243 6.979 7.854 9.432 9.285 11.506L10.744 10.175C8.797 7.436 8.738 3.803 11.303 1.462L10.186 0.238C7.621 2.579 4.009 2.189 1.458 0L0 1.331C1.934 2.945 4.322 3.777 6.67 3.355L0.0349998 9.348Z" fill="currentColor" />
+              <path
+                d="M0.0349998 9.348L1.305 10.74L7.879 4.679C7.243 6.979 7.854 9.432 9.285 11.506L10.744 10.175C8.797 7.436 8.738 3.803 11.303 1.462L10.186 0.238C7.621 2.579 4.009 2.189 1.458 0L0 1.331C1.934 2.945 4.322 3.777 6.67 3.355L0.0349998 9.348Z"
+                fill="currentColor"
+              />
             </svg>
           </NuxtLink>
         </div>
       </Transition>
-
     </div>
   </header>
 </template>

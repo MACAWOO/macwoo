@@ -90,7 +90,10 @@ function sendMessage() {
       :class="!isOpen ? 'rounded-br-none' : ''"
       @click="isOpen = !isOpen"
     >
-      <span v-if="!isOpen" class="text-brand-dark font-bold text-2xl select-none leading-none">m</span>
+      <span
+        v-if="!isOpen"
+        class="text-brand-dark font-bold text-2xl select-none leading-none"
+      >m</span>
       <svg
         v-else
         class="w-6 h-6 text-brand-dark"

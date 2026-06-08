@@ -5,7 +5,6 @@ const { projects, pending } = useFeaturedProjects()
 <template>
   <section class="py-16 md:py-20 bg-[#1D96B8]">
     <div class="max-w-[1201px] mx-auto px-6 md:px-8">
-
       <!-- ── Header ── -->
       <div class="text-center max-w-[700px] mx-auto mb-14 md:mb-16">
         <h2
@@ -32,13 +31,13 @@ const { projects, pending } = useFeaturedProjects()
           :key="i"
           :class="[
             'animate-pulse w-full',
-            (i - 1) % 4 === 0 || (i - 1) % 4 === 3 
-              ? 'md:w-[calc((100%-28px)*0.5459)]' 
+            (i - 1) % 4 === 0 || (i - 1) % 4 === 3
+              ? 'md:w-[calc((100%-28px)*0.5459)]'
               : 'md:w-[calc((100%-28px)*0.4541)]'
           ]"
         >
-          <div 
-            class="rounded-[16px] w-full bg-white/15" 
+          <div
+            class="rounded-[16px] w-full bg-white/15"
             :class="(i - 1) % 4 === 0 || (i - 1) % 4 === 3 ? 'aspect-[680/662]' : 'aspect-[470/550]'"
           />
           <div class="mt-3 space-y-2">
@@ -60,8 +59,8 @@ const { projects, pending } = useFeaturedProjects()
           :is-large="index % 4 === 0 || index % 4 === 3"
           :class="[
             'w-full',
-            index % 4 === 0 || index % 4 === 3 
-              ? 'md:w-[calc((100%-28px)*0.5459)]' 
+            index % 4 === 0 || index % 4 === 3
+              ? 'md:w-[calc((100%-28px)*0.5459)]'
               : 'md:w-[calc((100%-28px)*0.4541)]'
           ]"
         />
@@ -81,11 +80,13 @@ const { projects, pending } = useFeaturedProjects()
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M0.0349998 9.348L1.305 10.74L7.879 4.679C7.243 6.979 7.854 9.432 9.285 11.506L10.744 10.175C8.797 7.436 8.738 3.803 11.303 1.462L10.186 0.238C7.621 2.579 4.009 2.189 1.458 0L0 1.331C1.934 2.945 4.322 3.777 6.67 3.355L0.0349998 9.348Z" fill="currentColor" />
+            <path
+              d="M0.0349998 9.348L1.305 10.74L7.879 4.679C7.243 6.979 7.854 9.432 9.285 11.506L10.744 10.175C8.797 7.436 8.738 3.803 11.303 1.462L10.186 0.238C7.621 2.579 4.009 2.189 1.458 0L0 1.331C1.934 2.945 4.322 3.777 6.67 3.355L0.0349998 9.348Z"
+              fill="currentColor"
+            />
           </svg>
         </NuxtLink>
       </div>
-
     </div>
   </section>
 </template>

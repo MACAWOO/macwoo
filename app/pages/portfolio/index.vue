@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { projects } from '~/data/portfolio'
+const { projects } = usePortfolio()
 
 useSeoMeta({
   title: 'Portfolio — Macawoo',
@@ -11,8 +11,8 @@ const activeFilter = ref<'All' | 'Branding' | 'Marketing' | 'Video Production'>(
 const filters = ['All', 'Branding', 'Marketing', 'Video Production'] as const
 
 const filtered = computed(() => {
-  if (activeFilter.value === 'All') return projects
-  return projects.filter((p) => {
+  if (activeFilter.value === 'All') return projects.value
+  return projects.value.filter((p) => {
     if (activeFilter.value === 'Branding') return p.category === 'Branding'
     if (activeFilter.value === 'Marketing') return p.category === 'Marketing'
     if (activeFilter.value === 'Video Production') return p.category === 'Video Production'

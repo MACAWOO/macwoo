@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { projects } from '~/data/portfolio'
+const { projects } = usePortfolio()
 
 const route = useRoute()
 const slug = route.params.slug as string
-const project = projects.find(p => p.slug === slug)
+const project = computed(() => projects.value.find(p => p.slug === slug))
 
-if (!project) {
-  throw createError({ statusCode: 404, message: 'Project not found' })
+if (!project.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Project not found', fatal: true })
 }
 
 useSeoMeta({
-  title: `${project.title} — Macawoo Portfolio`,
-  description: project.subtitle
+  title: () => project.value ? `${project.value.title} — Macawoo Portfolio` : 'Macawoo Portfolio',
+  description: () => project.value ? project.value.subtitle : ''
 })
 
 const galleryIndex = ref(0)
