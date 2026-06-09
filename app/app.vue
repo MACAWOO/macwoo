@@ -1,4 +1,6 @@
 <script setup>
+const route = useRoute()
+
 useHead({
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
@@ -28,7 +30,7 @@ useSeoMeta({
 
 <template>
   <UApp>
-    <AppHeader />
+    <AppHeader v-if="route.path !== '/careers'" />
     <main>
       <NuxtPage />
     </main>
@@ -36,3 +38,4 @@ useSeoMeta({
     <ChatWidget />
   </UApp>
 </template>
+

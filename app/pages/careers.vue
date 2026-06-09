@@ -3,94 +3,81 @@ const { jobs } = useCareers()
 
 useSeoMeta({
   title: 'Careers — Macawoo',
-  description: 'Build your future with Macawoo. We are a collection of creatives, thinkers, and storytellers who push each other to lead high-impact initiatives.'
+  description: 'Build your future with Macawoo. We are a collection of visionaries, builders, and storytellers. Join us in crafting digital experiences that demand attention and drive transformation.'
 })
 
 const isModalOpen = ref(false)
 </script>
 
 <template>
-  <div>
+  <div class="relative bg-brand-dark">
+    <!-- Absolute Back button -->
+    <NuxtLink
+      to="/"
+      class="absolute top-8 left-8 z-30 inline-flex items-center gap-2 px-5 py-2.5 bg-white text-brand-dark rounded-full text-sm font-bold shadow-md hover:scale-105 hover:bg-zinc-50 transition-all cursor-pointer border border-zinc-200/50"
+    >
+      <UIcon name="i-lucide-arrow-left" class="w-4 h-4 text-brand-dark" />
+      Back
+    </NuxtLink>
+
+    <!-- Page Hero -->
     <PageHero
-      variant="teal"
-      title-html="Build Your Future<br>With <em class='not-italic text-brand-yellow-500'>Macawoo</em>"
+      title-html="<span class='text-brand-yellow-500'>Build Your Future<br>With Macawoo</span>"
       video="/Background%20Videos/Careers.mp4"
-      image="/Images/Marketing.jpeg"
-      description="We are a collection of creatives, thinkers, and storytellers. Your work isn't just a project — it's a strategic asset."
-      :ctas="[{ label: 'View Open Roles ↓', to: '#open-roles' }]"
+      description="We are a collection of visionaries, builders, and storytellers. Join us in crafting digital experiences that demand attention and drive transformation."
+      :ctas="[{ label: 'View Open Roles ↓', to: '#open-roles', variant: 'white' }]"
+      show-grid
+      min-height=""
+      class="custom-hero-ratio"
     />
 
     <!-- We Engineer Digital Excellence -->
-    <section class="py-20 bg-white">
+    <section class="py-20 bg-[#1D96B8] text-white">
       <div class="max-w-7xl mx-auto px-6">
-        <div class="flex flex-col md:flex-row gap-12 items-start">
-          <div class="md:w-2/3">
-            <h2 class="text-3xl md:text-4xl font-bold text-brand-teal-500 mb-6 leading-snug">
+        <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
+          <!-- Left side Content (2/3 width on desktop) -->
+          <div class="lg:w-7/12 flex flex-col items-start">
+            <h2 class="text-3xl md:text-[46px] font-bold text-brand-yellow-500 mb-6 leading-tight font-sans uppercase tracking-wide">
               We Engineer<br>Digital Excellence.
             </h2>
-            <p class="text-zinc-600 text-base leading-relaxed mb-10 max-w-xl">
-              At Macawoo, we don't just execute; we architect. We value raw creative energy paired with executive-level precision. Here, your work isn't just a project — it's a strategic asset for ambitious founders. We foster an environment where bold ideas are stress-tested and brilliant execution is the baseline.
+            <p class="text-white text-base md:text-lg leading-relaxed mb-10 max-w-xl font-sans font-normal">
+              At Macawoo, we don't just execute; we architect. We value raw creative energy paired with executive-level precision. Here, your work isn't just a project—it's a strategic asset for ambitious founders. We foster an environment where bold ideas are stress-tested and brilliant execution is the baseline.
             </p>
-            <div class="grid sm:grid-cols-2 gap-6">
-              <div class="bg-zinc-50 rounded-2xl p-6">
-                <div class="flex gap-3 items-start">
-                  <div class="w-8 h-8 bg-brand-yellow-500 rounded-lg flex items-center justify-center shrink-0">
-                    <svg
-                      class="w-4 h-4 text-brand-dark"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                      />
-                    </svg>
+            <!-- Two yellow cards -->
+            <div class="grid sm:grid-cols-2 gap-6 w-full">
+              <div class="bg-brand-yellow-500 text-brand-dark rounded-2xl p-6 shadow-sm flex flex-col justify-between min-h-[140px]">
+                <div>
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mb-3">
+                    <UIcon name="i-lucide-rocket" class="w-6 h-6 text-brand-dark" />
                   </div>
-                  <div>
-                    <h3 class="font-bold text-brand-dark text-sm mb-1">
-                      Accelerated Growth
-                    </h3>
-                    <p class="text-zinc-500 text-xs leading-relaxed">
-                      Continuous learning and opportunities to lead high-impact initiatives.
-                    </p>
-                  </div>
+                  <h3 class="font-bold text-brand-dark text-sm mb-1 uppercase tracking-wider">
+                    Accelerated Growth
+                  </h3>
+                  <p class="text-brand-dark/80 text-xs leading-relaxed font-medium">
+                    Continuous learning and opportunities to lead high-impact initiatives.
+                  </p>
                 </div>
               </div>
-              <div class="bg-zinc-50 rounded-2xl p-6">
-                <div class="flex gap-3 items-start">
-                  <div class="w-8 h-8 bg-brand-yellow-500 rounded-lg flex items-center justify-center shrink-0">
-                    <svg
-                      class="w-4 h-4 text-brand-dark"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
+              <div class="bg-brand-yellow-500 text-brand-dark rounded-2xl p-6 shadow-sm flex flex-col justify-between min-h-[140px]">
+                <div>
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mb-3">
+                    <UIcon name="i-lucide-users" class="w-6 h-6 text-brand-dark" />
                   </div>
-                  <div>
-                    <h3 class="font-bold text-brand-dark text-sm mb-1">
-                      Visionary Team
-                    </h3>
-                    <p class="text-zinc-500 text-xs leading-relaxed">
-                      Collaborate with top-tier talent pushing the boundaries of design and tech.
-                    </p>
-                  </div>
+                  <h3 class="font-bold text-brand-dark text-sm mb-1 uppercase tracking-wider">
+                    Visionary Team
+                  </h3>
+                  <p class="text-brand-dark/80 text-xs leading-relaxed font-medium">
+                    Collaborate with top-tier talent pushing the boundaries of design and tech.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="md:w-1/3 flex justify-center md:justify-end">
-            <div class="w-32 h-32 bg-brand-yellow-500 rounded-3xl flex items-center justify-center">
-              <span class="text-brand-dark font-bold text-7xl leading-none">m</span>
+
+          <!-- Right side Placeholder Card (1/3 width on desktop) -->
+          <div class="lg:w-5/12 w-full flex justify-center lg:justify-end">
+            <div class="relative w-full max-w-[380px] aspect-[3/4] bg-zinc-200 rounded-[2.5rem] shadow-md border border-white/10">
+            
             </div>
           </div>
         </div>
@@ -100,38 +87,46 @@ const isModalOpen = ref(false)
     <!-- Open Roles -->
     <section
       id="open-roles"
-      class="py-16 bg-zinc-50"
+      class="py-20 bg-[#1D96B8] text-white"
     >
       <div class="max-w-7xl mx-auto px-6">
-        <h2 class="text-2xl md:text-3xl font-bold text-brand-dark mb-2">
+        <h2 class="text-3xl md:text-[46px] font-bold text-brand-yellow-500 mb-2 uppercase tracking-wide">
           Open Roles
         </h2>
-        <p class="text-zinc-500 text-sm mb-10">
-          Find your place among the extraordinary.
+        <p class="text-white/80 text-sm mb-12">
+          Find your place among the visionaries.
         </p>
 
-        <div class="space-y-4">
+        <div class="border-t border-brand-yellow-500">
           <div
             v-for="job in jobs"
             :key="job.id"
-            class="bg-white rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center gap-4 hover:shadow-md transition-shadow"
+            class="border-b border-brand-yellow-500 py-8 flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer group transition-colors duration-200"
+            @click="isModalOpen = true"
           >
+            <!-- Left Side: Dept/Loc + Job Title -->
             <div class="flex-1">
-              <p class="text-zinc-500 text-xs mb-1">
+              <p class="text-white/70 text-xs font-semibold uppercase tracking-wider mb-2">
                 {{ job.department }} · {{ job.location }}
               </p>
-              <h3 class="text-xl md:text-2xl font-bold text-brand-teal-500">
+              <h3 class="text-2xl md:text-3xl lg:text-[36px] font-bold text-brand-yellow-500 uppercase tracking-wide group-hover:text-white transition-colors duration-200">
                 {{ job.title }}
               </h3>
             </div>
-            <div class="flex items-center gap-3 shrink-0">
-              <span class="text-xs font-medium text-zinc-500 bg-zinc-100 px-3 py-1.5 rounded-full">{{ job.experience }}</span>
-              <button
-                class="px-5 py-2 bg-brand-yellow-500 text-brand-dark text-sm font-bold rounded-full hover:bg-brand-yellow-400 transition-colors flex items-center gap-2"
-                @click="isModalOpen = true"
-              >
-                Apply Now ↗
-              </button>
+
+            <!-- Right Side: Experience + Type Pill + Yellow Arrow -->
+            <div class="flex items-center gap-6 md:gap-8 shrink-0 flex-wrap sm:flex-nowrap">
+              <span class="text-white text-sm md:text-base font-semibold tracking-wide">
+                {{ job.experience }}
+              </span>
+              <span class="text-white text-xs font-bold border border-white px-5 py-2 rounded-full tracking-wider uppercase">
+                {{ job.type }}
+              </span>
+              <!-- Arrow icon -->
+              <UIcon
+                name="i-lucide-arrow-up-right"
+                class="w-8 h-8 md:w-10 md:h-10 text-brand-yellow-500 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 duration-200"
+              />
             </div>
           </div>
         </div>
