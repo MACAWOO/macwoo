@@ -13,7 +13,10 @@ const isYellowFooter = computed(() => isCareers.value || route.path === '/portfo
       <div class="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
         <!-- Navigation -->
         <div>
-          <h4 class="font-bold text-base md:text-lg mb-5" :class="isYellowFooter ? 'text-brand-dark' : 'text-white'">
+          <h4
+            class="font-bold text-base md:text-lg mb-5"
+            :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+          >
             Navigation
           </h4>
           <ul class="space-y-3">
@@ -64,7 +67,10 @@ const isYellowFooter = computed(() => isCareers.value || route.path === '/portfo
 
         <!-- Services -->
         <div>
-          <h4 class="font-bold text-base md:text-lg mb-5" :class="isYellowFooter ? 'text-brand-dark' : 'text-white'">
+          <h4
+            class="font-bold text-base md:text-lg mb-5"
+            :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+          >
             Services
           </h4>
           <ul class="space-y-3">
@@ -94,20 +100,35 @@ const isYellowFooter = computed(() => isCareers.value || route.path === '/portfo
 
         <!-- Contact -->
         <div>
-          <h4 class="font-bold text-base md:text-lg mb-5" :class="isYellowFooter ? 'text-brand-dark' : 'text-white'">
+          <h4
+            class="font-bold text-base md:text-lg mb-5"
+            :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+          >
             Contact
           </h4>
           <ul class="space-y-3">
-            <li :class="isYellowFooter ? 'text-brand-dark' : 'text-white'" class="text-sm md:text-base">
+            <li
+              :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+              class="text-sm md:text-base"
+            >
               Phone Number:
             </li>
-            <li :class="isYellowFooter ? 'text-brand-dark' : 'text-white'" class="text-sm md:text-base font-semibold">
+            <li
+              :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+              class="text-sm md:text-base font-semibold"
+            >
               +91 9747477502
             </li>
-            <li :class="isYellowFooter ? 'text-brand-dark' : 'text-white'" class="text-sm md:text-base pt-2">
+            <li
+              :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+              class="text-sm md:text-base pt-2"
+            >
               Email Id:
             </li>
-            <li :class="isYellowFooter ? 'text-brand-dark' : 'text-white'" class="text-sm md:text-base break-all">
+            <li
+              :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+              class="text-sm md:text-base break-all"
+            >
               macawooofficial@gmail.com
             </li>
           </ul>
@@ -116,10 +137,16 @@ const isYellowFooter = computed(() => isCareers.value || route.path === '/portfo
         <!-- Address + Social -->
         <div>
           <div class="flex items-center justify-between gap-4 mb-5">
-            <h4 class="font-bold text-base md:text-lg" :class="isYellowFooter ? 'text-brand-dark' : 'text-white'">
+            <h4
+              class="font-bold text-base md:text-lg"
+              :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+            >
               Address
             </h4>
-            <div class="flex items-center gap-3" :class="isYellowFooter ? 'text-brand-dark' : 'text-white'">
+            <div
+              class="flex items-center gap-3"
+              :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+            >
               <a
                 href="#"
                 aria-label="Facebook"
@@ -161,7 +188,10 @@ const isYellowFooter = computed(() => isCareers.value || route.path === '/portfo
               </a>
             </div>
           </div>
-          <p class="text-sm md:text-base" :class="isYellowFooter ? 'text-brand-dark' : 'text-white'">
+          <p
+            class="text-sm md:text-base"
+            :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+          >
             Kerala | UAE
           </p>
         </div>

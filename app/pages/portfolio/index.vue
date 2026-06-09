@@ -103,44 +103,12 @@ const pairs = computed(() => {
       <!-- Pagination -->
       <div class="max-w-[1200px] mx-auto px-6 pb-16 flex justify-end">
         <div class="flex items-center gap-3">
-          <button class="w-[41px] h-[41px] rounded-full flex items-center justify-center hover:opacity-80 transition-opacity">
-            <svg
-              class="w-[41px] h-[41px] rotate-180"
-              viewBox="0 0 76 76"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle
-                cx="38"
-                cy="38"
-                r="34"
-                fill="white"
-              />
-              <path
-                d="M23.7001 36.4138L23.6507 40.3664L42.405 40.4601C38.1352 43.0818 35.5561 47.7211 34.7762 52.9509L38.9181 52.9934C39.8606 46.005 44.9759 40.3433 52.2592 40.4165L52.3021 36.9405C45.0189 36.8673 40.0452 31.1047 39.2744 24.0972L35.134 24.0561C35.7836 29.2988 38.2492 33.9901 42.4503 36.6991L23.7001 36.4138Z"
-                fill="#141111"
-              />
-            </svg>
+          <button class="w-[41px] h-[41px] rounded-full flex items-center justify-center bg-white shadow-[0_2px_8px_rgba(0,0,0,0.12)] hover:opacity-80 transition-opacity">
+            <LeftArrow class="w-[45%] h-[45%]" />
           </button>
           <span class="font-medium text-white text-lg">Page: 01</span>
-          <button class="w-[41px] h-[41px] rounded-full flex items-center justify-center hover:opacity-80 transition-opacity">
-            <svg
-              class="w-[41px] h-[41px]"
-              viewBox="0 0 76 76"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle
-                cx="38"
-                cy="38"
-                r="34"
-                fill="white"
-              />
-              <path
-                d="M23.7001 36.4138L23.6507 40.3664L42.405 40.4601C38.1352 43.0818 35.5561 47.7211 34.7762 52.9509L38.9181 52.9934C39.8606 46.005 44.9759 40.3433 52.2592 40.4165L52.3021 36.9405C45.0189 36.8673 40.0452 31.1047 39.2744 24.0972L35.134 24.0561C35.7836 29.2988 38.2492 33.9901 42.4503 36.6991L23.7001 36.4138Z"
-                fill="#141111"
-              />
-            </svg>
+          <button class="w-[41px] h-[41px] rounded-full flex items-center justify-center bg-white shadow-[0_2px_8px_rgba(0,0,0,0.12)] hover:opacity-80 transition-opacity">
+            <RightArrow class="w-[45%] h-[45%]" />
           </button>
         </div>
       </div>

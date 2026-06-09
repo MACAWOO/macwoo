@@ -95,7 +95,7 @@ useSeoMeta({
         <!-- Cards Grid Container -->
         <div class="relative">
           <!-- Connecting Line (Desktop) -->
-          <div class="hidden md:block absolute left-[15%] right-[15%] top-16 h-[2px] border-t-2 border-dashed border-[#1D96B8]/30 z-0"></div>
+          <div class="hidden md:block absolute left-[15%] right-[15%] top-16 h-[2px] border-t-2 border-dashed border-[#1D96B8]/30 z-0" />
 
           <!-- Cards Grid -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
@@ -105,7 +105,10 @@ useSeoMeta({
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
               <div class="w-12 h-12 rounded-full border border-white/30 bg-[#1D96B8] flex items-center justify-center text-white mb-6 relative z-10">
-                <UIcon name="i-lucide-compass" class="w-6 h-6" />
+                <UIcon
+                  name="i-lucide-compass"
+                  class="w-6 h-6"
+                />
               </div>
               <h3 class="font-bold text-xl md:text-2xl mb-3">
                 Strategy
@@ -121,7 +124,10 @@ useSeoMeta({
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
               <div class="w-12 h-12 rounded-full border border-white/30 bg-[#1D96B8] flex items-center justify-center text-white mb-6 relative z-10">
-                <UIcon name="i-lucide-palette" class="w-6 h-6" />
+                <UIcon
+                  name="i-lucide-palette"
+                  class="w-6 h-6"
+                />
               </div>
               <h3 class="font-bold text-xl md:text-2xl mb-3">
                 Creativity
@@ -137,7 +143,10 @@ useSeoMeta({
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
               <div class="w-12 h-12 rounded-full border border-white/30 bg-[#1D96B8] flex items-center justify-center text-white mb-6 relative z-10">
-                <UIcon name="i-lucide-trending-up" class="w-6 h-6" />
+                <UIcon
+                  name="i-lucide-trending-up"
+                  class="w-6 h-6"
+                />
               </div>
               <h3 class="font-bold text-xl md:text-2xl mb-3">
                 Growth

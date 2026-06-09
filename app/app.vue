@@ -38,4 +38,3 @@ useSeoMeta({
     <ChatWidget />
   </UApp>
 </template>
-

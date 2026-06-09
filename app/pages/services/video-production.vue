@@ -89,68 +89,9 @@ const logos = [
         :to="prevTo"
         class="absolute left-4 md:left-[120px] top-1/2 -translate-y-1/2 z-20 w-[48px] h-[48px] md:w-[68px] md:h-[68px] flex items-center justify-center hover:scale-105 transition-transform"
       >
-        <svg
-          class="w-full h-full -scale-x-100"
-          viewBox="0 0 76 76"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g filter="url(#filterLeftArrowVP)">
-            <circle
-              cx="38"
-              cy="38"
-              r="34"
-              fill="white"
-            />
-          </g>
-          <path
-            d="M23.7001 36.4138L23.6507 40.3664L42.405 40.4601C38.1352 43.0818 35.5561 47.7211 34.7762 52.9509L38.9181 52.9934C39.8606 46.005 44.9759 40.3433 52.2592 40.4165L52.3021 36.9405C45.0189 36.8673 40.0452 31.1047 39.2744 24.0972L35.134 24.0561C35.7836 29.2988 38.2492 33.9901 42.4503 36.6991L23.7001 36.4138Z"
-            fill="#141111"
-          />
-          <defs>
-            <filter
-              id="filterLeftArrowVP"
-              x="0"
-              y="0"
-              width="76"
-              height="76"
-              filterUnits="userSpaceOnUse"
-              color-interpolation-filters="sRGB"
-            >
-              <feFlood
-                flood-opacity="0"
-                result="BackgroundImageFix"
-              />
-              <feColorMatrix
-                in="SourceAlpha"
-                type="matrix"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                result="hardAlpha"
-              />
-              <feOffset />
-              <feGaussianBlur stdDeviation="2" />
-              <feComposite
-                in2="hardAlpha"
-                operator="out"
-              />
-              <feColorMatrix
-                type="matrix"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
-              />
-              <feBlend
-                mode="normal"
-                in2="BackgroundImageFix"
-                result="effect1_dropShadow_165_405"
-              />
-              <feBlend
-                mode="normal"
-                in="SourceGraphic"
-                in2="effect1_dropShadow_165_405"
-                result="shape"
-              />
-            </filter>
-          </defs>
-        </svg>
+        <div class="w-full h-full rounded-full bg-white flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.12)]">
+          <LeftArrow class="w-[38%] h-[38%]" />
+        </div>
       </NuxtLink>
 
       <!-- Right Arrow -->
@@ -158,68 +99,9 @@ const logos = [
         :to="nextTo"
         class="absolute right-4 md:right-[120px] top-1/2 -translate-y-1/2 z-20 w-[48px] h-[48px] md:w-[68px] md:h-[68px] flex items-center justify-center hover:scale-105 transition-transform"
       >
-        <svg
-          class="w-full h-full"
-          viewBox="0 0 76 76"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g filter="url(#filterRightArrowVP)">
-            <circle
-              cx="38"
-              cy="38"
-              r="34"
-              fill="white"
-            />
-          </g>
-          <path
-            d="M23.7001 36.4138L23.6507 40.3664L42.405 40.4601C38.1352 43.0818 35.5561 47.7211 34.7762 52.9509L38.9181 52.9934C39.8606 46.005 44.9759 40.3433 52.2592 40.4165L52.3021 36.9405C45.0189 36.8673 40.0452 31.1047 39.2744 24.0972L35.134 24.0561C35.7836 29.2988 38.2492 33.9901 42.4503 36.6991L23.7001 36.4138Z"
-            fill="#141111"
-          />
-          <defs>
-            <filter
-              id="filterRightArrowVP"
-              x="0"
-              y="0"
-              width="76"
-              height="76"
-              filterUnits="userSpaceOnUse"
-              color-interpolation-filters="sRGB"
-            >
-              <feFlood
-                flood-opacity="0"
-                result="BackgroundImageFix"
-              />
-              <feColorMatrix
-                in="SourceAlpha"
-                type="matrix"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                result="hardAlpha"
-              />
-              <feOffset />
-              <feGaussianBlur stdDeviation="2" />
-              <feComposite
-                in2="hardAlpha"
-                operator="out"
-              />
-              <feColorMatrix
-                type="matrix"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
-              />
-              <feBlend
-                mode="normal"
-                in2="BackgroundImageFix"
-                result="effect1_dropShadow_165_405"
-              />
-              <feBlend
-                mode="normal"
-                in="SourceGraphic"
-                in2="effect1_dropShadow_165_405"
-                result="shape"
-              />
-            </filter>
-          </defs>
-        </svg>
+        <div class="w-full h-full rounded-full bg-white flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.12)]">
+          <RightArrow class="w-[38%] h-[38%]" />
+        </div>
       </NuxtLink>
     </section>
 
@@ -345,16 +227,10 @@ const logos = [
           style="font-family: 'Bricolage Grotesque', sans-serif; box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);"
         >
           <span>Start Your Project</span>
-          <svg
+          <UpRightArrow
             class="w-[20px] h-[19px] md:w-[25px] md:h-[23px]"
-            viewBox="0 0 12 12"
-            fill="none"
-          >
-            <path
-              d="M0.0349998 9.348L1.305 10.74L7.879 4.679C7.243 6.979 7.854 9.432 9.285 11.506L10.744 10.175C8.797 7.436 8.738 3.803 11.303 1.462L10.186 0.238C7.621 2.579 4.009 2.189 1.458 0L0 1.331C1.934 2.945 4.322 3.777 6.67 3.355L0.0349998 9.348Z"
-              fill="#141111"
-            />
-          </svg>
+            fill="#141111"
+          />
         </NuxtLink>
       </div>
     </section>

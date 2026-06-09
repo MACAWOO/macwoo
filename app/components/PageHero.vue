@@ -31,7 +31,7 @@ withDefaults(defineProps<Props>(), {
   <section
     class="relative w-full flex items-center overflow-hidden bg-brand-dark"
     :class="[
-      minHeight,
+      minHeight
     ]"
   >
     <!-- Video background -->
@@ -50,8 +50,20 @@ withDefaults(defineProps<Props>(), {
       >
     </video>
 
+    <!-- Single Backdrop Blur Overlay for high-performance scrolling -->
+    <div
+      v-if="showGrid"
+      class="absolute inset-0 pointer-events-none z-[4]"
+      style="backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);"
+      aria-hidden="true"
+    />
+
     <!-- Premium Glass Panel Overlay -->
-    <div v-if="showGrid" class="absolute inset-0 pointer-events-none z-[5] flex items-center justify-start overflow-hidden w-full h-full" aria-hidden="true">
+    <div
+      v-if="showGrid"
+      class="absolute inset-0 pointer-events-none z-[5] flex items-center justify-start overflow-hidden w-full h-full"
+      aria-hidden="true"
+    >
       <div
         v-for="i in 53"
         :key="i"
@@ -67,7 +79,13 @@ withDefaults(defineProps<Props>(), {
           xmlns="http://www.w3.org/2000/svg"
           preserveAspectRatio="none"
         >
-          <rect y="-96" width="29" height="519" fill="#1E1E1E" fill-opacity="0.2"/>
+          <rect
+            y="-96"
+            width="29"
+            height="519"
+            fill="#1E1E1E"
+            fill-opacity="0.2"
+          />
         </svg>
       </div>
     </div>
@@ -80,7 +98,6 @@ withDefaults(defineProps<Props>(), {
       class="absolute inset-0 w-full h-full object-cover opacity-30"
     >
 
-  
     <!-- Left Arrow -->
     <NuxtLink
       v-if="showArrows && prevTo"
@@ -272,13 +289,23 @@ withDefaults(defineProps<Props>(), {
     </div>
 
     <!-- SVG Displacement Filters for Flat Glass Rectangle Refraction -->
-    <svg class="absolute w-0 h-0 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      class="absolute w-0 h-0 pointer-events-none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <defs>
-        <!-- 
-          Left displacement filter: shifts the background flatly to the left 
+        <!--
+          Left displacement filter: shifts the background flatly to the left
           inside the column, returning to 0 at the beveled outer edges.
         -->
-        <filter id="glass-dispersion-left" x="-20%" y="-10%" width="140%" height="120%" filterUnits="objectBoundingBox">
+        <filter
+          id="glass-dispersion-left"
+          x="-20%"
+          y="-10%"
+          width="140%"
+          height="120%"
+          filterUnits="objectBoundingBox"
+        >
           <feImage
             href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0%25' stop-color='%23808080'/%3E%3Cstop offset='8%25' stop-color='%23588080'/%3E%3Cstop offset='92%25' stop-color='%23588080'/%3E%3Cstop offset='100%25' stop-color='%23808080'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23g)'/%3E%3C/svg%3E"
             result="dispMap"
@@ -296,19 +323,60 @@ withDefaults(defineProps<Props>(), {
             yChannelSelector="G"
             result="displaced"
           />
-          <feOffset dx="-5.5" dy="-3.5" in="displaced" result="red" />
-          <feColorMatrix type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" in="red" result="red-only" />
-          
-          <feOffset dx="5.5" dy="3.5" in="displaced" result="blue" />
-          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" in="blue" result="blue-only" />
-          
-          <feColorMatrix type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" in="displaced" result="green-only" />
-          
-          <feBlend mode="screen" in="red-only" in2="green-only" result="rg" />
-          <feBlend mode="screen" in="rg" in2="blue-only" />
+          <feOffset
+            dx="-5.5"
+            dy="-3.5"
+            in="displaced"
+            result="red"
+          />
+          <feColorMatrix
+            type="matrix"
+            values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
+            in="red"
+            result="red-only"
+          />
+
+          <feOffset
+            dx="5.5"
+            dy="3.5"
+            in="displaced"
+            result="blue"
+          />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0"
+            in="blue"
+            result="blue-only"
+          />
+
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0"
+            in="displaced"
+            result="green-only"
+          />
+
+          <feBlend
+            mode="screen"
+            in="red-only"
+            in2="green-only"
+            result="rg"
+          />
+          <feBlend
+            mode="screen"
+            in="rg"
+            in2="blue-only"
+          />
         </filter>
-        
-        <filter id="glass-dispersion-right" x="-20%" y="-10%" width="140%" height="120%" filterUnits="objectBoundingBox">
+
+        <filter
+          id="glass-dispersion-right"
+          x="-20%"
+          y="-10%"
+          width="140%"
+          height="120%"
+          filterUnits="objectBoundingBox"
+        >
           <feImage
             href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0%25' stop-color='%23808080'/%3E%3Cstop offset='8%25' stop-color='%23a88080'/%3E%3Cstop offset='92%25' stop-color='%23a88080'/%3E%3Cstop offset='100%25' stop-color='%23808080'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23g)'/%3E%3C/svg%3E"
             result="dispMap"
@@ -326,16 +394,50 @@ withDefaults(defineProps<Props>(), {
             yChannelSelector="G"
             result="displaced"
           />
-          <feOffset dx="-5.5" dy="-3.5" in="displaced" result="red" />
-          <feColorMatrix type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" in="red" result="red-only" />
-          
-          <feOffset dx="5.5" dy="3.5" in="displaced" result="blue" />
-          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" in="blue" result="blue-only" />
-          
-          <feColorMatrix type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" in="displaced" result="green-only" />
-          
-          <feBlend mode="screen" in="red-only" in2="green-only" result="rg" />
-          <feBlend mode="screen" in="rg" in2="blue-only" />
+          <feOffset
+            dx="-5.5"
+            dy="-3.5"
+            in="displaced"
+            result="red"
+          />
+          <feColorMatrix
+            type="matrix"
+            values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
+            in="red"
+            result="red-only"
+          />
+
+          <feOffset
+            dx="5.5"
+            dy="3.5"
+            in="displaced"
+            result="blue"
+          />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0"
+            in="blue"
+            result="blue-only"
+          />
+
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0"
+            in="displaced"
+            result="green-only"
+          />
+
+          <feBlend
+            mode="screen"
+            in="red-only"
+            in2="green-only"
+            result="rg"
+          />
+          <feBlend
+            mode="screen"
+            in="rg"
+            in2="blue-only"
+          />
         </filter>
       </defs>
     </svg>
@@ -379,10 +481,8 @@ withDefaults(defineProps<Props>(), {
     transparent 35%,
     transparent 100%
   );
-  backdrop-filter: url(#glass-dispersion-left) blur(16px);
-  -webkit-backdrop-filter: url(#glass-dispersion-left) blur(16px);
   /* Glass bevel shadows and reflective highlights */
-  box-shadow: 
+  box-shadow:
     1.5px 0 0 rgba(255, 255, 255, 0.18), /* Reflective white shadow/highlight on the right */
     4px 0 8px rgba(0, 0, 0, 0.4);         /* Shadow cast to the right */
 }
@@ -395,10 +495,8 @@ withDefaults(defineProps<Props>(), {
     transparent 35%,
     transparent 100%
   );
-  backdrop-filter: url(#glass-dispersion-right) blur(16px);
-  -webkit-backdrop-filter: url(#glass-dispersion-right) blur(16px);
   /* Glass bevel shadows and reflective highlights */
-  box-shadow: 
+  box-shadow:
     1.5px 0 0 rgba(255, 255, 255, 0.14), /* Reflective white shadow/highlight on the right */
     4px 0 8px rgba(0, 0, 0, 0.35);        /* Shadow cast to the right */
 }
@@ -423,7 +521,6 @@ withDefaults(defineProps<Props>(), {
   z-index: 2;
 }
 
-
 /* Custom 1442x386 Desktop Aspect Ratio overrides */
 @media (min-width: 1024px) {
   .custom-hero-ratio {
@@ -432,20 +529,20 @@ withDefaults(defineProps<Props>(), {
     height: 386px !important;
     min-height: 386px !important;
   }
-  
+
   .custom-hero-ratio .py-24,
   .custom-hero-ratio :deep(.py-24) {
     padding-top: 2.25rem !important;
     padding-bottom: 2.25rem !important;
   }
-  
+
   .custom-hero-ratio h1,
   .custom-hero-ratio :deep(h1) {
     font-size: 2.75rem !important;
     line-height: 3.25rem !important;
     margin-bottom: 0.5rem !important;
   }
-  
+
   .custom-hero-ratio p,
   .custom-hero-ratio :deep(p) {
     font-size: 0.95rem !important;
@@ -460,20 +557,20 @@ withDefaults(defineProps<Props>(), {
     width: 100% !important;
     min-height: 360px !important;
   }
-  
+
   .custom-hero-ratio .py-24,
   .custom-hero-ratio :deep(.py-24) {
     padding-top: 3.5rem !important;
     padding-bottom: 3.5rem !important;
   }
-  
+
   .custom-hero-ratio h1,
   .custom-hero-ratio :deep(h1) {
     font-size: 2.25rem !important;
     line-height: 2.75rem !important;
     margin-bottom: 0.5rem !important;
   }
-  
+
   .custom-hero-ratio p,
   .custom-hero-ratio :deep(p) {
     font-size: 0.9rem !important;

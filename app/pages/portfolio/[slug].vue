@@ -245,34 +245,14 @@ const paragraphs = computed(() =>
             :disabled="galleryIndex === 0"
             @click="galleryIndex = Math.max(0, galleryIndex - 1)"
           >
-            <svg
-              class="w-5 h-5 text-brand-dark"
-              viewBox="0 0 76 76"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M52.3 36.4L52.35 40.37L33.6 40.46C37.86 43.08 40.44 47.72 41.22 52.95L37.08 52.99C36.14 46 31.02 40.34 23.74 40.42L23.7 36.94C30.98 36.87 35.95 31.1 36.73 24.1L40.87 24.06C40.22 29.3 37.75 33.99 33.55 36.7L52.3 36.4Z"
-                fill="#141111"
-              />
-            </svg>
+            <LeftArrow class="w-5 h-5 text-brand-dark" />
           </button>
           <button
             class="w-14 h-14 rounded-full bg-brand-yellow-500 border-2 border-brand-yellow-500 flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-30"
             :disabled="galleryIndex >= project.galleryImages.length - 1"
             @click="galleryIndex = Math.min(project.galleryImages.length - 1, galleryIndex + 1)"
           >
-            <svg
-              class="w-5 h-5 text-brand-dark"
-              viewBox="0 0 76 76"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M23.7001 36.4138L23.6507 40.3664L42.405 40.4601C38.1352 43.0818 35.5561 47.7211 34.7762 52.9509L38.9181 52.9934C39.8606 46.005 44.9759 40.3433 52.2592 40.4165L52.3021 36.9405C45.0189 36.8673 40.0452 31.1047 39.2744 24.0972L35.134 24.0561C35.7836 29.2988 38.2492 33.9901 42.4503 36.6991L23.7001 36.4138Z"
-                fill="#141111"
-              />
-            </svg>
+            <RightArrow class="w-5 h-5 text-brand-dark" />
           </button>
         </div>
       </div>

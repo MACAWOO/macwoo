@@ -16,7 +16,10 @@ const isModalOpen = ref(false)
       to="/"
       class="absolute top-8 left-8 z-30 inline-flex items-center gap-2 px-5 py-2.5 bg-white text-brand-dark rounded-full text-sm font-bold shadow-md hover:scale-105 hover:bg-zinc-50 transition-all cursor-pointer border border-zinc-200/50"
     >
-      <UIcon name="i-lucide-arrow-left" class="w-4 h-4 text-brand-dark" />
+      <UIcon
+        name="i-lucide-arrow-left"
+        class="w-4 h-4 text-brand-dark"
+      />
       Back
     </NuxtLink>
 
@@ -48,7 +51,10 @@ const isModalOpen = ref(false)
               <div class="bg-brand-yellow-500 text-brand-dark rounded-2xl p-6 shadow-sm flex flex-col justify-between min-h-[140px]">
                 <div>
                   <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mb-3">
-                    <UIcon name="i-lucide-rocket" class="w-6 h-6 text-brand-dark" />
+                    <UIcon
+                      name="i-lucide-rocket"
+                      class="w-6 h-6 text-brand-dark"
+                    />
                   </div>
                   <h3 class="font-bold text-brand-dark text-sm mb-1 uppercase tracking-wider">
                     Accelerated Growth
@@ -61,7 +67,10 @@ const isModalOpen = ref(false)
               <div class="bg-brand-yellow-500 text-brand-dark rounded-2xl p-6 shadow-sm flex flex-col justify-between min-h-[140px]">
                 <div>
                   <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mb-3">
-                    <UIcon name="i-lucide-users" class="w-6 h-6 text-brand-dark" />
+                    <UIcon
+                      name="i-lucide-users"
+                      class="w-6 h-6 text-brand-dark"
+                    />
                   </div>
                   <h3 class="font-bold text-brand-dark text-sm mb-1 uppercase tracking-wider">
                     Visionary Team
@@ -76,9 +85,7 @@ const isModalOpen = ref(false)
 
           <!-- Right side Placeholder Card (1/3 width on desktop) -->
           <div class="lg:w-5/12 w-full flex justify-center lg:justify-end">
-            <div class="relative w-full max-w-[380px] aspect-[3/4] bg-zinc-200 rounded-[2.5rem] shadow-md border border-white/10">
-            
-            </div>
+            <div class="relative w-full max-w-[380px] aspect-[3/4] bg-zinc-200 rounded-[2.5rem] shadow-md border border-white/10" />
           </div>
         </div>
       </div>

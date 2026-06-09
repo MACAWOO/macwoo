@@ -2,6 +2,7 @@
 const isMenuOpen = ref(false)
 const isServicesOpen = ref(false)
 const isScrolled = ref(false)
+const scrollProgress = ref(0)
 
 // ── Sliding glass pill state ──
 const navLinksRef = ref<HTMLElement | null>(null)
@@ -62,10 +63,9 @@ let rafId = 0
 const onScroll = () => {
   if (rafId) return
   rafId = requestAnimationFrame(() => {
-    const scrolled = window.scrollY > 60
-    if (isScrolled.value !== scrolled) {
-      isScrolled.value = scrolled
-    }
+    const maxScroll = 500
+    scrollProgress.value = Math.min(Math.max(window.scrollY / maxScroll, 0), 1)
+    isScrolled.value = window.scrollY > 250
     rafId = 0
   })
 }
@@ -89,19 +89,27 @@ watch(() => route.path, () => {
 
 <template>
   <header class="fixed left-0 right-0 z-50 top-[24px] w-full pointer-events-none">
-    <div class="w-full mx-auto px-8 md:px-16 lg:px-20 pointer-events-auto flex items-center justify-between gap-8">
+    <div class="w-full mx-auto px-8 md:px-16 lg:px-20 pointer-events-auto flex items-center">
       <!-- ── LOGO (fades out on scroll) ── -->
       <NuxtLink
         to="/"
-        class="hidden md:block shrink-0 pointer-events-auto transition-all duration-500 ease-out"
-        :class="isScrolled ? 'opacity-0 pointer-events-none -translate-x-3' : 'opacity-100 translate-x-0'"
+        class="hidden md:block shrink-0 overflow-hidden"
+        :style="{
+          opacity: 1 - scrollProgress,
+          maxWidth: 150 * (1 - scrollProgress) + 'px',
+          transform: 'translateX(' + (-12 * scrollProgress) + 'px)',
+          pointerEvents: scrollProgress > 0.8 ? 'none' : 'auto'
+        }"
       >
         <NavBarLogo />
       </NuxtLink>
 
+      <!-- Left Spacer -->
+      <div class="hidden md:block flex-1" />
+
       <!-- ═══════════════════════ DESKTOP NAV PILL ═══════════════════════ -->
       <nav
-        class="hidden md:flex items-center gap-1 px-2.5 h-[46px] rounded-full"
+        class="hidden md:flex items-center gap-1 px-2.5 h-[46px] rounded-full shrink-0"
         style="
           background: linear-gradient(90deg, #2094BA 0%, #2AA4C9 50%, #2095BB 100%);
           border: 1px solid rgba(255,255,255,0.18);
@@ -272,19 +280,21 @@ watch(() => route.path, () => {
             class="font-bold text-[16px] leading-none whitespace-nowrap select-none mr-3"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
           >Get in Touch</span>
-          <svg
+          <UpRightArrow
             class="w-[12px] h-[12px] shrink-0 transition-transform duration-300 ease-out group-hover/cta:translate-x-[2px] group-hover/cta:-translate-y-[2px]"
-            viewBox="0 0 12 12"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0.0349998 9.348L1.305 10.74L7.879 4.679C7.243 6.979 7.854 9.432 9.285 11.506L10.744 10.175C8.797 7.436 8.738 3.803 11.303 1.462L10.186 0.238C7.621 2.579 4.009 2.189 1.458 0L0 1.331C1.934 2.945 4.322 3.777 6.67 3.355L0.0349998 9.348Z"
-              fill="currentColor"
-            />
-          </svg>
+          />
         </NuxtLink>
       </nav>
+
+      <!-- Right Spacer -->
+      <div
+        class="hidden md:block"
+        :style="{
+          flexGrow: scrollProgress,
+          flexShrink: 1,
+          flexBasis: '0%'
+        }"
+      />
 
       <!-- ═══════════════════════ MOBILE NAV ═══════════════════════ -->
       <div
@@ -380,17 +390,9 @@ watch(() => route.path, () => {
             @click="isMenuOpen = false"
           >
             Get in Touch
-            <svg
+            <UpRightArrow
               class="w-[12px] h-[12px] transition-transform duration-300 ease-out group-hover/cta:translate-x-[2px] group-hover/cta:-translate-y-[2px]"
-              viewBox="0 0 12 12"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0.0349998 9.348L1.305 10.74L7.879 4.679C7.243 6.979 7.854 9.432 9.285 11.506L10.744 10.175C8.797 7.436 8.738 3.803 11.303 1.462L10.186 0.238C7.621 2.579 4.009 2.189 1.458 0L0 1.331C1.934 2.945 4.322 3.777 6.67 3.355L0.0349998 9.348Z"
-                fill="currentColor"
-              />
-            </svg>
+            />
           </NuxtLink>
         </div>
       </Transition>

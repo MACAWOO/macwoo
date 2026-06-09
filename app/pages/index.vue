@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { projects } from '~/data/portfolio'
+// import { projects } from '~/data/portfolio'
 
 useSeoMeta({
   title: 'Macawoo — Feel The Woo',
@@ -7,6 +7,32 @@ useSeoMeta({
 })
 
 const containerRef = ref<HTMLElement | null>(null)
+
+const services = ['Branding & Design', 'Digital Marketing', 'Video Production', 'Others']
+const form = reactive({ name: '', service: '', email: '', phone: '', message: '' })
+
+const isSubmitting = ref(false)
+const isSubmitted = ref(false)
+
+const handleSubmit = async () => {
+  isSubmitting.value = true
+  // Simulate API submission
+  await new Promise(resolve => setTimeout(resolve, 1200))
+  isSubmitting.value = false
+  isSubmitted.value = true
+
+  // Reset form
+  form.name = ''
+  form.service = ''
+  form.email = ''
+  form.phone = ''
+  form.message = ''
+
+  // Clear success message after 5 seconds
+  setTimeout(() => {
+    isSubmitted.value = false
+  }, 5000)
+}
 
 onMounted(() => {
   const observer = new IntersectionObserver((entries) => {
@@ -274,26 +300,190 @@ onMounted(() => {
     <!-- Why Macawoo -->
     <WhyMacawoo />
 
-    <!-- CTA -->
-    <section class="py-24 bg-brand-dark relative overflow-hidden">
-      <div class="absolute inset-0 opacity-10">
-        <img
-          src="/Images/upscale_image_quality_2K_202606031120.jpeg"
-          alt=""
-          class="w-full h-full object-cover"
-        >
-      </div>
-      <div class="relative z-10 max-w-3xl mx-auto px-6 text-center">
-        <h2 class="text-3xl md:text-5xl font-bold text-white leading-snug mb-6">
-          Connect your ideas into<br>
-          <span class="text-brand-yellow-500">successful businesses.</span>
-        </h2>
-        <NuxtLink
-          to="/contact"
-          class="inline-flex items-center gap-2 px-8 py-4 bg-brand-yellow-500 text-brand-dark font-bold rounded-full text-sm hover:bg-brand-yellow-400 transition-colors"
-        >
-          Get Started ×
-        </NuxtLink>
+    <!-- CTA (Get Started Form & Card ) -->
+    <section class="py-20 md:py-28 bg-[#1D96B8] relative overflow-hidden">
+      <div class="max-w-[1266px] mx-auto px-6 md:px-8">
+        <div class="flex flex-col lg:flex-row gap-12 lg:gap-20 items-stretch">
+          <!-- Left side: Design card -->
+          <div class="flex-1 rounded-[32px] overflow-hidden relative min-h-[350px] lg:min-h-[500px] flex flex-col justify-end p-8 md:p-12 shadow-xl group">
+            <!-- Background Image -->
+            <div class="absolute inset-0 bg-[url('/Images/wavy_yellow_teal_bg.png')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" />
+            <!-- Gradient Overlay for readability -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+            <!-- Text Content -->
+            <div class="relative z-10">
+              <h2
+                class="text-white text-3xl md:text-4xl lg:text-[42px] font-bold leading-[1.2] tracking-tight"
+                style="font-family: 'Bricolage Grotesque', sans-serif;"
+              >
+                Convert your ideas into<br>successful business
+              </h2>
+            </div>
+          </div>
+
+          <!-- Right side: Form -->
+          <div class="flex-1 flex flex-col justify-center">
+            <div
+              v-if="isSubmitted"
+              class="flex flex-col items-center justify-center text-center p-8 bg-[#1684A2]/50 rounded-[32px] border border-white/10 h-full min-h-[400px]"
+            >
+              <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-[#1D96B8] mb-4 shadow-lg animate-bounce">
+                <svg
+                  class="w-8 h-8"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-2">
+                Message Sent!
+              </h3>
+              <p class="text-white/80 max-w-sm">
+                Thank you for reaching out. The Macawoo team will get back to you shortly.
+              </p>
+            </div>
+
+            <form
+              v-else
+              class="space-y-6"
+              @submit.prevent="handleSubmit"
+            >
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Full Name -->
+                <div>
+                  <label
+                    class="block text-sm font-semibold text-brand-dark mb-2"
+                    style="font-family: 'Bricolage Grotesque', sans-serif;"
+                  >Full Name</label>
+                  <input
+                    v-model="form.name"
+                    type="text"
+                    required
+                    placeholder="John Doe"
+                    class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 text-base transition-colors"
+                  >
+                </div>
+
+                <!-- Select Service's -->
+                <div>
+                  <label
+                    class="block text-sm font-semibold text-brand-dark mb-2"
+                    style="font-family: 'Bricolage Grotesque', sans-serif;"
+                  >Select Service's</label>
+                  <div class="relative">
+                    <select
+                      v-model="form.service"
+                      required
+                      class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white focus:outline-none focus:ring-2 focus:ring-white/50 text-base appearance-none cursor-pointer transition-colors"
+                    >
+                      <option
+                        value=""
+                        disabled
+                      >
+                        Select Services
+                      </option>
+                      <option
+                        v-for="s in services"
+                        :key="s"
+                        :value="s"
+                        class="text-brand-dark bg-white"
+                      >
+                        {{ s }}
+                      </option>
+                    </select>
+                    <!-- Custom Dropdown Icon -->
+                    <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none w-7 h-7 rounded-full border border-brand-dark/30 flex items-center justify-center bg-transparent">
+                      <svg
+                        class="w-4 h-4 text-brand-dark"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2.5"
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Email -->
+                <div>
+                  <label
+                    class="block text-sm font-semibold text-brand-dark mb-2"
+                    style="font-family: 'Bricolage Grotesque', sans-serif;"
+                  >Email</label>
+                  <input
+                    v-model="form.email"
+                    type="email"
+                    required
+                    placeholder="john@gmail.com"
+                    class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 text-base transition-colors"
+                  >
+                </div>
+
+                <!-- Phone Number -->
+                <div>
+                  <label
+                    class="block text-sm font-semibold text-brand-dark mb-2"
+                    style="font-family: 'Bricolage Grotesque', sans-serif;"
+                  >Phone Number</label>
+                  <input
+                    v-model="form.phone"
+                    type="tel"
+                    required
+                    placeholder="+91 00000 00000"
+                    class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 text-base transition-colors"
+                  >
+                </div>
+              </div>
+
+              <!-- Message -->
+              <div>
+                <label
+                  class="block text-sm font-semibold text-brand-dark mb-2"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >Message</label>
+                <textarea
+                  v-model="form.message"
+                  required
+                  rows="4"
+                  placeholder="Tell us about your project, goals, and any specific requirements. We'll get back to you shortly."
+                  class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 text-base transition-colors resize-none"
+                />
+              </div>
+
+              <!-- Submit Button -->
+              <div>
+                <button
+                  type="submit"
+                  :disabled="isSubmitting"
+                  class="group inline-flex items-center gap-3 px-8 py-4 bg-white text-brand-dark font-bold rounded-full text-base hover:bg-zinc-100 transition-all duration-300 transform active:scale-95 disabled:opacity-75 disabled:pointer-events-none shadow-md cursor-pointer"
+                >
+                  <span v-if="isSubmitting">Submitting...</span>
+                  <span v-else>Get Started</span>
+                  <UpRightArrow
+                    v-if="!isSubmitting"
+                    class="w-3 h-3 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                  />
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </section>
   </div>
