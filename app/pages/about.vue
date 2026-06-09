@@ -9,41 +9,71 @@ useSeoMeta({
   <div>
     <!-- Hero -->
     <PageHero
-      title-html="Built for Brands That<br>Want to Stand Out."
+      title-html="<span class='text-brand-yellow-500'>Built for Brands That<br>Want to Stand Out.</span>"
       video="/Background%20Videos/About.mp4"
       image="/Images/Branding.jpeg"
-      description="We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth."
+      class="custom-hero-ratio"
+      :show-grid="true"
     />
 
-    <!-- Who We Are -->
-    <section class="py-16 bg-brand-yellow-500">
-      <div class="max-w-7xl mx-auto px-6">
-        <p class="text-brand-dark/60 text-xs font-semibold uppercase tracking-widest mb-4">
+    <!-- Who We Are Section -->
+    <section class="bg-brand-yellow-500 py-16 md:py-24">
+      <div class="max-w-[1266px] mx-auto px-6 text-center">
+        <p
+          class="text-[#1D96B8] text-xs font-semibold uppercase tracking-[0.18em] mb-6"
+          style="font-family: 'Bricolage Grotesque', sans-serif;"
+        >
           Who We Are
         </p>
-        <p class="text-brand-dark text-xl md:text-2xl font-medium leading-relaxed max-w-3xl">
-          We are a creative &amp; strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.
+        <p
+          class="text-brand-dark text-2xl md:text-3xl lg:text-[40px] font-semibold leading-[1.3] max-w-5xl mx-auto"
+          style="font-family: 'Bricolage Grotesque', sans-serif;"
+        >
+          We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.
         </p>
       </div>
     </section>
 
-    <!-- Quote -->
-    <section class="py-20 bg-brand-teal-500">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="flex flex-col md:flex-row gap-12 items-start">
-          <div class="md:w-2/3">
-            <p class="text-white/50 text-xs font-semibold uppercase tracking-widest mb-6">
-              What We Believe
-            </p>
-            <h2 class="text-4xl md:text-5xl font-bold italic text-white leading-tight mb-8">
+    <!-- What We Believe Section -->
+    <section class="bg-[#1D96B8] py-16 md:py-24 text-white">
+      <div class="max-w-[1266px] mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+          <!-- Left column: Visual rounded box -->
+          <div class="rounded-[2.5rem] overflow-hidden w-full h-[320px] md:h-[450px]">
+            <img
+              src="/Images/what_we_believe.png"
+              alt="What We Believe"
+              class="w-full h-full object-cover"
+            >
+          </div>
+
+          <!-- Right column -->
+          <div class="flex flex-col gap-6">
+            <!-- Top bar -->
+            <div class="flex items-center justify-between">
+              <span
+                class="text-white/80 text-xs font-semibold uppercase tracking-[0.18em]"
+                style="font-family: 'Bricolage Grotesque', sans-serif;"
+              >What we believe</span>
+              <!-- Yellow badge speech bubble -->
+              <div class="w-12 h-12 bg-brand-yellow-500 rounded-full rounded-bl-none flex items-center justify-center text-brand-dark text-xl font-bold font-fredoka">
+                m
+              </div>
+            </div>
+
+            <!-- Heading -->
+            <h2
+              class="text-brand-yellow-500 text-3xl md:text-4xl lg:text-[46px] font-bold leading-tight"
+              style="font-family: 'Bricolage Grotesque', sans-serif;"
+            >
               "Brands should be felt,<br>not just seen."
             </h2>
-          </div>
-          <div class="md:w-1/3">
-            <div class="w-16 h-16 bg-brand-yellow-500 rounded-2xl flex items-center justify-center mb-6">
-              <span class="text-brand-dark font-bold text-3xl leading-none">m</span>
-            </div>
-            <p class="text-white/80 text-sm leading-relaxed">
+
+            <!-- Paragraph -->
+            <p
+              class="text-white text-base md:text-lg leading-relaxed font-normal"
+              style="font-family: 'Bricolage Grotesque', sans-serif;"
+            >
               We believe great brands create meaningful connections. Through strategy, creativity, and execution, we help businesses build experiences that inspire trust, spark engagement, and drive growth.
             </p>
           </div>
@@ -51,88 +81,115 @@ useSeoMeta({
       </div>
     </section>
 
-    <!-- How We Work -->
-    <section class="py-20 bg-white">
-      <div class="max-w-7xl mx-auto px-6">
-        <h2 class="text-3xl md:text-4xl font-bold text-brand-dark mb-12">
+    <!-- How We Work Section -->
+    <section class="bg-brand-yellow-500 py-16 md:py-24">
+      <div class="max-w-[1266px] mx-auto px-6">
+        <!-- Title -->
+        <h2
+          class="text-[#1D96B8] text-3xl md:text-4xl lg:text-[48px] font-bold mb-12"
+          style="font-family: 'Fredoka', sans-serif;"
+        >
           How We Work
         </h2>
-        <div class="grid md:grid-cols-3 gap-8">
-          <div class="flex flex-col gap-4">
-            <div class="w-12 h-12 bg-brand-teal-50 rounded-xl flex items-center justify-center">
-              <img
-                src="/Icons/Lightbulb@4x.png"
-                alt="Strategy"
-                class="w-7 h-7 object-contain"
-              >
+
+        <!-- Cards Grid Container -->
+        <div class="relative">
+          <!-- Connecting Line (Desktop) -->
+          <div class="hidden md:block absolute left-[15%] right-[15%] top-16 h-[2px] border-t-2 border-dashed border-[#1D96B8]/30 z-0"></div>
+
+          <!-- Cards Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+            <!-- Strategy Card -->
+            <div
+              class="bg-[#1D96B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start"
+              style="font-family: 'Bricolage Grotesque', sans-serif;"
+            >
+              <div class="w-12 h-12 rounded-full border border-white/30 bg-[#1D96B8] flex items-center justify-center text-white mb-6 relative z-10">
+                <UIcon name="i-lucide-compass" class="w-6 h-6" />
+              </div>
+              <h3 class="font-bold text-xl md:text-2xl mb-3">
+                Strategy
+              </h3>
+              <p class="text-white/90 text-sm md:text-base leading-relaxed">
+                We lay the foundation. Deep research and sharp insights inform every creative decision, ensuring your brand is built to win.
+              </p>
             </div>
-            <h3 class="font-bold text-brand-dark text-xl">
-              Strategy
-            </h3>
-            <p class="text-zinc-600 text-sm leading-relaxed">
-              Every great brand begins with a clear strategic foundation. We research, analyse, and define the positioning that will make your brand impossible to ignore.
-            </p>
-          </div>
-          <div class="flex flex-col gap-4">
-            <div class="w-12 h-12 bg-brand-teal-50 rounded-xl flex items-center justify-center">
-              <img
-                src="/Icons/Palette@4x.png"
-                alt="Creativity"
-                class="w-7 h-7 object-contain"
-              >
+
+            <!-- Creativity Card -->
+            <div
+              class="bg-[#1D96B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start"
+              style="font-family: 'Bricolage Grotesque', sans-serif;"
+            >
+              <div class="w-12 h-12 rounded-full border border-white/30 bg-[#1D96B8] flex items-center justify-center text-white mb-6 relative z-10">
+                <UIcon name="i-lucide-palette" class="w-6 h-6" />
+              </div>
+              <h3 class="font-bold text-xl md:text-2xl mb-3">
+                Creativity
+              </h3>
+              <p class="text-white/90 text-sm md:text-base leading-relaxed">
+                We bring ideas to life. Bold design, compelling storytelling, and high-fidelity visuals that capture the imagination.
+              </p>
             </div>
-            <h3 class="font-bold text-brand-dark text-xl">
-              Creativity
-            </h3>
-            <p class="text-zinc-600 text-sm leading-relaxed">
-              We bring ideas to life with craft and intentionality. From visual identity to campaign concepts, creativity is the engine behind everything we produce.
-            </p>
-          </div>
-          <div class="flex flex-col gap-4">
-            <div class="w-12 h-12 bg-brand-teal-50 rounded-xl flex items-center justify-center">
-              <img
-                src="/Icons/Chart%20Spline@4x.png"
-                alt="Execution"
-                class="w-7 h-7 object-contain"
-              >
+
+            <!-- Growth Card -->
+            <div
+              class="bg-[#1D96B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start"
+              style="font-family: 'Bricolage Grotesque', sans-serif;"
+            >
+              <div class="w-12 h-12 rounded-full border border-white/30 bg-[#1D96B8] flex items-center justify-center text-white mb-6 relative z-10">
+                <UIcon name="i-lucide-trending-up" class="w-6 h-6" />
+              </div>
+              <h3 class="font-bold text-xl md:text-2xl mb-3">
+                Growth
+              </h3>
+              <p class="text-white/90 text-sm md:text-base leading-relaxed">
+                We scale the impact. Execution that converts, campaigns that sustain, and a brand presence that dominates the market.
+              </p>
             </div>
-            <h3 class="font-bold text-brand-dark text-xl">
-              Execution
-            </h3>
-            <p class="text-zinc-600 text-sm leading-relaxed">
-              Ideas without execution are just ideas. We follow through with precision — launching, measuring, and optimising until the work delivers real results.
-            </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Mission -->
-    <section class="py-16 bg-zinc-50">
-      <div class="max-w-7xl mx-auto px-6">
-        <p class="text-brand-teal-500 text-xs font-semibold uppercase tracking-widest mb-6">
-          Our Mission
+    <!-- Vision Section -->
+    <section class="bg-[#1D96B8] py-16 md:py-24 text-white text-center">
+      <div class="max-w-[1266px] mx-auto px-6">
+        <p
+          class="text-white/80 text-xs font-semibold uppercase tracking-[0.18em] mb-6"
+          style="font-family: 'Bricolage Grotesque', sans-serif;"
+        >
+          Vision
         </p>
-        <p class="text-brand-dark text-xl md:text-2xl leading-relaxed max-w-4xl">
-          We envision a world where every brand creates a lasting impression, transforming simple interactions into meaningful connections. By combining creativity, strategy, and innovation, we help businesses build distinctive identities that don't just get noticed — but genuinely remembered, trusted, and connected with for years to come.
+        <p
+          class="text-white text-xl md:text-2xl lg:text-[28px] font-semibold leading-[1.6] max-w-5xl mx-auto"
+          style="font-family: 'Bricolage Grotesque', sans-serif;"
+        >
+          We envision a world where every brand creates a lasting impression, transforming simple interactions into meaningful connections. By combining creativity, strategy, and innovation, we help businesses build distinctive identities that people don't just notice—but genuinely remember, trust, and connect with for years to come.
         </p>
       </div>
     </section>
 
-    <!-- CTA -->
-    <section class="py-20 bg-brand-yellow-500 text-center">
-      <div class="max-w-3xl mx-auto px-6">
-        <h2 class="text-3xl md:text-5xl font-bold text-brand-dark leading-snug mb-8">
-          To create brands that people don't just notice — but remember.
+    <!-- CTA Section -->
+    <section class="bg-brand-yellow-500 py-20 md:py-28 text-center flex flex-col items-center justify-center">
+      <div class="max-w-4xl mx-auto px-6">
+        <h2
+          class="text-[#1D96B8] text-3xl md:text-5xl lg:text-[56px] font-bold leading-tight mb-6"
+          style="font-family: 'Bricolage Grotesque', sans-serif;"
+        >
+          To create brands that people don't just notice—but remember.
         </h2>
-        <p class="text-brand-dark/60 text-sm mb-8">
-          Let's Build Something Together
+        <p
+          class="text-brand-dark/70 text-sm md:text-base font-semibold mb-8 uppercase tracking-wider"
+          style="font-family: 'Bricolage Grotesque', sans-serif;"
+        >
+          Let's Build Something Powerful
         </p>
         <NuxtLink
           to="/contact"
-          class="inline-flex items-center gap-2 px-8 py-4 bg-brand-dark text-white font-bold rounded-full text-sm hover:bg-brand-dark/80 transition-colors"
+          class="inline-flex items-center gap-2 px-8 py-4 bg-[#1D96B8] text-white font-bold rounded-full text-sm hover:bg-[#1D96B8]/90 transition-colors"
+          style="font-family: 'Bricolage Grotesque', sans-serif;"
         >
-          Start Your Project →
+          Start Your Project ×
         </NuxtLink>
       </div>
     </section>

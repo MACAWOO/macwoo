@@ -8,7 +8,12 @@ export function useCareers() {
     const stored = localStorage.getItem('macwoo_jobs')
     if (stored) {
       try {
-        jobs.value = JSON.parse(stored)
+        const parsed = JSON.parse(stored)
+        if (Array.isArray(parsed) && parsed.some(j => j.experience === '4+ Years Experience')) {
+          localStorage.removeItem('macwoo_jobs')
+        } else {
+          jobs.value = parsed
+        }
       } catch (e) {
         console.error('Error parsing jobs from localStorage:', e)
       }

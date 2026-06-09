@@ -11,116 +11,271 @@ if (!project.value) {
 
 useSeoMeta({
   title: () => project.value ? `${project.value.title} — Macawoo Portfolio` : 'Macawoo Portfolio',
-  description: () => project.value ? project.value.subtitle : ''
+  description: () => project.value ? (project.value.tagline ?? project.value.subtitle) : ''
 })
 
 const galleryIndex = ref(0)
+
+const paragraphs = computed(() =>
+  project.value?.storyParagraphs?.length
+    ? project.value.storyParagraphs
+    : [project.value?.story ?? '']
+)
 </script>
 
 <template>
-  <div v-if="project">
-    <!-- Back -->
-    <div class="pt-20 pb-4 px-6 max-w-7xl mx-auto">
+  <div
+    v-if="project"
+    class="bg-white"
+  >
+    <!-- ── Hero ── -->
+    <div class="relative">
+      <!-- dark left-to-right gradient -->
+      <div
+        class="absolute inset-0 z-10 pointer-events-none"
+        style="background: linear-gradient(90deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 55%)"
+      />
+
+      <!-- back button -->
       <NuxtLink
         to="/portfolio"
-        class="inline-flex items-center gap-2 text-zinc-500 text-sm hover:text-brand-teal-500 transition-colors"
+        class="absolute top-8 left-6 md:left-[120px] z-20 bg-white inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity"
       >
-        ← Back
+        <svg
+          class="w-4 h-4 text-brand-dark"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M10 12L6 8L10 4"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span class="font-extrabold text-brand-dark text-sm">Back</span>
       </NuxtLink>
-    </div>
 
-    <!-- Hero image -->
-    <div class="w-full aspect-[16/7] overflow-hidden">
+      <!-- hero image -->
       <img
         :src="project.heroImage"
         :alt="project.title"
-        class="w-full h-full object-cover"
+        class="w-full h-[360px] md:h-[560px] lg:h-[640px] object-cover"
       >
     </div>
 
-    <!-- Tags + title -->
-    <section class="py-12 bg-white">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="flex flex-wrap gap-2 mb-6">
-          <span
-            v-for="tag in project.tags"
-            :key="tag"
-            class="text-xs font-medium px-3 py-1.5 rounded-full bg-brand-dark text-white"
-          >
-            {{ tag }}
-          </span>
-        </div>
-        <h1 class="text-4xl md:text-6xl font-bold text-brand-dark mb-4">
-          {{ project.title }}
-        </h1>
-        <p class="text-zinc-600 text-lg max-w-2xl">
-          {{ project.subtitle }}
-        </p>
-      </div>
-    </section>
-
-    <!-- Story -->
-    <section class="py-16 bg-white border-t border-zinc-100">
-      <div class="max-w-7xl mx-auto px-6">
-        <h2 class="text-2xl md:text-3xl font-bold text-brand-teal-500 mb-6">
-          The Story Behind the Project
-        </h2>
-        <p class="text-zinc-700 text-base leading-relaxed max-w-3xl">
-          {{ project.story }}
-        </p>
-      </div>
-    </section>
-
-    <!-- Design Highlights -->
-    <section
-      v-if="project.galleryImages.length"
-      class="py-20 bg-brand-yellow-500"
-    >
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="flex items-center justify-between mb-8">
-          <h2 class="text-2xl md:text-3xl font-bold text-brand-dark">
-            Design Highlights
-          </h2>
-          <div class="flex gap-3">
-            <button
-              class="w-10 h-10 rounded-full border-2 border-brand-dark/30 flex items-center justify-center text-brand-dark hover:bg-brand-dark/10 transition-colors disabled:opacity-30"
-              :disabled="galleryIndex === 0"
-              @click="galleryIndex = Math.max(0, galleryIndex - 1)"
-            >
-              ←
-            </button>
-            <button
-              class="w-10 h-10 rounded-full border-2 border-brand-dark/30 flex items-center justify-center text-brand-dark hover:bg-brand-dark/10 transition-colors disabled:opacity-30"
-              :disabled="galleryIndex >= project.galleryImages.length - 1"
-              @click="galleryIndex = Math.min(project.galleryImages.length - 1, galleryIndex + 1)"
-            >
-              →
-            </button>
-          </div>
-        </div>
-        <div class="rounded-2xl overflow-hidden">
-          <img
-            :src="project.galleryImages[galleryIndex]"
-            :alt="`${project.title} design highlight ${galleryIndex + 1}`"
-            class="w-full object-contain max-h-[600px]"
-          >
-        </div>
-      </div>
-    </section>
-
-    <!-- Next project CTA -->
-    <section class="py-16 bg-brand-dark text-center">
-      <div class="max-w-xl mx-auto px-6">
-        <h2 class="text-2xl font-bold text-white mb-6">
-          Ready to create something like this?
-        </h2>
-        <NuxtLink
-          to="/contact"
-          class="inline-flex items-center gap-2 px-8 py-4 bg-brand-yellow-500 text-brand-dark font-bold rounded-full text-sm hover:bg-brand-yellow-400 transition-colors"
+    <!-- ── Teal Info Section ── -->
+    <div class="bg-[#1D96B8] px-6 md:px-[120px] py-16">
+      <!-- metadata pills -->
+      <div class="flex flex-wrap gap-2 mb-7">
+        <!-- services pill -->
+        <span
+          v-if="project.services"
+          class="border border-white text-white text-base font-normal leading-[28px] px-3 py-2 rounded-[56px] inline-flex items-center gap-1.5"
         >
-          Start Your Project →
-        </NuxtLink>
+          <svg
+            class="w-3.5 h-3.5 shrink-0"
+            viewBox="0 0 14 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              x="1"
+              y="1"
+              width="5"
+              height="5"
+              rx="1"
+              stroke="white"
+              stroke-width="1.5"
+            />
+            <rect
+              x="8"
+              y="1"
+              width="5"
+              height="5"
+              rx="1"
+              stroke="white"
+              stroke-width="1.5"
+            />
+            <rect
+              x="1"
+              y="8"
+              width="5"
+              height="5"
+              rx="1"
+              stroke="white"
+              stroke-width="1.5"
+            />
+            <rect
+              x="8"
+              y="8"
+              width="5"
+              height="5"
+              rx="1"
+              stroke="white"
+              stroke-width="1.5"
+            />
+          </svg>
+          {{ project.services }}
+        </span>
+
+        <!-- industry pill -->
+        <span
+          v-if="project.industry"
+          class="border border-white text-white text-base font-normal leading-[28px] px-3 py-2 rounded-[56px] inline-flex items-center gap-1.5"
+        >
+          <svg
+            class="w-5 h-5 shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 21h18M6 21V7l6-4 6 4v14M9 21v-5h6v5"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          {{ project.industry }}
+        </span>
+
+        <!-- date pill -->
+        <span
+          v-if="project.date"
+          class="border border-white text-white text-base font-normal leading-[28px] px-3 py-2 rounded-[56px] inline-flex items-center gap-1.5"
+        >
+          <svg
+            class="w-3 h-3 shrink-0"
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              x="1"
+              y="2"
+              width="10"
+              height="9"
+              rx="1.5"
+              stroke="white"
+              stroke-width="1.2"
+            />
+            <path
+              d="M4 1v2M8 1v2"
+              stroke="white"
+              stroke-width="1.2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M1 5h10"
+              stroke="white"
+              stroke-width="1.2"
+            />
+          </svg>
+          {{ project.date }}
+        </span>
       </div>
-    </section>
+
+      <!-- title -->
+      <h1
+        class="font-fredoka text-[56px] md:text-[64px] text-brand-yellow-500 leading-tight mb-3"
+        style="font-variation-settings: 'wdth' 100"
+      >
+        {{ project.title }}
+      </h1>
+
+      <!-- tagline -->
+      <p
+        v-if="project.tagline"
+        class="text-white text-lg leading-[24px] max-w-2xl"
+      >
+        {{ project.tagline }}
+      </p>
+    </div>
+
+    <!-- ── Story Section ── -->
+    <div class="bg-white px-6 md:px-[120px] py-16">
+      <h2
+        class="font-fredoka text-[40px] md:text-[48px] text-[#1D96B8] mb-5 leading-tight"
+        style="font-variation-settings: 'wdth' 100"
+      >
+        The Story Behind the Project
+      </h2>
+      <div class="space-y-5 max-w-[1200px]">
+        <p
+          v-for="(para, i) in paragraphs"
+          :key="i"
+          class="text-brand-dark text-lg leading-[24px]"
+        >
+          {{ para }}
+        </p>
+      </div>
+    </div>
+
+    <!-- ── Design Highlights ── -->
+    <div
+      v-if="project.galleryImages.length"
+      class="bg-brand-yellow-500 px-6 md:px-[120px] py-16"
+    >
+      <h2
+        class="font-fredoka text-[40px] md:text-[48px] text-[#1D96B8] mb-5 leading-tight"
+        style="font-variation-settings: 'wdth' 100"
+      >
+        Design Highlights
+      </h2>
+
+      <div class="relative rounded-[28px] overflow-hidden">
+        <img
+          :src="project.galleryImages[galleryIndex]"
+          :alt="`${project.title} design highlight ${galleryIndex + 1}`"
+          class="w-full object-cover rounded-[28px]"
+          style="min-height: 280px; max-height: 619px;"
+        >
+
+        <!-- prev / next buttons -->
+        <div
+          v-if="project.galleryImages.length > 1"
+          class="absolute bottom-5 right-5 flex gap-2"
+        >
+          <button
+            class="w-14 h-14 rounded-full bg-brand-yellow-500 border-2 border-brand-yellow-500 flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-30"
+            :disabled="galleryIndex === 0"
+            @click="galleryIndex = Math.max(0, galleryIndex - 1)"
+          >
+            <svg
+              class="w-5 h-5 text-brand-dark"
+              viewBox="0 0 76 76"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M52.3 36.4L52.35 40.37L33.6 40.46C37.86 43.08 40.44 47.72 41.22 52.95L37.08 52.99C36.14 46 31.02 40.34 23.74 40.42L23.7 36.94C30.98 36.87 35.95 31.1 36.73 24.1L40.87 24.06C40.22 29.3 37.75 33.99 33.55 36.7L52.3 36.4Z"
+                fill="#141111"
+              />
+            </svg>
+          </button>
+          <button
+            class="w-14 h-14 rounded-full bg-brand-yellow-500 border-2 border-brand-yellow-500 flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-30"
+            :disabled="galleryIndex >= project.galleryImages.length - 1"
+            @click="galleryIndex = Math.min(project.galleryImages.length - 1, galleryIndex + 1)"
+          >
+            <svg
+              class="w-5 h-5 text-brand-dark"
+              viewBox="0 0 76 76"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M23.7001 36.4138L23.6507 40.3664L42.405 40.4601C38.1352 43.0818 35.5561 47.7211 34.7762 52.9509L38.9181 52.9934C39.8606 46.005 44.9759 40.3433 52.2592 40.4165L52.3021 36.9405C45.0189 36.8673 40.0452 31.1047 39.2744 24.0972L35.134 24.0561C35.7836 29.2988 38.2492 33.9901 42.4503 36.6991L23.7001 36.4138Z"
+                fill="#141111"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

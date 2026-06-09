@@ -14,7 +14,7 @@ export const jobs: JobListing[] = [
     department: 'Design',
     location: 'Kochi',
     type: 'Full-Time',
-    experience: '4+ Years Experience'
+    experience: '7+ Years Experience'
   },
   {
     id: '2',
@@ -22,7 +22,7 @@ export const jobs: JobListing[] = [
     department: 'Design',
     location: 'Kochi',
     type: 'Full-Time',
-    experience: '4+ Years Experience'
+    experience: '7+ Years Experience'
   },
   {
     id: '3',
@@ -30,6 +30,6 @@ export const jobs: JobListing[] = [
     department: 'Design',
     location: 'Kochi',
     type: 'Full-Time',
-    experience: '4+ Years Experience'
+    experience: '7+ Years Experience'
   }
 ]
