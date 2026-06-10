@@ -8,7 +8,72 @@ useSeoMeta({
 
 const containerRef = ref<HTMLElement | null>(null)
 const textRevealRef = ref<HTMLElement | null>(null)
-const scrollProgress = ref(0)
+
+// Scroll-bound About Us section animation variables
+const aboutTrackRef = ref<HTMLElement | null>(null)
+const logoPlaceholderRef = ref<HTMLElement | null>(null)
+const trackProgress = ref(0)
+const logoOffset = ref({ x: 0, y: 0 })
+
+const updateLogoOffset = () => {
+  if (!logoPlaceholderRef.value) return
+  let el = logoPlaceholderRef.value
+  let left = 0
+  let top = 0
+  while (el && !el.classList.contains('sticky')) {
+    left += el.offsetLeft
+    top += el.offsetTop
+    el = el.offsetParent as HTMLElement
+  }
+
+  const placeholderCenterX = left + logoPlaceholderRef.value.offsetWidth / 2
+  const placeholderCenterY = top + logoPlaceholderRef.value.offsetHeight / 2
+
+  const stickyContainer = logoPlaceholderRef.value.closest('.sticky') as HTMLElement
+  const stickyWidth = stickyContainer ? stickyContainer.offsetWidth : window.innerWidth
+  const stickyHeight = stickyContainer ? stickyContainer.offsetHeight : window.innerHeight
+
+  logoOffset.value = {
+    x: (stickyWidth / 2) - placeholderCenterX,
+    y: (stickyHeight / 2) - placeholderCenterY
+  }
+}
+
+const backgroundStyle = computed(() => {
+  const t = Math.max(0, Math.min(1, trackProgress.value / 0.15))
+  return {
+    opacity: t,
+    transform: `scale(${0.95 + t * 0.05})`
+  }
+})
+
+const logoStyle = computed(() => {
+  const t = Math.max(0, Math.min(1, trackProgress.value / 0.4))
+  // Cubic ease-in-out
+  const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+
+  const scale = 2.5 - 1.5 * eased
+  const x = logoOffset.value.x * (1 - eased)
+  const y = logoOffset.value.y * (1 - eased)
+
+  return {
+    transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`,
+    transformOrigin: 'center center'
+  }
+})
+
+const taglineOpacity = computed(() => {
+  if (trackProgress.value < 0.4) return 0
+  const t = Math.max(0, Math.min(1, (trackProgress.value - 0.4) / 0.2))
+  return t
+})
+
+const textColumnOpacity = computed(() => {
+  if (trackProgress.value < 0.3) return 0
+  const t = Math.max(0, Math.min(1, (trackProgress.value - 0.3) / 0.2))
+  return t
+})
+
 const revealText = 'At Macawoo, we create brands that connect, campaigns that perform, and stories that leave a lasting impression. Through branding, marketing, and storytelling, we help businesses stand out, stay relevant, and grow with purpose.'
 const words = revealText.split(' ')
 
@@ -20,40 +85,38 @@ const isSubmitted = ref(false)
 
 const getWordStyle = (index: number) => {
   const totalWords = words.length
-  // Each word transitions over a range of 0.2 of the overall progress (from 0.25 opacity to 1.0)
-  const wordStart = (index / totalWords) * 0.8
-  const wordEnd = wordStart + 0.2
+  // Words start revealing after progress = 0.45
+  const start = (index / totalWords) * 0.75
+  const end = start + 0.25
+
+  const t = Math.max(0, Math.min(1, (trackProgress.value - 0.45) / 0.55))
 
   let opacity = 0.25
-  if (scrollProgress.value >= wordEnd) {
+  if (t >= end) {
     opacity = 1.0
-  } else if (scrollProgress.value <= wordStart) {
+  } else if (t <= start) {
     opacity = 0.25
   } else {
-    const factor = (scrollProgress.value - wordStart) / (wordEnd - wordStart)
+    const factor = (t - start) / (end - start)
     opacity = 0.25 + factor * 0.75
   }
 
   return {
-    opacity
+    opacity,
+    transition: 'opacity 0.15s ease-out'
   }
 }
 
 const handleScroll = () => {
-  if (!textRevealRef.value) return
-  const rect = textRevealRef.value.getBoundingClientRect()
+  if (!aboutTrackRef.value) return
+  const rect = aboutTrackRef.value.getBoundingClientRect()
   const windowHeight = window.innerHeight
 
-  // Start revealing when the element is 85% down the viewport,
-  // finish when it reaches 25% down the viewport.
-  const start = windowHeight * 0.85
-  const end = windowHeight * 0.25
+  const totalDistance = rect.height - windowHeight
+  const scrolledDistance = -rect.top
 
-  const totalRange = start - end
-  const currentPos = rect.top - end
-  const rawProgress = 1 - (currentPos / totalRange)
-
-  scrollProgress.value = Math.max(0, Math.min(1, rawProgress))
+  const progress = Math.max(0, Math.min(1, scrolledDistance / totalDistance))
+  trackProgress.value = progress
 }
 
 const handleSubmit = async () => {
@@ -95,11 +158,17 @@ onMounted(() => {
   }
 
   window.addEventListener('scroll', handleScroll)
+  window.addEventListener('resize', updateLogoOffset)
   handleScroll()
+
+  nextTick(() => {
+    updateLogoOffset()
+  })
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('resize', updateLogoOffset)
 })
 </script>
 
@@ -112,57 +181,75 @@ onUnmounted(() => {
       description="From strategy to storytelling, we create brands, campaigns, and content that don't just look good but perform, connect, and grow."
     />
 
-    <!-- About Section -->
-    <section class="bg-[#1D96B8] py-16 md:py-20 min-h-screen flex items-center">
-      <div class="max-w-[1266px] mx-auto px-6 md:px-8">
-        <div class="flex flex-col md:flex-row gap-12 md:gap-20 items-start">
-          <!-- Left column -->
-          <div class="md:w-[340px] shrink-0 flex flex-col gap-6">
-            <!-- ABOUT US label -->
-            <div class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-[#E8F600] inline-block shrink-0" />
-              <span
-                class="text-[#E8F600] text-xs font-semibold uppercase tracking-[0.18em]"
+    <!-- About Section Track (300vh height to give space for scrolling animation) -->
+    <section
+      ref="aboutTrackRef"
+      class="relative h-[300vh] bg-transparent"
+    >
+      <!-- Pinned Viewport Container (Sticky h-screen) -->
+      <div class="sticky top-0 h-screen w-full overflow-hidden bg-brand-dark flex items-center">
+        <!-- Sliding Background Overlay -->
+        <div
+          class="absolute inset-0 bg-[#1D96B8] transition-transform duration-75"
+          :style="backgroundStyle"
+        />
+
+        <div class="relative z-10 max-w-[1266px] w-full mx-auto px-6 md:px-8">
+          <div class="flex flex-col md:flex-row gap-12 md:gap-20 items-center md:items-start relative">
+            <!-- Left column -->
+            <div class="md:w-[340px] shrink-0 flex flex-col gap-6">
+              <!-- ABOUT US label -->
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-[#E8F600] inline-block shrink-0" />
+                <span
+                  class="text-[#E8F600] text-xs font-semibold uppercase tracking-[0.18em]"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >About Us</span>
+              </div>
+
+              <!-- Logo container (This will be animated from center to left) -->
+              <div
+                ref="logoPlaceholderRef"
+                class="relative h-[140px] w-[140px] shrink-0"
+              >
+                <img
+                  src="/Images/Logo.png"
+                  alt="Macawoo logo"
+                  class="absolute w-[140px] h-[140px] object-contain"
+                  :style="logoStyle"
+                >
+              </div>
+
+              <!-- Tagline below logo (fades in after logo finishes moving) -->
+              <p
+                class="text-[#E8F600] text-sm leading-relaxed max-w-[260px] transition-opacity duration-300"
+                :style="{ opacity: taglineOpacity }"
                 style="font-family: 'Bricolage Grotesque', sans-serif;"
-              >About Us</span>
+              >
+                We love to create, we love to solve, we love to collaborate, and we love to turn amazing ideas into reality. We're here to partner with you through every step of the process.
+              </p>
             </div>
 
-            <!-- Yellow circle logo -->
-            <div>
-              <img
-                src="/Images/Logo.png"
-                alt="Macawoo logo"
-                class="w-[140px] h-[140px] object-contain"
+            <!-- Right column – statement copy -->
+            <div
+              ref="textRevealRef"
+              class="flex-1 flex items-center md:pt-8"
+              :style="{ opacity: textColumnOpacity }"
+            >
+              <p
+                class="text-white text-[28px] md:text-[36px] lg:text-[42px] font-semibold leading-[1.25]"
+                style="font-family: 'Bricolage Grotesque', sans-serif;"
               >
+                <span
+                  v-for="(word, index) in words"
+                  :key="index"
+                  class="inline-block mr-[0.23em]"
+                  :style="getWordStyle(index)"
+                >
+                  {{ word }}
+                </span>
+              </p>
             </div>
-
-            <!-- Tagline below logo -->
-            <p
-              class="text-[#E8F600] text-sm leading-relaxed max-w-[260px]"
-              style="font-family: 'Bricolage Grotesque', sans-serif;"
-            >
-              We love to create, we love to solve, we love to collaborate, and we love to turn amazing ideas into reality. We're here to partner with you through every step of the process.
-            </p>
-          </div>
-
-          <!-- Right column – statement copy -->
-          <div
-            ref="textRevealRef"
-            class="flex-1 flex items-center md:pt-8"
-          >
-            <p
-              class="text-white text-[28px] md:text-[36px] lg:text-[42px] font-semibold leading-[1.25]"
-              style="font-family: 'Bricolage Grotesque', sans-serif;"
-            >
-              <span
-                v-for="(word, index) in words"
-                :key="index"
-                class="inline-block mr-[0.23em] transition-opacity duration-150 ease-out"
-                :style="getWordStyle(index)"
-              >
-                {{ word }}
-              </span>
-            </p>
           </div>
         </div>
       </div>
