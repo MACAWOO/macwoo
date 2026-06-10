@@ -297,43 +297,34 @@ watch(() => route.path, () => {
       />
 
       <!-- ═══════════════════════ MOBILE NAV ═══════════════════════ -->
-      <div
-        class="md:hidden flex items-center justify-between px-4 h-[46px] rounded-full w-full"
-        style="background: linear-gradient(90deg, #2094BA 0%, #2AA4C9 50%, #2095BB 100%); border:1px solid rgba(255,255,255,0.18);"
-      >
+      <div class="md:hidden flex items-center justify-between w-full">
         <NavBarLogo class="shrink-0" />
         <button
-          class="text-white p-1.5 rounded-full hover:bg-white/10 transition-colors"
+          class="w-12 h-12 rounded-[16px] bg-white flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform shrink-0 cursor-pointer"
           aria-label="Toggle menu"
           @click="isMenuOpen = !isMenuOpen"
         >
           <svg
             v-if="!isMenuOpen"
-            class="w-5 h-5"
+            class="w-[22px] h-[22px] text-[#1D96B8]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
+            stroke-linecap="round"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
+            <path d="M4 6h16M4 12h16M4 18h16" />
           </svg>
           <svg
             v-else
-            class="w-5 h-5"
+            class="w-[22px] h-[22px] text-[#1D96B8]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
+            stroke-linecap="round"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
+            <path d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>

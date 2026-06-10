@@ -15,91 +15,156 @@ useSeoMeta({
 })
 
 const recommended = computed(() => posts.value.filter(p => p.slug !== slug).slice(0, 3))
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()
+}
 </script>
 
 <template>
   <div v-if="post">
-    <!-- Back -->
-    <div class="pt-20 pb-4 px-6 max-w-4xl mx-auto">
-      <NuxtLink
-        to="/blog"
-        class="inline-flex items-center gap-2 text-zinc-500 text-sm hover:text-brand-teal-500 transition-colors"
-      >
-        ← Back
-      </NuxtLink>
-    </div>
-
     <!-- Hero image -->
-    <div class="w-full aspect-[21/9] overflow-hidden">
+    <div class="relative w-full h-[500px] md:h-[698px] overflow-hidden">
       <img
         :src="post.image"
         :alt="post.title"
         class="w-full h-full object-cover"
       >
+      <div class="absolute inset-0 bg-black/20" />
+      <NuxtLink
+        to="/blog"
+        class="absolute top-[90px] left-[120px] bg-white flex items-center gap-[3px] px-5 py-[10px] rounded-full font-extrabold text-[16px] text-[#201f1f] leading-[28px] hover:bg-zinc-100 transition-colors z-10"
+      >
+        <svg
+          class="w-[14px] h-[14px] shrink-0 -rotate-45"
+          viewBox="0 0 14 14"
+          fill="none"
+        >
+          <path
+            d="M2 12L12 2M12 2H4M12 2V10"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        Back
+      </NuxtLink>
     </div>
 
-    <!-- Article -->
-    <article class="py-14 bg-white">
-      <div class="max-w-3xl mx-auto px-6">
-        <div class="flex gap-3 mb-6">
-          <span class="text-xs text-zinc-500 bg-zinc-100 px-3 py-1.5 rounded-full">
-            {{ new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }}
-          </span>
-          <span class="text-xs text-zinc-500 bg-zinc-100 px-3 py-1.5 rounded-full">{{ post.readTime }}</span>
-        </div>
-
-        <h1 class="text-3xl md:text-5xl font-bold text-brand-yellow-500 leading-tight mb-6">
-          {{ post.title }}
-        </h1>
-
-        <p class="text-zinc-500 text-base leading-relaxed mb-10 italic">
-          {{ post.excerpt }}
-        </p>
-
-        <div
-          v-for="section in post.body"
-          :key="section.heading ?? section.content"
-          class="mb-10"
-        >
-          <h2
-            v-if="section.heading"
-            class="text-xl font-bold text-brand-dark mb-4"
-          >
-            {{ section.heading }}
-          </h2>
-          <p class="text-zinc-700 text-base leading-relaxed">
-            {{ section.content }}
+    <!-- Article header on teal -->
+    <div class="bg-[#1d96b8]">
+      <div class="max-w-[1440px] mx-auto px-[120px] pt-[59px] pb-[40px]">
+        <div class="max-w-[894px]">
+          <div class="flex gap-[15px] mb-[13px]">
+            <span class="border border-white rounded-full px-[9px] py-[5px] text-[16px] font-['Bricolage_Grotesque'] text-white leading-[28px] whitespace-nowrap">
+              {{ formatDate(post.date) }}
+            </span>
+            <span class="border border-white rounded-full px-[9px] py-[5px] text-[16px] font-['Bricolage_Grotesque'] text-white leading-[28px] flex items-center gap-[5px] whitespace-nowrap">
+              <svg
+                class="w-[18px] h-[18px] shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                />
+                <path
+                  d="M12 7v5l3 3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              {{ post.readTime }}
+            </span>
+          </div>
+          <h1 class="font-fredoka font-medium text-[48px] text-[#f4ed18] leading-[51px] mb-[14px]">
+            {{ post.title }}
+          </h1>
+          <p class="text-[18px] font-['Bricolage_Grotesque'] font-normal text-white leading-relaxed">
+            {{ post.excerpt }}
           </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Article body (white) -->
+    <article class="bg-white">
+      <div class="max-w-[1440px] mx-auto px-[120px] py-[34px]">
+        <div class="flex flex-col gap-[34px]">
+          <div
+            v-for="section in post.body"
+            :key="section.heading ?? section.content"
+            class="flex flex-col gap-[14px]"
+          >
+            <h2
+              v-if="section.heading"
+              class="font-fredoka font-medium text-[32px] text-[#1d96b8] leading-normal"
+            >
+              {{ section.heading }}
+            </h2>
+            <p class="text-[18px] font-['Bricolage_Grotesque'] font-normal text-black leading-relaxed">
+              {{ section.content }}
+            </p>
+          </div>
         </div>
       </div>
     </article>
 
-    <!-- Recommended -->
-    <section class="py-16 bg-brand-teal-500">
-      <div class="max-w-7xl mx-auto px-6">
-        <h2 class="text-2xl font-bold text-white mb-8">
+    <!-- Recommended reading -->
+    <section class="bg-[#1d96b8] py-16">
+      <div class="max-w-[1440px] mx-auto px-[120px]">
+        <h2 class="font-fredoka font-medium text-[48px] text-[#f4ed18] leading-[51px] mb-8">
           Recommended Reading
         </h2>
-        <div class="grid md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <NuxtLink
             v-for="rec in recommended"
             :key="rec.slug"
             :to="`/blog/${rec.slug}`"
-            class="group block bg-white rounded-2xl overflow-hidden hover:shadow-lg transition-shadow"
+            class="group block rounded-[34px] overflow-hidden"
           >
-            <div class="aspect-[4/3] overflow-hidden">
+            <div class="h-[337px] overflow-hidden rounded-t-[34px] bg-zinc-200">
               <img
                 :src="rec.image"
                 :alt="rec.title"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               >
             </div>
-            <div class="p-4">
-              <div class="flex gap-2 mb-2">
-                <span class="text-xs text-zinc-400 bg-zinc-100 px-2 py-1 rounded">{{ new Date(rec.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }}</span>
-                <span class="text-xs text-zinc-400 bg-zinc-100 px-2 py-1 rounded">{{ rec.readTime }}</span>
+            <div class="bg-white rounded-b-[34px] px-[21px] pt-[14px] pb-[18px] flex flex-col gap-[10px]">
+              <div class="flex gap-2 flex-wrap">
+                <span class="border border-[#201f1f] rounded-full px-[9px] py-[3px] text-[16px] text-[#201f1f] leading-[28px] whitespace-nowrap">
+                  {{ formatDate(rec.date) }}
+                </span>
+                <span class="border border-[#201f1f] rounded-full px-[9px] py-[3px] text-[16px] text-[#201f1f] leading-[28px] flex items-center gap-[5px] whitespace-nowrap">
+                  <svg
+                    class="w-[18px] h-[18px] shrink-0"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="9"
+                    />
+                    <path
+                      d="M12 7v5l3 3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  {{ rec.readTime }}
+                </span>
               </div>
-              <h3 class="font-bold text-brand-dark text-sm leading-snug">{{ rec.title }}</h3>
+              <h3 class="text-[32px] font-normal text-[#201f1f] leading-tight">
+                {{ rec.title }}
+              </h3>
             </div>
           </NuxtLink>
         </div>

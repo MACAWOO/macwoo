@@ -7,12 +7,54 @@ useSeoMeta({
 })
 
 const containerRef = ref<HTMLElement | null>(null)
+const textRevealRef = ref<HTMLElement | null>(null)
+const scrollProgress = ref(0)
+const revealText = 'At Macawoo, we create brands that connect, campaigns that perform, and stories that leave a lasting impression. Through branding, marketing, and storytelling, we help businesses stand out, stay relevant, and grow with purpose.'
+const words = revealText.split(' ')
 
 const services = ['Branding & Design', 'Digital Marketing', 'Video Production', 'Others']
 const form = reactive({ name: '', service: '', email: '', phone: '', message: '' })
 
 const isSubmitting = ref(false)
 const isSubmitted = ref(false)
+
+const getWordStyle = (index: number) => {
+  const totalWords = words.length
+  // Each word transitions over a range of 0.2 of the overall progress (from 0.25 opacity to 1.0)
+  const wordStart = (index / totalWords) * 0.8
+  const wordEnd = wordStart + 0.2
+
+  let opacity = 0.25
+  if (scrollProgress.value >= wordEnd) {
+    opacity = 1.0
+  } else if (scrollProgress.value <= wordStart) {
+    opacity = 0.25
+  } else {
+    const factor = (scrollProgress.value - wordStart) / (wordEnd - wordStart)
+    opacity = 0.25 + factor * 0.75
+  }
+
+  return {
+    opacity
+  }
+}
+
+const handleScroll = () => {
+  if (!textRevealRef.value) return
+  const rect = textRevealRef.value.getBoundingClientRect()
+  const windowHeight = window.innerHeight
+
+  // Start revealing when the element is 85% down the viewport,
+  // finish when it reaches 25% down the viewport.
+  const start = windowHeight * 0.85
+  const end = windowHeight * 0.25
+
+  const totalRange = start - end
+  const currentPos = rect.top - end
+  const rawProgress = 1 - (currentPos / totalRange)
+
+  scrollProgress.value = Math.max(0, Math.min(1, rawProgress))
+}
 
 const handleSubmit = async () => {
   isSubmitting.value = true
@@ -51,6 +93,13 @@ onMounted(() => {
     const cards = containerRef.value.querySelectorAll('.reveal-card')
     cards.forEach(card => observer.observe(card))
   }
+
+  window.addEventListener('scroll', handleScroll)
+  handleScroll()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
 })
 </script>
 
@@ -64,7 +113,7 @@ onMounted(() => {
     />
 
     <!-- About Section -->
-    <section class="bg-[#1D96B8] py-16 md:py-20">
+    <section class="bg-[#1D96B8] py-16 md:py-20 min-h-screen flex items-center">
       <div class="max-w-[1266px] mx-auto px-6 md:px-8">
         <div class="flex flex-col md:flex-row gap-12 md:gap-20 items-start">
           <!-- Left column -->
@@ -97,12 +146,22 @@ onMounted(() => {
           </div>
 
           <!-- Right column – statement copy -->
-          <div class="flex-1 flex items-center md:pt-8">
+          <div
+            ref="textRevealRef"
+            class="flex-1 flex items-center md:pt-8"
+          >
             <p
               class="text-white text-[28px] md:text-[36px] lg:text-[42px] font-semibold leading-[1.25]"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
-              At Macawoo, we create brands that connect, campaigns that perform, and stories that leave a lasting impression. Through branding, marketing, and storytelling, we help businesses stand out, stay relevant, and grow with purpose.
+              <span
+                v-for="(word, index) in words"
+                :key="index"
+                class="inline-block mr-[0.23em] transition-opacity duration-150 ease-out"
+                :style="getWordStyle(index)"
+              >
+                {{ word }}
+              </span>
             </p>
           </div>
         </div>

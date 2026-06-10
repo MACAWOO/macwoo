@@ -14,8 +14,8 @@ useSeoMeta({
       video="/Background%20Videos/Case%20Study.mp4"
       image="/Images/Marketing.jpeg"
       description="Dive deep into how we transform bold visions into measurable realities for ambitious founders and marketing directors."
+      class="custom-hero-ratio"
       show-grid
-      min-height="min-h-[386px]"
     />
 
     <div class="bg-[#1D96B8]">

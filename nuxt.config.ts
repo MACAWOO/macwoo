@@ -29,11 +29,21 @@ export default defineNuxtConfig({
     '/': { prerender: true }
   },
 
+  devServer: {
+    host: '0.0.0.0'
+  },
+
   compatibilityDate: '2025-01-15',
 
   nitro: {
     prerender: {
       crawlLinks: true
+    }
+  },
+
+  vite: {
+    server: {
+      allowedHosts: true
     }
   },
 

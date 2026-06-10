@@ -26,6 +26,9 @@ useSeoMeta({
   ogDescription: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
   twitterCard: 'summary_large_image'
 })
+const isBlog = computed(() => route.path.startsWith('/blog'))
+const footerBgColor = computed(() => isBlog.value ? 'bg-[#1D96B8]' : undefined)
+const footerColor = computed(() => isBlog.value ? 'bg-brand-yellow-500' : undefined)
 </script>
 
 <template>
@@ -34,7 +37,10 @@ useSeoMeta({
     <main>
       <NuxtPage />
     </main>
-    <AppFooter />
+    <AppFooter
+      :bg-color="footerBgColor"
+      :footer-color="footerColor"
+    />
     <ChatWidget />
   </UApp>
 </template>

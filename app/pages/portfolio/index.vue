@@ -35,8 +35,8 @@ const pairs = computed(() => {
       video="/Background%20Videos/Portfolio.mp4"
       image="/Images/Marketing.jpeg"
       description="A curated selection of our finest projects, demonstrating our commitment to visionary design and strategic execution."
+      class="custom-hero-ratio"
       show-grid
-      min-height="min-h-[386px]"
     />
 
     <div class="bg-[#1D96B8]">

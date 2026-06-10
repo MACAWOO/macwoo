@@ -8,7 +8,7 @@
     <img
       src="/Images/Logo_letters.png"
       alt="Macawoo"
-      class="h-7 w-auto md:hidden block"
+      class="h-9 w-auto md:hidden block"
     >
   </div>
 </template>

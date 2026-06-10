@@ -1,21 +1,35 @@
 <script setup lang="ts">
+interface Props {
+  bgColor?: string
+  footerColor?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {})
+
 const route = useRoute()
 const isCareers = computed(() => route.path === '/careers')
 const isYellowFooter = computed(() => isCareers.value || route.path === '/portfolio' || route.path === '/case-studies')
+
+const isYellowMode = computed(() => {
+  if (props.footerColor) {
+    return props.footerColor.includes('yellow')
+  }
+  return isYellowFooter.value
+})
 </script>
 
 <template>
-  <footer :class="[isYellowFooter ? 'bg-[#1D96B8]' : 'bg-white', 'px-4 md:px-10 py-16 md:py-24']">
+  <footer :class="[bgColor || (isYellowFooter ? 'bg-[#1D96B8]' : 'bg-white'), 'px-4 md:px-10 py-16 md:py-24']">
     <div
       class="max-w-[1400px] mx-auto rounded-[2.5rem] px-8 pt-16 pb-8 md:px-16 md:pt-20 md:pb-12 transition-colors duration-300"
-      :class="isYellowFooter ? 'bg-brand-yellow-500 text-brand-dark' : 'bg-[#1D96B8] text-white'"
+      :class="[footerColor || (isYellowFooter ? 'bg-brand-yellow-500' : 'bg-[#1D96B8]'), isYellowMode ? 'text-brand-dark' : 'text-white']"
     >
       <div class="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
         <!-- Navigation -->
         <div>
           <h4
             class="font-bold text-base md:text-lg mb-5"
-            :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+            :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
           >
             Navigation
           </h4>
@@ -24,42 +38,42 @@ const isYellowFooter = computed(() => isCareers.value || route.path === '/portfo
               <NuxtLink
                 to="/"
                 class="text-sm md:text-base hover:opacity-80 transition-opacity"
-                :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+                :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               >Home</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/about"
                 class="text-sm md:text-base hover:opacity-80 transition-opacity"
-                :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+                :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               >About</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/portfolio"
                 class="text-sm md:text-base hover:opacity-80 transition-opacity"
-                :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+                :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               >Portfolio</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/case-studies"
                 class="text-sm md:text-base hover:opacity-80 transition-opacity"
-                :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+                :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               >Case Studies</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/blog"
                 class="text-sm md:text-base hover:opacity-80 transition-opacity"
-                :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+                :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               >Blog</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/careers"
                 class="text-sm md:text-base hover:opacity-80 transition-opacity"
-                :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+                :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               >Careers</NuxtLink>
             </li>
           </ul>
@@ -69,7 +83,7 @@ const isYellowFooter = computed(() => isCareers.value || route.path === '/portfo
         <div>
           <h4
             class="font-bold text-base md:text-lg mb-5"
-            :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+            :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
           >
             Services
           </h4>
@@ -78,21 +92,21 @@ const isYellowFooter = computed(() => isCareers.value || route.path === '/portfo
               <NuxtLink
                 to="/services/branding-design"
                 class="text-sm md:text-base hover:opacity-80 transition-opacity"
-                :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+                :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               >Branding & Designing</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/services/digital-marketing"
                 class="text-sm md:text-base hover:opacity-80 transition-opacity"
-                :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+                :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               >Digital Marketing</NuxtLink>
             </li>
             <li>
               <NuxtLink
                 to="/services/video-production"
                 class="text-sm md:text-base hover:opacity-80 transition-opacity"
-                :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+                :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               >Video Production</NuxtLink>
             </li>
           </ul>
@@ -102,31 +116,31 @@ const isYellowFooter = computed(() => isCareers.value || route.path === '/portfo
         <div>
           <h4
             class="font-bold text-base md:text-lg mb-5"
-            :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+            :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
           >
             Contact
           </h4>
           <ul class="space-y-3">
             <li
-              :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+              :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               class="text-sm md:text-base"
             >
               Phone Number:
             </li>
             <li
-              :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+              :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               class="text-sm md:text-base font-semibold"
             >
               +91 9747477502
             </li>
             <li
-              :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+              :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               class="text-sm md:text-base pt-2"
             >
               Email Id:
             </li>
             <li
-              :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+              :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               class="text-sm md:text-base break-all"
             >
               macawooofficial@gmail.com
@@ -139,13 +153,13 @@ const isYellowFooter = computed(() => isCareers.value || route.path === '/portfo
           <div class="flex items-center justify-between gap-4 mb-5">
             <h4
               class="font-bold text-base md:text-lg"
-              :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+              :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
             >
               Address
             </h4>
             <div
               class="flex items-center gap-3"
-              :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+              :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
             >
               <a
                 href="#"
@@ -190,7 +204,7 @@ const isYellowFooter = computed(() => isCareers.value || route.path === '/portfo
           </div>
           <p
             class="text-sm md:text-base"
-            :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+            :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
           >
             Kerala | UAE
           </p>
@@ -200,26 +214,26 @@ const isYellowFooter = computed(() => isCareers.value || route.path === '/portfo
       <!-- Bottom strip -->
       <div
         class="border-t pt-6 mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-y-2 gap-x-8 text-xs md:text-sm"
-        :class="isYellowFooter ? 'border-brand-dark/20 text-brand-dark' : 'border-white/20 text-white'"
+        :class="isYellowMode ? 'border-brand-dark/20 text-brand-dark' : 'border-white/20 text-white'"
       >
         <p>
           All right Reserved @ <NuxtLink
             to="/admin"
             class="hover:underline transition-all"
-            :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+            :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
           >Macawoo</NuxtLink>
         </p>
         <div class="flex items-center gap-2">
           <a
             href="#"
             class="hover:underline"
-            :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+            :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
           >Privacy</a>
-          <span :class="isYellowFooter ? 'text-brand-dark/50' : 'text-white/50'">|</span>
+          <span :class="isYellowMode ? 'text-brand-dark/50' : 'text-white/50'">|</span>
           <a
             href="#"
             class="hover:underline"
-            :class="isYellowFooter ? 'text-brand-dark' : 'text-white'"
+            :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
           >Terms & Conditions</a>
         </div>
       </div>
