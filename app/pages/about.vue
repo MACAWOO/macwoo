@@ -1,24 +1,26 @@
 <script setup lang="ts">
+const { settings } = usePageSettings()
+
 useSeoMeta({
-  title: 'About — Macawoo',
+  title: 'About Us — Macawoo',
   description: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.'
 })
 </script>
 
 <template>
   <div>
-    <!-- Hero -->
+    <!-- Page Hero -->
     <PageHero
-      title-html="<span class='text-brand-yellow-500'>Built for Brands That<br>Want to Stand Out.</span>"
-      video="/Background%20Videos/About.mp4"
-      image="/Images/Branding.jpeg"
+      title-html="About Us"
+      :video="settings.aboutHeroVideo"
+      :image="settings.aboutHeroImage"
+      show-grid
       class="custom-hero-ratio"
-      :show-grid="true"
     />
 
     <!-- Who We Are Section -->
-    <section class="bg-brand-yellow-500 py-16 md:py-24">
-      <div class="max-w-[1266px] mx-auto px-6 text-center">
+    <section class="bg-[#F8F9FA] py-16 md:py-24 text-center">
+      <div class="max-w-[1266px] mx-auto px-6">
         <p
           class="text-[#1D96B8] text-xs font-semibold uppercase tracking-[0.18em] mb-6"
           style="font-family: 'Bricolage Grotesque', sans-serif;"

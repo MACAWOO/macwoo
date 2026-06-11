@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { settings } = usePageSettings()
+
 useSeoMeta({
   title: 'Contact — Macawoo',
   description: 'Ready to elevate your brand? Drop us a line and let\'s start crafting a narrative that commands attention and drives results.'
@@ -12,8 +14,8 @@ const form = reactive({ name: '', service: '', email: '', phone: '', message: ''
   <div>
     <PageHero
       title-html="Let's Build Something<br><em class='not-italic text-brand-yellow-500'>Powerful.</em>"
-      video="/Background%20Videos/Contact.mp4"
-      image="/Images/Marketing.jpeg"
+      :video="settings.contactHeroVideo"
+      :image="settings.contactHeroImage"
       description="Ready to elevate your brand? Drop us a line and let's start crafting a narrative that commands attention and drives results."
     />
 

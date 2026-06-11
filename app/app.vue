@@ -29,18 +29,20 @@ useSeoMeta({
 const isBlog = computed(() => route.path.startsWith('/blog'))
 const footerBgColor = computed(() => isBlog.value ? 'bg-[#1D96B8]' : undefined)
 const footerColor = computed(() => isBlog.value ? 'bg-brand-yellow-500' : undefined)
+const isAdmin = computed(() => route.path.startsWith('/admin'))
 </script>
 
 <template>
   <UApp>
-    <AppHeader v-if="route.path !== '/careers'" />
+    <AppHeader v-if="route.path !== '/careers' && !isAdmin" />
     <main>
       <NuxtPage />
     </main>
     <AppFooter
+      v-if="!isAdmin"
       :bg-color="footerBgColor"
       :footer-color="footerColor"
     />
-    <ChatWidget />
+    <ChatWidget v-if="!isAdmin" />
   </UApp>
 </template>

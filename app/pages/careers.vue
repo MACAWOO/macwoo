@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { jobs } = useCareers()
+const { settings } = usePageSettings()
 
 useSeoMeta({
   title: 'Careers — Macawoo',
@@ -26,7 +27,8 @@ const isModalOpen = ref(false)
     <!-- Page Hero -->
     <PageHero
       title-html="<span class='text-brand-yellow-500'>Build Your Future<br>With Macawoo</span>"
-      video="/Background%20Videos/Careers.mp4"
+      :video="settings.careersHeroVideo"
+      :image="settings.careersHeroImage"
       description="We are a collection of visionaries, builders, and storytellers. Join us in crafting digital experiences that demand attention and drive transformation."
       :ctas="[{ label: 'View Open Roles ↓', to: '#open-roles', variant: 'white' }]"
       show-grid

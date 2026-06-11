@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { posts } = useBlogs()
+const { settings } = usePageSettings()
 
 useSeoMeta({
   title: 'Blog — Macawoo',
@@ -24,7 +25,8 @@ function formatDate(dateStr: string) {
     <PageHero
       variant="teal"
       title-html="Ideas, Insights &amp; Stories<br>That Drive Brands"
-      video="/Background%20Videos/Blog.mp4"
+      :video="settings.blogHeroVideo"
+      :image="settings.blogHeroImage"
       class="custom-hero-ratio"
       show-grid
     />

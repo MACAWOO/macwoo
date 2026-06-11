@@ -1,3 +1,13 @@
+<script setup lang="ts">
+interface Props {
+  grids?: number
+}
+
+withDefaults(defineProps<Props>(), {
+  grids: 53
+})
+</script>
+
 <template>
   <div class="absolute inset-0 pointer-events-none overflow-hidden select-none z-[4]">
     <!-- Single Backdrop Blur Overlay for high-performance scrolling -->
@@ -13,10 +23,14 @@
       aria-hidden="true"
     >
       <div
-        v-for="i in 53"
+        v-for="i in grids"
         :key="i"
         class="glass-panel"
-        :style="{ '--panel-index': i }"
+        :style="{
+          '--panel-index': i,
+          'width': `calc(100% / ${grids})`,
+          'flex': `0 0 calc(100% / ${grids})`
+        }"
       >
         <svg
           class="glass-svg"
@@ -45,8 +59,6 @@
 .glass-panel {
   position: relative;
   display: block !important;
-  width: calc(100% / 53) !important;
-  flex: 0 0 calc(100% / 53) !important;
   height: 100% !important;
   margin: 0 !important;
   padding: 0 !important;

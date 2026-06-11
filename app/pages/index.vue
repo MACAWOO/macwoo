@@ -6,6 +6,8 @@ useSeoMeta({
   description: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.'
 })
 
+const { settings } = usePageSettings()
+
 const containerRef = ref<HTMLElement | null>(null)
 const textRevealRef = ref<HTMLElement | null>(null)
 
@@ -39,38 +41,121 @@ const updateLogoOffset = () => {
   }
 }
 
+const disperseScale = computed(() => {
+  const t = Math.max(0, Math.min(1, trackProgress.value / 0.22))
+  // Progressive scale of dispersion distortion
+  return t * t * 250
+})
+
+const heroOpacity = computed(() => {
+  // Pinned PageHero wrapper container is active until the background image completely fades out at 0.50
+  if (trackProgress.value <= 0.25) return 1
+  if (trackProgress.value >= 0.50) return 0
+  return 1 - ((trackProgress.value - 0.25) / 0.25)
+})
+
+const heroBgStyle = computed(() => {
+  // Keep background image fully visible (at !opacity-60, which is 0.6) until progress reaches 0.25.
+  // Fades out between 0.25 and 0.50.
+  if (trackProgress.value <= 0.25) return { opacity: 0.6 }
+  if (trackProgress.value >= 0.50) return { opacity: 0 }
+  const t = (trackProgress.value - 0.25) / 0.25
+  return {
+    opacity: 0.6 * (1 - t)
+  }
+})
+
+const heroContentStyle = computed(() => {
+  // Hero text / content blurs out and disperses out between progress 0.0 and 0.22.
+  const t = Math.max(0, Math.min(1, trackProgress.value / 0.22))
+  const opacityVal = Math.max(0, 1 - t * 1.2) // Fully fades out slightly before 0.22
+  const blurVal = t * 24
+  const scaleVal = 1 + t * 0.15
+  return {
+    opacity: opacityVal,
+    filter: `url(#hero-disperse) blur(${blurVal}px)`,
+    transform: `scale(${scaleVal})`,
+    pointerEvents: (opacityVal > 0 ? 'auto' : 'none') as 'auto' | 'none'
+  }
+})
+
 const backgroundStyle = computed(() => {
-  const t = Math.max(0, Math.min(1, trackProgress.value / 0.15))
+  // Teal background overlay arrives when logo starts moving to left (progress >= 0.25)
+  if (trackProgress.value <= 0.25) return { opacity: 0 }
+  if (trackProgress.value >= 0.50) return { opacity: 1 }
+  const t = (trackProgress.value - 0.25) / 0.25
   return {
     opacity: t,
     transform: `scale(${0.95 + t * 0.05})`
   }
 })
 
-const logoStyle = computed(() => {
-  const t = Math.max(0, Math.min(1, trackProgress.value / 0.4))
-  // Cubic ease-in-out
-  const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+const logoOpacity = computed(() => {
+  // Logo fades in between progress 0.0 and 0.20
+  if (trackProgress.value <= 0.20) {
+    return trackProgress.value / 0.20
+  }
+  return 1
+})
 
-  const scale = 2.5 - 1.5 * eased
-  const x = logoOffset.value.x * (1 - eased)
-  const y = logoOffset.value.y * (1 - eased)
+const logoStyle = computed(() => {
+  let scale = 1
+  let x = 0
+  let y = 0
+  const winHeight = typeof window !== 'undefined' ? window.innerHeight : 800
+
+  if (trackProgress.value < 0.25) {
+    // Phase 1: Logo enters from bottom center to center, scaling up from 0.5 to 2.5
+    const t = Math.max(0, Math.min(1, trackProgress.value / 0.25))
+    // Cubic ease-out curve for smooth entry
+    const easeT = 1 - Math.pow(1 - t, 3)
+    scale = 0.5 + 2.0 * easeT
+
+    // Horizontally centered (logoOffset.value.x)
+    x = logoOffset.value.x
+    // Vertically moves from bottom of screen (logoOffset.value.y + winHeight / 2 + 100) to center (logoOffset.value.y)
+    y = logoOffset.value.y + (winHeight / 2 + 100) * (1 - easeT)
+  } else {
+    // Phase 2: Translate from center to left placeholder between 0.25 and 0.60
+    const t = Math.max(0, Math.min(1, (trackProgress.value - 0.25) / 0.35))
+    // Cubic ease-in-out curve
+    const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+    scale = 2.5 - 1.5 * eased
+    x = logoOffset.value.x * (1 - eased)
+    y = logoOffset.value.y * (1 - eased)
+  }
 
   return {
     transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`,
-    transformOrigin: 'center center'
+    transformOrigin: 'center center',
+    opacity: logoOpacity.value
   }
 })
 
 const taglineOpacity = computed(() => {
-  if (trackProgress.value < 0.4) return 0
-  const t = Math.max(0, Math.min(1, (trackProgress.value - 0.4) / 0.2))
+  if (trackProgress.value < 0.40) return 0
+  const t = Math.max(0, Math.min(1, (trackProgress.value - 0.40) / 0.25))
   return t
 })
 
 const textColumnOpacity = computed(() => {
-  if (trackProgress.value < 0.3) return 0
-  const t = Math.max(0, Math.min(1, (trackProgress.value - 0.3) / 0.2))
+  if (trackProgress.value < 0.30) return 0
+  const t = Math.max(0, Math.min(1, (trackProgress.value - 0.30) / 0.30))
+  return t
+})
+
+const aboutSectionStyle = computed(() => {
+  // Interactive only once Phase 2 begins
+  const isInteractive = trackProgress.value >= 0.25
+  return {
+    pointerEvents: (isInteractive ? 'auto' : 'none') as 'auto' | 'none',
+    zIndex: 30
+  }
+})
+
+const labelOpacity = computed(() => {
+  if (trackProgress.value < 0.25) return 0
+  const t = Math.max(0, Math.min(1, (trackProgress.value - 0.25) / 0.25)) // Fades in between 0.25 and 0.50
   return t
 })
 
@@ -85,11 +170,10 @@ const isSubmitted = ref(false)
 
 const getWordStyle = (index: number) => {
   const totalWords = words.length
-  // Words start revealing after progress = 0.45
-  const start = (index / totalWords) * 0.75
-  const end = start + 0.25
+  const start = (index / totalWords) * 0.35
+  const end = start + 0.1
 
-  const t = Math.max(0, Math.min(1, (trackProgress.value - 0.45) / 0.55))
+  const t = Math.max(0, Math.min(1, (trackProgress.value - 0.55) / 0.45))
 
   let opacity = 0.25
   if (t >= end) {
@@ -174,81 +258,100 @@ onUnmounted(() => {
 
 <template>
   <div>
-    <!-- Hero -->
-    <PageHero
-      title-html="FEEL THE <span class=&quot;text-brand-yellow-500&quot;>WOO</span>"
-      image="/Images/hero.png"
-      description="From strategy to storytelling, we create brands, campaigns, and content that don't just look good but perform, connect, and grow."
-    />
-
-    <!-- About Section Track (300vh height to give space for scrolling animation) -->
+    <!-- Unified Scroll Track (400vh height for Hero + About Us scroll story) -->
     <section
       ref="aboutTrackRef"
-      class="relative h-[300vh] bg-transparent"
+      class="relative h-[400vh] bg-transparent"
     >
       <!-- Pinned Viewport Container (Sticky h-screen) -->
-      <div class="sticky top-0 h-screen w-full overflow-hidden bg-brand-dark flex items-center">
-        <!-- Sliding Background Overlay -->
+      <div class="sticky top-0 h-screen w-full overflow-hidden bg-brand-dark">
+        <!-- 1. Hero Section (Pinned and fades out) -->
         <div
-          class="absolute inset-0 bg-[#1D96B8] transition-transform duration-75"
+          class="absolute inset-0 z-20 transition-opacity duration-75"
+          :style="{ opacity: heroOpacity, pointerEvents: heroOpacity > 0 ? 'auto' : 'none' }"
+        >
+          <PageHero
+            title-html="FEEL THE <span class=&quot;text-brand-yellow-500&quot;>WOO</span>"
+            :image="settings.indexHeroImage"
+            :video="settings.indexHeroVideo"
+            description="From strategy to storytelling, we create brands, campaigns, and content that don't just look good but perform, connect, and grow."
+            image-class="!opacity-60"
+            class="h-full w-full"
+            :image-style="heroBgStyle"
+            :content-style="heroContentStyle"
+          />
+        </div>
+
+        <!-- 2. Sliding/Fading Teal Background Overlay -->
+        <div
+          class="absolute inset-0 bg-[#1D96B8] transition-opacity duration-75 z-10"
           :style="backgroundStyle"
         />
 
-        <div class="relative z-10 max-w-[1266px] w-full mx-auto px-6 md:px-8">
-          <div class="flex flex-col md:flex-row gap-12 md:gap-20 items-center md:items-start relative">
-            <!-- Left column -->
-            <div class="md:w-[340px] shrink-0 flex flex-col gap-6">
-              <!-- ABOUT US label -->
-              <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-[#E8F600] inline-block shrink-0" />
-                <span
-                  class="text-[#E8F600] text-xs font-semibold uppercase tracking-[0.18em]"
+        <!-- 3. About Us Content Section -->
+        <div
+          class="absolute inset-0 flex items-center"
+          :style="aboutSectionStyle"
+        >
+          <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8">
+            <div class="flex flex-col md:flex-row gap-12 md:gap-20 items-center md:items-start relative">
+              <!-- Left column -->
+              <div class="md:w-[340px] shrink-0 flex flex-col gap-6">
+                <!-- ABOUT US label (fades in as teal bg arrives) -->
+                <div
+                  class="flex items-center gap-2 transition-opacity duration-300"
+                  :style="{ opacity: labelOpacity }"
+                >
+                  <span class="w-2 h-2 rounded-full bg-[#E8F600] inline-block shrink-0" />
+                  <span
+                    class="text-[#E8F600] text-xs font-semibold uppercase tracking-[0.18em]"
+                    style="font-family: 'Bricolage Grotesque', sans-serif;"
+                  >About Us</span>
+                </div>
+
+                <!-- Logo container (This will be animated from center to left) -->
+                <div
+                  ref="logoPlaceholderRef"
+                  class="relative h-[140px] w-[140px] shrink-0"
+                >
+                  <img
+                    src="/Images/Logo.png"
+                    alt="Macawoo logo"
+                    class="absolute w-[140px] h-[140px] object-contain"
+                    :style="logoStyle"
+                  >
+                </div>
+
+                <!-- Tagline below logo (fades in after logo finishes moving) -->
+                <p
+                  class="text-[#E8F600] text-sm leading-relaxed max-w-[260px] transition-opacity duration-300"
+                  :style="{ opacity: taglineOpacity }"
                   style="font-family: 'Bricolage Grotesque', sans-serif;"
-                >About Us</span>
+                >
+                  We love to create, we love to solve, we love to collaborate, and we love to turn amazing ideas into reality. We're here to partner with you through every step of the process.
+                </p>
               </div>
 
-              <!-- Logo container (This will be animated from center to left) -->
+              <!-- Right column – statement copy -->
               <div
-                ref="logoPlaceholderRef"
-                class="relative h-[140px] w-[140px] shrink-0"
+                ref="textRevealRef"
+                class="flex-1 flex items-center md:pt-8"
+                :style="{ opacity: textColumnOpacity }"
               >
-                <img
-                  src="/Images/Logo.png"
-                  alt="Macawoo logo"
-                  class="absolute w-[140px] h-[140px] object-contain"
-                  :style="logoStyle"
+                <p
+                  class="text-white text-[28px] md:text-[36px] lg:text-[42px] font-semibold leading-[1.25]"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
                 >
+                  <span
+                    v-for="(word, index) in words"
+                    :key="index"
+                    class="inline-block mr-[0.23em]"
+                    :style="getWordStyle(index)"
+                  >
+                    {{ word }}
+                  </span>
+                </p>
               </div>
-
-              <!-- Tagline below logo (fades in after logo finishes moving) -->
-              <p
-                class="text-[#E8F600] text-sm leading-relaxed max-w-[260px] transition-opacity duration-300"
-                :style="{ opacity: taglineOpacity }"
-                style="font-family: 'Bricolage Grotesque', sans-serif;"
-              >
-                We love to create, we love to solve, we love to collaborate, and we love to turn amazing ideas into reality. We're here to partner with you through every step of the process.
-              </p>
-            </div>
-
-            <!-- Right column – statement copy -->
-            <div
-              ref="textRevealRef"
-              class="flex-1 flex items-center md:pt-8"
-              :style="{ opacity: textColumnOpacity }"
-            >
-              <p
-                class="text-white text-[28px] md:text-[36px] lg:text-[42px] font-semibold leading-[1.25]"
-                style="font-family: 'Bricolage Grotesque', sans-serif;"
-              >
-                <span
-                  v-for="(word, index) in words"
-                  :key="index"
-                  class="inline-block mr-[0.23em]"
-                  :style="getWordStyle(index)"
-                >
-                  {{ word }}
-                </span>
-              </p>
             </div>
           </div>
         </div>
@@ -278,7 +381,7 @@ onUnmounted(() => {
             style="transition-delay: 0ms;"
           >
             <img
-              src="/Images/Branding.jpeg"
+              :src="settings.servicesBrandingImage"
               alt="Branding & Design"
               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             >
@@ -309,7 +412,7 @@ onUnmounted(() => {
             style="transition-delay: 150ms;"
           >
             <img
-              src="/Images/Digital Marketing.jpeg"
+              :src="settings.servicesMarketingImage"
               alt="Digital Marketing"
               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             >
@@ -339,7 +442,7 @@ onUnmounted(() => {
             style="transition-delay: 300ms;"
           >
             <img
-              src="/Images/Video Production.jpeg"
+              :src="settings.servicesVideoImage"
               alt="Video Production"
               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             >
@@ -454,11 +557,13 @@ onUnmounted(() => {
           <div class="flex-1 rounded-[32px] overflow-hidden relative min-h-[350px] lg:min-h-[500px] flex flex-col justify-end p-8 md:p-12 shadow-xl group">
             <!-- Background Image -->
             <div class="absolute inset-0 bg-[url('/Images/wavy_yellow_teal_bg.png')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" />
+            <!-- Glassmorphism Grid Overlay on the image -->
+            <GlassGrid :grids="15" />
             <!-- Gradient Overlay for readability -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10" />
 
             <!-- Text Content -->
-            <div class="relative z-10">
+            <div class="relative z-20">
               <h2
                 class="text-white text-3xl md:text-4xl lg:text-[42px] font-bold leading-[1.2] tracking-tight"
                 style="font-family: 'Bricolage Grotesque', sans-serif;"
@@ -632,5 +737,29 @@ onUnmounted(() => {
         </div>
       </div>
     </section>
+
+    <!-- SVG Disperse Filter for Hero Text Dissolve -->
+    <svg
+      class="absolute w-0 h-0 pointer-events-none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter id="hero-disperse">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.04"
+            numOctaves="3"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            :scale="disperseScale"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
   </div>
 </template>

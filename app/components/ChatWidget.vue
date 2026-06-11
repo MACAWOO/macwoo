@@ -19,65 +19,76 @@ function sendMessage() {
     <!-- Chat panel -->
     <div
       v-if="isOpen"
-      class="w-80 bg-brand-yellow-500 rounded-2xl border border-brand-dark/10 overflow-hidden"
+      class="w-[484px] bg-[#f4ed18] rounded-[34px] shadow-[0px_0px_14px_0px_rgba(0,0,0,0.5)] flex flex-col"
     >
-      <!-- Header bar -->
-      <div class="flex items-center justify-between px-4 py-3">
-        <span class="font-bold text-brand-dark text-sm">Macawoo Chat</span>
+      <!-- Close button -->
+      <div class="flex justify-end px-5 pt-[17px] pb-0">
         <button
-          class="text-brand-dark hover:opacity-70 transition-opacity"
+          class="w-[33px] h-[33px] flex items-center justify-center text-black hover:opacity-60 transition-opacity"
           @click="isOpen = false"
         >
-          ✕
+          <svg
+            viewBox="0 0 24 24"
+            class="w-[22px] h-[22px]"
+            fill="currentColor"
+          >
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+          </svg>
         </button>
       </div>
 
-      <!-- Messages -->
-      <div class="bg-white mx-3 rounded-xl p-4 min-h-48 max-h-64 overflow-y-auto space-y-3">
-        <p
-          v-if="messages[0]"
-          class="text-xs text-zinc-400 text-center"
-        >
-          {{ messages[0].time }}
+      <!-- Messages area -->
+      <div class="bg-white mx-[17px] h-[400px] rounded-[19px] overflow-y-auto p-4 flex flex-col">
+        <p class="text-center text-[#0d0d0d] text-base font-medium mb-4 shrink-0">
+          Today 6:50 PM
         </p>
-        <div
-          v-for="(msg, i) in messages"
-          :key="i"
-          :class="msg.from === 'user' ? 'flex justify-end' : ''"
-        >
+        <div class="flex flex-col gap-1">
           <div
-            class="inline-block px-4 py-2.5 rounded-2xl text-sm max-w-[85%]"
-            :class="msg.from === 'bot' ? 'bg-zinc-100 text-zinc-800' : 'bg-brand-teal-500 text-white'"
+            v-for="(msg, i) in messages"
+            :key="i"
+            :class="msg.from === 'user' ? 'flex justify-end' : 'flex justify-start'"
           >
-            {{ msg.text }}
+            <div
+              class="relative px-5 py-2 text-base font-medium max-w-[85%] text-black"
+              :class="msg.from === 'bot' ? 'bot-bubble' : 'user-bubble'"
+            >
+              {{ msg.text }}
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Input -->
-      <div class="flex items-center gap-2 px-3 py-3 bg-white mx-3 mb-3 rounded-xl mt-2">
+      <!-- Input area -->
+      <div class="bg-white mx-[17px] my-[17px] rounded-[11px] h-[57px] flex items-center px-5 shrink-0">
         <input
           v-model="message"
           type="text"
           placeholder="Type Your Message Here"
-          class="flex-1 text-sm focus:outline-none placeholder:text-zinc-400"
+          class="flex-1 text-[20px] font-medium focus:outline-none placeholder:text-black bg-transparent"
           @keydown.enter="sendMessage"
         >
         <button
-          class="text-zinc-400 hover:text-brand-teal-500 transition-colors"
+          class="text-black hover:opacity-60 transition-opacity ml-2 shrink-0"
           @click="sendMessage"
         >
           <svg
-            class="w-5 h-5"
-            fill="none"
+            class="w-6 h-6"
             viewBox="0 0 24 24"
-            stroke="currentColor"
+            fill="none"
           >
             <path
+              d="M22 2L11 13"
+              stroke="currentColor"
+              stroke-width="1.5"
               stroke-linecap="round"
               stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+            />
+            <path
+              d="M22 2L15 22L11 13L2 9L22 2Z"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
             />
           </svg>
         </button>
@@ -86,17 +97,51 @@ function sendMessage() {
 
     <!-- Toggle button -->
     <button
-      class="w-14 h-14 bg-brand-yellow-500 rounded-full flex items-center justify-center hover:bg-brand-yellow-400 transition-colors"
-      :class="!isOpen ? 'rounded-br-none' : ''"
+      class="w-[72px] h-[72px] relative flex items-center justify-center hover:opacity-95 transition-all duration-300 active:scale-95 cursor-pointer"
       @click="isOpen = !isOpen"
     >
-      <span
+      <!-- Speech bubble background SVG -->
+      <svg
+        class="absolute inset-0 w-full h-full drop-shadow-[0px_8px_16px_rgba(0,0,0,0.18)]"
+        viewBox="0 0 100 100"
+        fill="none"
+      >
+        <path
+          d="M 46 6 A 40 40 0 0 1 84.6 56.3 Q 86 70 88 88 Q 70 82 56.3 84.6 A 40 40 0 1 1 46 6 Z"
+          fill="#EDE000"
+        />
+      </svg>
+
+      <!-- SVG Filter for the logo color conversion -->
+      <svg
+        style="position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px;"
+      >
+        <defs>
+          <filter id="tealize-logo">
+            <feColorMatrix
+              type="matrix"
+              values="
+                0 0 -0.93 0 0.93
+                0 0 -0.27 0 0.88
+                0 0 0.72 0 0
+                0 0 0 1 0
+              "
+            />
+          </filter>
+        </defs>
+      </svg>
+
+      <!-- Logo image with filter (tealized) -->
+      <img
         v-if="!isOpen"
-        class="text-brand-dark font-bold text-2xl select-none leading-none"
-      >m</span>
+        src="/Images/Logo.png"
+        alt="Macawoo"
+        class="w-12 h-12 object-contain select-none pointer-events-none z-10"
+        style="filter: url(#tealize-logo);"
+      >
       <svg
         v-else
-        class="w-6 h-6 text-brand-dark"
+        class="w-8 h-8 text-black z-10"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -104,10 +149,35 @@ function sendMessage() {
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="2.5"
           d="M6 18L18 6M6 6l12 12"
         />
       </svg>
     </button>
   </div>
 </template>
+
+<style scoped>
+.bot-bubble {
+  background: #ebebeb;
+  border-radius: 20px 20px 20px 5px;
+  position: relative;
+}
+
+.bot-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 12px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 10px solid #ebebeb;
+}
+
+.user-bubble {
+  background: #ebebeb;
+  border-radius: 20px 20px 5px 20px;
+}
+</style>

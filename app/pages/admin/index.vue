@@ -6,23 +6,77 @@ const { posts: blogs, addPost, updatePost, deletePost, resetBlogs } = useBlogs()
 const { projects: portfolio, addProject, updateProject, deleteProject, resetPortfolio } = usePortfolio()
 const { jobs: careers, addJob, updateJob, deleteJob, resetCareers } = useCareers()
 const { caseStudies, addCaseStudy, updateCaseStudy, deleteCaseStudy, resetCaseStudies } = useCaseStudies()
+const { settings, updateSettings, resetSettings } = usePageSettings()
 
 useSeoMeta({
-  title: 'Admin Dashboard — Macawoo',
+  title: 'Site Administration — Macawoo',
   description: 'Control center for updating Macawoo content.'
 })
 
-// Tabs definition
-const tabs = [
-  { label: '🎛️ Dashboard', value: 'dashboard' },
-  { label: '📝 Blogs', value: 'blogs' },
-  { label: '💼 Portfolio / Featured', value: 'portfolio' },
-  { label: '📊 Case Studies', value: 'case-studies' },
-  { label: '👥 Careers (Open Roles)', value: 'careers' }
-] as const
+// Navigation & SPA view states
+type View = 'dashboard' | 'list' | 'change'
+type ModelType = 'blog' | 'portfolio' | 'case-study' | 'career' | 'page-settings'
 
-// Navigation tab state
-const activeTab = ref<'dashboard' | 'blogs' | 'portfolio' | 'case-studies' | 'careers'>('dashboard')
+const currentView = ref<View>('dashboard')
+const currentModel = ref<ModelType>('blog')
+const currentId = ref<string | number | null>(null) // null for Add, slug/id for Edit
+
+// Bulk selection
+const selectedIds = ref<Record<string, boolean>>({})
+const allSelected = ref(false)
+
+// Bulk action selection
+const selectedBulkAction = ref('')
+
+// Search and filter states
+const searchQueries = reactive({
+  'blog': '',
+  'portfolio': '',
+  'case-study': '',
+  'career': '',
+  'page-settings': ''
+})
+
+const activeFilters = reactive({
+  portfolioCategory: 'All', // 'All' | 'Branding' | 'Marketing' | 'Video Production'
+  portfolioFeatured: 'All', // 'All' | 'Featured' | 'Not Featured'
+  blogYear: 'All', // 'All' | '2026' | '2025'
+  careerDepartment: 'All' // 'All' | 'Design' | 'Marketing'
+})
+
+// Table sorting states
+const sortKeys = reactive({
+  'blog': 'date',
+  'portfolio': 'displayOrder',
+  'case-study': 'title',
+  'career': 'title',
+  'page-settings': ''
+})
+
+const sortOrders = reactive({
+  'blog': 'desc',
+  'portfolio': 'asc',
+  'case-study': 'asc',
+  'career': 'asc',
+  'page-settings': 'asc'
+})
+
+// Recent actions log
+interface RecentAction {
+  time: string
+  action: 'add' | 'change' | 'delete'
+  model: string
+  name: string
+}
+const recentActions = ref<RecentAction[]>([])
+
+const logAction = (action: 'add' | 'change' | 'delete', modelName: string, itemName: string) => {
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+  recentActions.value.unshift({ time, action, model: modelName, name: itemName })
+  if (recentActions.value.length > 15) {
+    recentActions.value.pop()
+  }
+}
 
 // Template images for selection
 const templateImages = [
@@ -46,18 +100,28 @@ const generateSlug = (text: string) => {
     .replace(/(^-|-$)+/g, '')
 }
 
-// Modal Form states
-const isModalOpen = ref(false)
-const modalType = ref<'blog' | 'portfolio' | 'case-study' | 'career'>('blog')
-const modalMode = ref<'create' | 'edit'>('create')
-const editId = ref<string | number>('') // slug or ID
-
 // Form models
+const settingsForm = ref({
+  indexHeroImage: '',
+  indexHeroVideo: '',
+  aboutHeroImage: '',
+  aboutHeroVideo: '',
+  blogHeroImage: '',
+  blogHeroVideo: '',
+  servicesBrandingImage: '',
+  servicesMarketingImage: '',
+  servicesVideoImage: '',
+  careersHeroImage: '',
+  careersHeroVideo: '',
+  contactHeroImage: '',
+  contactHeroVideo: ''
+})
+
 const blogForm = ref({
   title: '',
   slug: '',
   excerpt: '',
-  date: new Date().toISOString().split('T')[0] || '',
+  date: '',
   readTime: '5 Min Read',
   image: '/Images/Branding.jpeg',
   body: [] as { heading?: string, content: string }[]
@@ -74,7 +138,12 @@ const portfolioForm = ref({
   galleryImagesString: '',
   story: '',
   featured: true,
-  displayOrder: 1
+  displayOrder: 1,
+  tagline: '',
+  services: '',
+  industry: '',
+  date: '',
+  storyParagraphs: [] as string[]
 })
 
 const caseStudyForm = ref({
@@ -87,7 +156,14 @@ const caseStudyForm = ref({
   challenge: '',
   approach: '',
   solution: [] as string[],
-  results: [] as { metric: string, label: string }[]
+  results: [] as { metric: string, label: string }[],
+  tagline: '',
+  services: '',
+  industry: '',
+  date: '',
+  challengeParagraphs: [] as string[],
+  approachParagraphs: [] as string[],
+  resultsSummary: ''
 })
 
 const careerForm = ref({
@@ -99,32 +175,46 @@ const careerForm = ref({
   experience: '4+ Years Experience'
 })
 
-// Auto-slug watcher for forms
+// Watchers for slug generation
 watch(() => blogForm.value.title, (newTitle) => {
-  if (modalMode.value === 'create') {
+  if (currentId.value === null) {
     blogForm.value.slug = generateSlug(newTitle)
   }
 })
 watch(() => portfolioForm.value.title, (newTitle) => {
-  if (modalMode.value === 'create') {
+  if (currentId.value === null) {
     portfolioForm.value.slug = generateSlug(newTitle)
   }
 })
 watch(() => caseStudyForm.value.title, (newTitle) => {
-  if (modalMode.value === 'create') {
+  if (currentId.value === null) {
     caseStudyForm.value.slug = generateSlug(newTitle)
   }
 })
 
-// CRUD Handlers
-const openCreateModal = (type: 'blog' | 'portfolio' | 'case-study' | 'career') => {
-  modalType.value = type
-  modalMode.value = 'create'
-  editId.value = ''
-  isModalOpen.value = true
+// Navigation actions
+const navigateTo = (view: View, model: ModelType | null = null, id: string | number | null = null) => {
+  if (model === 'page-settings') {
+    currentView.value = 'change'
+    currentModel.value = 'page-settings'
+    currentId.value = 'global'
+    settingsForm.value = { ...settings.value }
+    return
+  }
+  currentView.value = view
+  if (model) currentModel.value = model
+  currentId.value = id
+  selectedIds.value = {}
+  allSelected.value = false
+  selectedBulkAction.value = ''
+}
 
-  // Reset form schemas
-  if (type === 'blog') {
+const openAddForm = (model: ModelType) => {
+  currentModel.value = model
+  currentId.value = null
+  currentView.value = 'change'
+
+  if (model === 'blog') {
     blogForm.value = {
       title: '',
       slug: '',
@@ -134,7 +224,7 @@ const openCreateModal = (type: 'blog' | 'portfolio' | 'case-study' | 'career') =
       image: '/Images/Branding.jpeg',
       body: [{ heading: 'Introduction', content: '' }]
     }
-  } else if (type === 'portfolio') {
+  } else if (model === 'portfolio') {
     portfolioForm.value = {
       title: '',
       slug: '',
@@ -146,9 +236,14 @@ const openCreateModal = (type: 'blog' | 'portfolio' | 'case-study' | 'career') =
       galleryImagesString: '',
       story: '',
       featured: true,
-      displayOrder: portfolio.value.length + 1
+      displayOrder: portfolio.value.length + 1,
+      tagline: '',
+      services: '',
+      industry: '',
+      date: '',
+      storyParagraphs: ['']
     }
-  } else if (type === 'case-study') {
+  } else if (model === 'case-study') {
     caseStudyForm.value = {
       title: '',
       slug: '',
@@ -159,9 +254,16 @@ const openCreateModal = (type: 'blog' | 'portfolio' | 'case-study' | 'career') =
       challenge: '',
       approach: '',
       solution: [''],
-      results: [{ metric: '', label: '' }]
+      results: [{ metric: '', label: '' }],
+      tagline: '',
+      services: '',
+      industry: '',
+      date: '',
+      challengeParagraphs: [''],
+      approachParagraphs: [''],
+      resultsSummary: ''
     }
-  } else if (type === 'career') {
+  } else if (model === 'career') {
     careerForm.value = {
       id: String(Date.now()),
       title: '',
@@ -173,35 +275,48 @@ const openCreateModal = (type: 'blog' | 'portfolio' | 'case-study' | 'career') =
   }
 }
 
-const openEditModal = (type: 'blog' | 'portfolio' | 'case-study' | 'career', id: string | number) => {
-  modalType.value = type
-  modalMode.value = 'edit'
-  editId.value = id
-  isModalOpen.value = true
+const openEditForm = (model: ModelType, id: string | number) => {
+  currentModel.value = model
+  currentId.value = id
+  currentView.value = 'change'
 
-  if (type === 'blog') {
+  if (model === 'page-settings') {
+    settingsForm.value = { ...settings.value }
+  } else if (model === 'blog') {
     const original = blogs.value.find(b => b.slug === id)
     if (original) {
       blogForm.value = JSON.parse(JSON.stringify(original))
     }
-  } else if (type === 'portfolio') {
+  } else if (model === 'portfolio') {
     const original = portfolio.value.find(p => p.slug === id)
     if (original) {
       portfolioForm.value = {
         ...JSON.parse(JSON.stringify(original)),
         tagsString: original.tags.join(', '),
-        galleryImagesString: original.galleryImages.join(', ')
+        galleryImagesString: original.galleryImages.join(', '),
+        tagline: original.tagline || '',
+        services: original.services || '',
+        industry: original.industry || '',
+        date: original.date || '',
+        storyParagraphs: original.storyParagraphs ? [...original.storyParagraphs] : [original.story || '']
       }
     }
-  } else if (type === 'case-study') {
+  } else if (model === 'case-study') {
     const original = caseStudies.value.find(c => c.slug === id)
     if (original) {
       caseStudyForm.value = {
         ...JSON.parse(JSON.stringify(original)),
-        tagsString: original.tags.join(', ')
+        tagsString: original.tags.join(', '),
+        tagline: original.tagline || '',
+        services: original.services || '',
+        industry: original.industry || '',
+        date: original.date || '',
+        challengeParagraphs: original.challengeParagraphs ? [...original.challengeParagraphs] : [original.challenge || ''],
+        approachParagraphs: original.approachParagraphs ? [...original.approachParagraphs] : [original.approach || ''],
+        resultsSummary: original.resultsSummary || ''
       }
     }
-  } else if (type === 'career') {
+  } else if (model === 'career') {
     const original = careers.value.find(c => c.id === id)
     if (original) {
       careerForm.value = JSON.parse(JSON.stringify(original))
@@ -209,60 +324,202 @@ const openEditModal = (type: 'blog' | 'portfolio' | 'case-study' | 'career', id:
   }
 }
 
-// Submit forms
-const handleFormSubmit = () => {
-  if (modalType.value === 'blog') {
-    if (modalMode.value === 'create') {
+// Bulk selection check all
+const toggleAllSelections = (list: { slug?: string, id?: string | number }[]) => {
+  list.forEach((item) => {
+    const id = currentModel.value === 'career' ? item.id! : item.slug!
+    selectedIds.value[id] = allSelected.value
+  })
+}
+
+// Sorting toggle
+const toggleSort = (model: ModelType, key: string) => {
+  if (sortKeys[model] === key) {
+    sortOrders[model] = sortOrders[model] === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortKeys[model] = key
+    sortOrders[model] = 'asc'
+  }
+}
+
+// CRUD Save Handlers
+const handleSave = (actionType: 'save' | 'save_and_add' | 'save_and_continue') => {
+  const isCreate = currentId.value === null
+  let loggedName = ''
+
+  if (currentModel.value === 'page-settings') {
+    updateSettings(settingsForm.value)
+    logAction('change', 'Page Settings', 'Updated page backgrounds and assets')
+    alert('Page settings updated successfully.')
+    navigateTo('dashboard')
+    return
+  }
+
+  if (currentModel.value === 'blog') {
+    loggedName = blogForm.value.title
+    if (isCreate) {
       addPost(blogForm.value as BlogPost)
+      logAction('add', 'Blog post', loggedName)
     } else {
-      updatePost(editId.value as string, blogForm.value as BlogPost)
+      updatePost(currentId.value as string, blogForm.value as BlogPost)
+      logAction('change', 'Blog post', loggedName)
     }
-  } else if (modalType.value === 'portfolio') {
+  } else if (currentModel.value === 'portfolio') {
+    loggedName = portfolioForm.value.title
+    const { tagsString, galleryImagesString, ...projectData } = portfolioForm.value
     const processedProject = {
-      ...portfolioForm.value,
-      tags: portfolioForm.value.tagsString.split(',').map(s => s.trim()).filter(Boolean),
-      galleryImages: portfolioForm.value.galleryImagesString.split(',').map(s => s.trim()).filter(Boolean)
+      ...projectData,
+      tags: tagsString.split(',').map(s => s.trim()).filter(Boolean),
+      galleryImages: galleryImagesString.split(',').map(s => s.trim()).filter(Boolean),
+      storyParagraphs: portfolioForm.value.storyParagraphs.filter(Boolean)
     }
-    // Delete temporary string fields before saving
-    delete (processedProject as any).tagsString
-    delete (processedProject as any).galleryImagesString
 
-    if (modalMode.value === 'create') {
+    if (isCreate) {
       addProject(processedProject)
+      logAction('add', 'Portfolio project', loggedName)
     } else {
-      updateProject(editId.value as string, processedProject)
+      updateProject(currentId.value as string, processedProject)
+      logAction('change', 'Portfolio project', loggedName)
     }
-  } else if (modalType.value === 'case-study') {
+  } else if (currentModel.value === 'case-study') {
+    loggedName = caseStudyForm.value.title
+    const { tagsString, ...studyData } = caseStudyForm.value
     const processedStudy = {
-      ...caseStudyForm.value,
-      tags: caseStudyForm.value.tagsString.split(',').map(s => s.trim()).filter(Boolean),
+      ...studyData,
+      tags: tagsString.split(',').map(s => s.trim()).filter(Boolean),
       solution: caseStudyForm.value.solution.filter(Boolean),
-      results: caseStudyForm.value.results.filter(r => r.metric && r.label)
+      results: caseStudyForm.value.results.filter(r => r.metric && r.label),
+      challengeParagraphs: caseStudyForm.value.challengeParagraphs.filter(Boolean),
+      approachParagraphs: caseStudyForm.value.approachParagraphs.filter(Boolean)
     }
-    delete (processedStudy as any).tagsString
 
-    if (modalMode.value === 'create') {
+    if (isCreate) {
       addCaseStudy(processedStudy)
+      logAction('add', 'Case study', loggedName)
     } else {
-      updateCaseStudy(editId.value as string, processedStudy)
+      updateCaseStudy(currentId.value as string, processedStudy)
+      logAction('change', 'Case study', loggedName)
     }
-  } else if (modalType.value === 'career') {
-    if (modalMode.value === 'create') {
+  } else if (currentModel.value === 'career') {
+    loggedName = careerForm.value.title
+    if (isCreate) {
       addJob({ ...careerForm.value })
+      logAction('add', 'Open role', loggedName)
     } else {
-      updateJob(editId.value as string, { ...careerForm.value })
+      updateJob(currentId.value as string, { ...careerForm.value })
+      logAction('change', 'Open role', loggedName)
     }
   }
 
-  isModalOpen.value = false
+  if (actionType === 'save') {
+    navigateTo('list', currentModel.value)
+  } else if (actionType === 'save_and_add') {
+    openAddForm(currentModel.value)
+  } else if (actionType === 'save_and_continue') {
+    if (isCreate) {
+      if (currentModel.value === 'blog') currentId.value = blogForm.value.slug
+      else if (currentModel.value === 'portfolio') currentId.value = portfolioForm.value.slug
+      else if (currentModel.value === 'case-study') currentId.value = caseStudyForm.value.slug
+      else if (currentModel.value === 'career') currentId.value = careerForm.value.id
+    }
+    alert('Changes saved successfully. You may continue editing.')
+  }
 }
 
-// Quick helpers for dynamic forms
+// Delete current item from Change Form
+const deleteCurrentItem = () => {
+  if (!currentId.value) return
+  if (confirm('Are you sure you want to delete this item?')) {
+    let loggedName = ''
+    if (currentModel.value === 'blog') {
+      loggedName = blogForm.value.title
+      deletePost(currentId.value as string)
+    } else if (currentModel.value === 'portfolio') {
+      loggedName = portfolioForm.value.title
+      deleteProject(currentId.value as string)
+    } else if (currentModel.value === 'case-study') {
+      loggedName = caseStudyForm.value.title
+      deleteCaseStudy(currentId.value as string)
+    } else if (currentModel.value === 'career') {
+      loggedName = careerForm.value.title
+      deleteJob(currentId.value as string)
+    }
+    logAction('delete', currentModel.value, loggedName)
+    navigateTo('list', currentModel.value)
+  }
+}
+
+// Bulk actions executor
+const executeBulkAction = () => {
+  if (selectedBulkAction.value === 'delete') {
+    const idsToDelete = Object.keys(selectedIds.value).filter(id => selectedIds.value[id])
+    if (idsToDelete.length === 0) {
+      alert('No items selected.')
+      return
+    }
+    if (confirm(`Are you sure you want to delete the ${idsToDelete.length} selected item(s)?`)) {
+      idsToDelete.forEach((id) => {
+        if (currentModel.value === 'blog') {
+          const item = blogs.value.find(b => b.slug === id)
+          if (item) {
+            deletePost(id)
+            logAction('delete', 'Blog post', item.title)
+          }
+        } else if (currentModel.value === 'portfolio') {
+          const item = portfolio.value.find(p => p.slug === id)
+          if (item) {
+            deleteProject(id)
+            logAction('delete', 'Portfolio project', item.title)
+          }
+        } else if (currentModel.value === 'case-study') {
+          const item = caseStudies.value.find(c => c.slug === id)
+          if (item) {
+            deleteCaseStudy(id)
+            logAction('delete', 'Case study', item.title)
+          }
+        } else if (currentModel.value === 'career') {
+          const item = careers.value.find(c => c.id === id)
+          if (item) {
+            deleteJob(id)
+            logAction('delete', 'Open role', item.title)
+          }
+        }
+      })
+      selectedIds.value = {}
+      allSelected.value = false
+      selectedBulkAction.value = ''
+      alert('Selected items deleted successfully.')
+    }
+  }
+}
+
+// Helpers for nested elements in forms
 const addBlogBodySection = () => {
   blogForm.value.body.push({ heading: '', content: '' })
 }
 const removeBlogBodySection = (idx: number) => {
   blogForm.value.body.splice(idx, 1)
+}
+
+const addPortfolioStoryParagraph = () => {
+  portfolioForm.value.storyParagraphs.push('')
+}
+const removePortfolioStoryParagraph = (idx: number) => {
+  portfolioForm.value.storyParagraphs.splice(idx, 1)
+}
+
+const addCaseStudyChallengeParagraph = () => {
+  caseStudyForm.value.challengeParagraphs.push('')
+}
+const removeCaseStudyChallengeParagraph = (idx: number) => {
+  caseStudyForm.value.challengeParagraphs.splice(idx, 1)
+}
+
+const addCaseStudyApproachParagraph = () => {
+  caseStudyForm.value.approachParagraphs.push('')
+}
+const removeCaseStudyApproachParagraph = (idx: number) => {
+  caseStudyForm.value.approachParagraphs.splice(idx, 1)
 }
 
 const addSolutionPoint = () => {
@@ -279,540 +536,2043 @@ const removeResultMetric = (idx: number) => {
   caseStudyForm.value.results.splice(idx, 1)
 }
 
-// Re-sorting portfolio
-const moveProjectOrder = (index: number, direction: 'up' | 'down') => {
-  const sorted = [...portfolio.value].sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
-  const targetIndex = direction === 'up' ? index - 1 : index + 1
-  if (targetIndex < 0 || targetIndex >= sorted.length) return
-
-  const itemA = sorted[index]
-  const itemB = sorted[targetIndex]
-  if (itemA && itemB) {
-    // Swap displayOrders
-    const temp = itemA.displayOrder ?? index
-    itemA.displayOrder = itemB.displayOrder ?? targetIndex
-    itemB.displayOrder = temp
-
-    portfolio.value = sorted
-  }
-}
-
-// Reset operations
+// Reset localStorage mock databases
 const resetAllDynamicState = () => {
   if (confirm('Are you sure you want to discard all browser modifications and restore original static mock data?')) {
     resetBlogs()
     resetPortfolio()
     resetCareers()
     resetCaseStudies()
+    resetSettings()
+    logAction('change', 'Database', 'Reset all local storage mock records and page settings')
     alert('Local data reset completed successfully.')
+    navigateTo('dashboard')
   }
 }
+
+// Compute Breadcrumbs list
+const breadcrumbs = computed(() => {
+  const crumbs: { label: string, view: View, model: ModelType | null, id: string | number | null }[] = [
+    { label: 'Home', view: 'dashboard', model: null, id: null }
+  ]
+  if (currentView.value === 'dashboard') {
+    return crumbs
+  }
+
+  const modelLabels: Record<ModelType, string> = {
+    'blog': 'Blogs',
+    'portfolio': 'Portfolio',
+    'case-study': 'Case Studies',
+    'career': 'Careers',
+    'page-settings': 'Page Settings'
+  }
+
+  crumbs.push({
+    label: modelLabels[currentModel.value],
+    view: 'list',
+    model: currentModel.value,
+    id: null
+  })
+
+  if (currentView.value === 'change') {
+    const isEdit = currentId.value !== null
+    let itemTitle = 'Add item'
+    if (isEdit) {
+      if (currentModel.value === 'page-settings') {
+        itemTitle = 'Global settings'
+      } else if (currentModel.value === 'blog') {
+        itemTitle = blogs.value.find(b => b.slug === currentId.value)?.title || String(currentId.value)
+      } else if (currentModel.value === 'portfolio') {
+        itemTitle = portfolio.value.find(p => p.slug === currentId.value)?.title || String(currentId.value)
+      } else if (currentModel.value === 'case-study') {
+        itemTitle = caseStudies.value.find(c => c.slug === currentId.value)?.title || String(currentId.value)
+      } else if (currentModel.value === 'career') {
+        itemTitle = careers.value.find(c => c.id === currentId.value)?.title || String(currentId.value)
+      }
+    }
+    crumbs.push({
+      label: currentModel.value === 'page-settings' ? 'Configure settings' : (isEdit ? `Change: ${itemTitle}` : 'Add item'),
+      view: 'change',
+      model: currentModel.value,
+      id: currentId.value
+    })
+  }
+
+  return crumbs
+})
+
+// Filter & search compute listings
+const filteredBlogs = computed(() => {
+  let list = [...blogs.value]
+  const q = searchQueries.blog.toLowerCase().trim()
+  if (q) {
+    list = list.filter(b => b.title.toLowerCase().includes(q) || b.excerpt.toLowerCase().includes(q))
+  }
+  if (activeFilters.blogYear !== 'All') {
+    list = list.filter(b => b.date.startsWith(activeFilters.blogYear))
+  }
+  const key = sortKeys.blog
+  const order = sortOrders.blog
+  list.sort((a, b) => {
+    const valA = String((a as unknown as Record<string, unknown>)[key] ?? '')
+    const valB = String((b as unknown as Record<string, unknown>)[key] ?? '')
+    return order === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA)
+  })
+  return list
+})
+
+const filteredPortfolio = computed(() => {
+  let list = [...portfolio.value]
+  const q = searchQueries.portfolio.toLowerCase().trim()
+  if (q) {
+    list = list.filter(p => p.title.toLowerCase().includes(q) || p.subtitle.toLowerCase().includes(q))
+  }
+  if (activeFilters.portfolioCategory !== 'All') {
+    list = list.filter(p => p.category === activeFilters.portfolioCategory)
+  }
+  if (activeFilters.portfolioFeatured !== 'All') {
+    const feat = activeFilters.portfolioFeatured === 'Featured'
+    list = list.filter(p => p.featured === feat)
+  }
+  const key = sortKeys.portfolio
+  const order = sortOrders.portfolio
+  list.sort((a, b) => {
+    if (key === 'displayOrder') {
+      const valA = a.displayOrder ?? 0
+      const valB = b.displayOrder ?? 0
+      return order === 'asc' ? valA - valB : valB - valA
+    }
+    const valA = String((a as unknown as Record<string, unknown>)[key] ?? '')
+    const valB = String((b as unknown as Record<string, unknown>)[key] ?? '')
+    return order === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA)
+  })
+  return list
+})
+
+const filteredCaseStudies = computed(() => {
+  let list = [...caseStudies.value]
+  const q = searchQueries['case-study'].toLowerCase().trim()
+  if (q) {
+    list = list.filter(c => c.title.toLowerCase().includes(q) || c.client.toLowerCase().includes(q))
+  }
+  const key = sortKeys['case-study']
+  const order = sortOrders['case-study']
+  list.sort((a, b) => {
+    const valA = String((a as unknown as Record<string, unknown>)[key] ?? '')
+    const valB = String((b as unknown as Record<string, unknown>)[key] ?? '')
+    return order === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA)
+  })
+  return list
+})
+
+const filteredCareers = computed(() => {
+  let list = [...careers.value]
+  const q = searchQueries.career.toLowerCase().trim()
+  if (q) {
+    list = list.filter(c => c.title.toLowerCase().includes(q) || c.department.toLowerCase().includes(q) || c.location.toLowerCase().includes(q))
+  }
+  const key = sortKeys.career
+  const order = sortOrders.career
+  list.sort((a, b) => {
+    const valA = String((a as unknown as Record<string, unknown>)[key] ?? '')
+    const valB = String((b as unknown as Record<string, unknown>)[key] ?? '')
+    return order === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA)
+  })
+  return list
+})
 </script>
 
 <template>
-  <div>
-    <!-- Hero Block — styled to match the public subpages -->
-    <PageHero
-      variant="teal"
-      title-html="ADMIN <span class=&quot;text-brand-yellow-500&quot;>PANEL</span>"
-      video="/Background%20Videos/Portfolio.mp4"
-      image="/Images/Designing.jpeg"
-      description="The workspace command center for Macawoo. Dynamically modify portfolios, blogs, open roles, case studies, and homepage layout grids."
-    />
-
-    <!-- Main Section — Light layout mirroring public listings -->
-    <section class="bg-zinc-50 py-16 md:py-20 text-brand-dark">
-      <div class="max-w-[1266px] mx-auto px-6 md:px-8">
-        <!-- Controls Row -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 border-b border-zinc-200 pb-6">
-          <h2 class="text-2xl font-bold font-sans text-brand-dark">
-            Workspace Console
-          </h2>
-          <button
-            class="px-5 py-2.5 rounded-full bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition text-sm font-bold shadow-sm"
-            @click="resetAllDynamicState"
-          >
-            Reset All Data ↺
-          </button>
-        </div>
-
-        <!-- Filter tabs for Admin Navigation — identical style to Portfolio index.vue -->
-        <div class="flex flex-wrap gap-2.5 mb-10 justify-center border-b border-zinc-200 pb-6">
-          <button
-            v-for="tab in tabs"
-            :key="tab.value"
-            class="px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 select-none"
-            :class="activeTab === tab.value
-              ? 'bg-brand-yellow-500 text-brand-dark shadow-sm'
-              : 'border border-zinc-300 bg-white text-zinc-600 hover:border-brand-teal-500 hover:text-brand-teal-500'"
-            @click="activeTab = tab.value"
-          >
-            {{ tab.label }}
-          </button>
-        </div>
-
-        <!-- Tab Content Area -->
-        <div class="mt-6">
-          <!-- TAB 1: DASHBOARD -->
-          <div
-            v-if="activeTab === 'dashboard'"
-            class="space-y-8"
-          >
-            <!-- Welcome Info Box (Teal Banner) -->
-            <div
-              class="p-8 rounded-2xl text-white border border-brand-teal-700 bg-brand-teal-500 shadow-sm"
-            >
-              <h3 class="text-2xl font-bold font-fredoka text-[#E8F600] mb-3">
-                Welcome to your Macawoo Studio Admin Panel
-              </h3>
-              <p class="text-white/95 leading-relaxed text-sm max-w-4xl">
-                This Console allows you to update, remove, or insert content dynamically. All mutations are stored locally inside your browser's client-side database (`localStorage`). This lets you review complete design variations, preview copy adjustments, or prototype layouts before committing them to a production backend.
-              </p>
-            </div>
-
-            <!-- Stats grid -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
-              <div class="bg-white border border-zinc-200 shadow-sm rounded-2xl p-6 text-center">
-                <span class="text-3xl block mb-2">📝</span>
-                <span class="text-3xl font-bold text-brand-teal-500 block mb-1">{{ blogs.length }}</span>
-                <span class="text-xs text-zinc-500 font-bold uppercase tracking-wider">Total Blogs</span>
-              </div>
-              <div class="bg-white border border-zinc-200 shadow-sm rounded-2xl p-6 text-center">
-                <span class="text-3xl block mb-2">💼</span>
-                <span class="text-3xl font-bold text-brand-teal-500 block mb-1">{{ portfolio.length }}</span>
-                <span class="text-xs text-zinc-500 font-bold uppercase tracking-wider">Portfolio Works</span>
-              </div>
-              <div class="bg-white border border-zinc-200 shadow-sm rounded-2xl p-6 text-center">
-                <span class="text-3xl block mb-2">⭐</span>
-                <span class="text-3xl font-bold text-brand-teal-500 block mb-1">
-                  {{ portfolio.filter(p => p.featured !== false).length }}
-                </span>
-                <span class="text-xs text-zinc-500 font-bold uppercase tracking-wider">Featured on Home</span>
-              </div>
-              <div class="bg-white border border-zinc-200 shadow-sm rounded-2xl p-6 text-center">
-                <span class="text-3xl block mb-2">👥</span>
-                <span class="text-3xl font-bold text-brand-teal-500 block mb-1">{{ careers.length }}</span>
-                <span class="text-xs text-zinc-500 font-bold uppercase tracking-wider">Open Career Roles</span>
-              </div>
-            </div>
-
-            <!-- Guide Section -->
-            <div class="bg-white border border-zinc-200 shadow-sm rounded-2xl p-8">
-              <h3 class="font-bold text-brand-dark text-lg mb-4">
-                Front-End Persistence Guide
-              </h3>
-              <ul class="space-y-3.5 text-sm text-zinc-600">
-                <li class="flex items-start gap-2.5">
-                  <span class="text-brand-teal-500 font-bold text-base">✓</span>
-                  <span>Navigate to any page from the top/footer links, and modifications will be rendered instantly.</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                  <span class="text-brand-teal-500 font-bold text-base">✓</span>
-                  <span>Hit "Reset All Data" at the top right to erase browser edits and revert to the static codebase files.</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                  <span class="text-brand-teal-500 font-bold text-base">✓</span>
-                  <span>Standardized file paths like <code class="bg-zinc-100 text-brand-teal-600 px-1.5 py-0.5 rounded text-xs">/Images/Branding.jpeg</code> point to resources in the public assets folder.</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- TAB 2: BLOGS -->
-          <div
-            v-if="activeTab === 'blogs'"
-            class="space-y-6"
-          >
-            <div class="flex items-center justify-between">
-              <h2 class="text-2xl font-bold font-sans text-brand-dark">
-                Manage Journal Posts
-              </h2>
-              <button
-                class="px-6 py-2.5 bg-brand-teal-500 hover:bg-brand-teal-600 text-white text-sm font-bold rounded-full transition shadow-sm"
-                @click="openCreateModal('blog')"
-              >
-                + New Blog Post
-              </button>
-            </div>
-
-            <!-- Blog List Cards -->
-            <div class="space-y-4">
-              <div
-                v-for="post in blogs"
-                :key="post.slug"
-                class="flex items-center justify-between bg-white border border-zinc-200 rounded-2xl p-5 hover:shadow-md transition gap-4"
-              >
-                <div class="flex items-center gap-4 min-w-0">
-                  <img
-                    :src="post.image"
-                    class="w-16 h-12 object-cover rounded-lg bg-zinc-100 shrink-0 border border-zinc-200"
-                  >
-                  <div class="min-w-0">
-                    <h3 class="font-bold text-brand-dark truncate text-base">
-                      {{ post.title }}
-                    </h3>
-                    <p class="text-xs text-zinc-400 truncate mt-1">
-                      /blog/{{ post.slug }} · {{ post.date }}
-                    </p>
-                  </div>
-                </div>
-                <div class="flex items-center gap-2 shrink-0">
-                  <button
-                    class="px-4 py-2 rounded-xl border border-zinc-300 text-zinc-700 hover:text-brand-teal-500 hover:bg-zinc-50 text-xs font-semibold transition"
-                    @click="openEditModal('blog', post.slug)"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    class="px-4 py-2 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 text-xs font-semibold transition"
-                    @click="deletePost(post.slug)"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- TAB 3: PORTFOLIO & FEATURED WORKS -->
-          <div
-            v-if="activeTab === 'portfolio'"
-            class="space-y-6"
-          >
-            <div class="flex items-center justify-between">
-              <h2 class="text-2xl font-bold font-sans text-brand-dark">
-                Manage Portfolio Projects
-              </h2>
-              <button
-                class="px-6 py-2.5 bg-brand-teal-500 hover:bg-brand-teal-600 text-white text-sm font-bold rounded-full transition shadow-sm"
-                @click="openCreateModal('portfolio')"
-              >
-                + New Project
-              </button>
-            </div>
-
-            <!-- Portfolio Items & Homepage Reordering -->
-            <div class="space-y-4">
-              <p class="text-sm text-zinc-500 leading-relaxed">
-                To reorder featured works displayed on the Homepage, click the up (▲) or down (▼) buttons. Toggle "Featured" inside a project to control homepage selection.
-              </p>
-
-              <div class="space-y-4">
-                <div
-                  v-for="(project, idx) in [...portfolio].sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))"
-                  :key="project.slug"
-                  class="bg-white border rounded-2xl p-5 transition flex flex-col md:flex-row md:items-center justify-between gap-4"
-                  :class="project.featured !== false ? 'border-brand-yellow-500/50 shadow-sm' : 'border-zinc-200'"
-                >
-                  <div class="flex items-center gap-4 min-w-0">
-                    <img
-                      :src="project.image"
-                      class="w-16 h-12 object-cover rounded-lg bg-zinc-100 shrink-0 border border-zinc-200"
-                    >
-                    <div class="min-w-0">
-                      <div class="flex items-center gap-2 flex-wrap">
-                        <h3 class="font-bold text-brand-dark text-base leading-snug">
-                          {{ project.title }}
-                        </h3>
-                        <span
-                          v-if="project.featured !== false"
-                          class="text-[10px] bg-brand-yellow-500 text-brand-dark font-bold px-2.5 py-0.5 rounded-full select-none shrink-0 uppercase tracking-wider"
-                        >Featured</span>
-                      </div>
-                      <p class="text-xs text-zinc-400 truncate mt-1">
-                        {{ project.category }} · Slug: {{ project.slug }}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="flex flex-wrap items-center gap-3 justify-end shrink-0">
-                    <!-- Ordering Controls -->
-                    <div class="flex items-center gap-1 bg-zinc-50 rounded-xl p-1 border border-zinc-200 shadow-inner">
-                      <button
-                        class="p-1 px-3 hover:bg-zinc-200 text-zinc-600 hover:text-brand-dark rounded disabled:opacity-20 text-xs font-mono transition"
-                        :disabled="idx === 0"
-                        title="Move Up"
-                        @click="moveProjectOrder(idx, 'up')"
-                      >
-                        ▲
-                      </button>
-                      <button
-                        class="p-1 px-3 hover:bg-zinc-200 text-zinc-600 hover:text-brand-dark rounded disabled:opacity-20 text-xs font-mono transition"
-                        :disabled="idx === portfolio.length - 1"
-                        title="Move Down"
-                        @click="moveProjectOrder(idx, 'down')"
-                      >
-                        ▼
-                      </button>
-                    </div>
-
-                    <!-- Actions -->
-                    <button
-                      class="px-4 py-2 rounded-xl border border-zinc-300 text-zinc-700 hover:text-brand-teal-500 hover:bg-zinc-50 text-xs font-semibold transition"
-                      @click="openEditModal('portfolio', project.slug)"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      class="px-4 py-2 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 text-xs font-semibold transition"
-                      @click="deleteProject(project.slug)"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- TAB 4: CASE STUDIES -->
-          <div
-            v-if="activeTab === 'case-studies'"
-            class="space-y-6"
-          >
-            <div class="flex items-center justify-between">
-              <h2 class="text-2xl font-bold font-sans text-brand-dark">
-                Manage Case Studies
-              </h2>
-              <button
-                class="px-6 py-2.5 bg-brand-teal-500 hover:bg-brand-teal-600 text-white text-sm font-bold rounded-full transition shadow-sm"
-                @click="openCreateModal('case-study')"
-              >
-                + New Case Study
-              </button>
-            </div>
-
-            <!-- Case Studies List -->
-            <div class="space-y-4">
-              <div
-                v-for="study in caseStudies"
-                :key="study.slug"
-                class="flex items-center justify-between bg-white border border-zinc-200 rounded-2xl p-5 hover:shadow-md transition gap-4"
-              >
-                <div class="flex items-center gap-4 min-w-0">
-                  <img
-                    :src="study.image"
-                    class="w-16 h-12 object-cover rounded-lg bg-zinc-100 shrink-0 border border-zinc-200"
-                  >
-                  <div class="min-w-0">
-                    <h3 class="font-bold text-brand-dark truncate text-base">
-                      {{ study.title }}
-                    </h3>
-                    <p class="text-xs text-zinc-400 truncate mt-1">
-                      Client: {{ study.client }} · /case-studies/{{ study.slug }}
-                    </p>
-                  </div>
-                </div>
-                <div class="flex items-center gap-2 shrink-0">
-                  <button
-                    class="px-4 py-2 rounded-xl border border-zinc-300 text-zinc-700 hover:text-brand-teal-500 hover:bg-zinc-50 text-xs font-semibold transition"
-                    @click="openEditModal('case-study', study.slug)"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    class="px-4 py-2 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 text-xs font-semibold transition"
-                    @click="deleteCaseStudy(study.slug)"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- TAB 5: CAREERS (OPEN ROLES) -->
-          <div
-            v-if="activeTab === 'careers'"
-            class="space-y-6"
-          >
-            <div class="flex items-center justify-between">
-              <h2 class="text-2xl font-bold font-sans text-brand-dark">
-                Manage Open Roles
-              </h2>
-              <button
-                class="px-6 py-2.5 bg-brand-teal-500 hover:bg-brand-teal-600 text-white text-sm font-bold rounded-full transition shadow-sm"
-                @click="openCreateModal('career')"
-              >
-                + Add Open Role
-              </button>
-            </div>
-
-            <!-- Careers List -->
-            <div class="space-y-4">
-              <div
-                v-for="job in careers"
-                :key="job.id"
-                class="flex items-center justify-between bg-white border border-zinc-200 rounded-2xl p-5 hover:shadow-md transition gap-4"
-              >
-                <div class="min-w-0">
-                  <h3 class="font-bold text-brand-teal-500 text-lg leading-snug">
-                    {{ job.title }}
-                  </h3>
-                  <p class="text-xs text-zinc-400 truncate mt-1">
-                    {{ job.department }} · {{ job.location }} · {{ job.type }} · {{ job.experience }}
-                  </p>
-                </div>
-                <div class="flex items-center gap-2 shrink-0">
-                  <button
-                    class="px-4 py-2 rounded-xl border border-zinc-300 text-zinc-700 hover:text-brand-teal-500 hover:bg-zinc-50 text-xs font-semibold transition"
-                    @click="openEditModal('career', job.id)"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    class="px-4 py-2 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 text-xs font-semibold transition"
-                    @click="deleteJob(job.id)"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="min-h-screen bg-[#f8f9fa] text-zinc-800 font-sans flex flex-col antialiased">
+    <!-- Django Style Topbar Header -->
+    <header class="bg-[#141111] text-white px-5 py-3.5 flex items-center justify-between border-b-4 border-[#1D96B8] shrink-0">
+      <div class="flex items-center gap-4">
+        <h1 class="text-lg font-fredoka font-semibold tracking-wider text-white">
+          MACAWOO <span class="text-[#E8F600]">ADMINISTRATION</span>
+        </h1>
       </div>
-    </section>
-
-    <!-- MODAL OVERLAY EDITOR (Floating Light Glass modal panel) -->
-    <div
-      v-if="isModalOpen"
-      class="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto"
-    >
-      <div
-        class="absolute inset-0 bg-brand-dark/60 backdrop-blur-md"
-        @click="isModalOpen = false"
-      />
-
-      <div
-        class="relative bg-white border border-zinc-200 text-brand-dark rounded-3xl w-full max-w-3xl p-8 max-h-[85vh] overflow-y-auto shadow-2xl space-y-6"
-      >
-        <!-- Modal Close Button -->
-        <button
-          class="absolute top-5 right-5 text-zinc-400 hover:text-brand-dark transition text-xl"
-          @click="isModalOpen = false"
+      <div class="flex items-center gap-4 text-xs text-zinc-300">
+        <span>Welcome, <strong>administrator</strong>.</span>
+        <span class="text-zinc-500">|</span>
+        <NuxtLink
+          to="/"
+          class="hover:underline hover:text-white"
         >
-          ✕
+          View site
+        </NuxtLink>
+        <span class="text-zinc-500">|</span>
+        <button
+          class="hover:underline hover:text-white cursor-pointer bg-transparent border-0"
+          @click="resetAllDynamicState"
+        >
+          Reset data
         </button>
+      </div>
+    </header>
 
-        <div class="border-b border-zinc-200 pb-4">
-          <span class="text-xs uppercase font-bold text-brand-teal-500 tracking-wider font-fredoka">{{ modalMode === 'create' ? 'Create' : 'Edit' }} Content</span>
-          <h2 class="text-2xl font-bold font-sans text-brand-dark capitalize mt-0.5">
-            {{ modalType }} Details
-          </h2>
+    <!-- Breadcrumbs Navigation Bar -->
+    <nav class="bg-[#eaeaea] border-b border-[#dcdcdc] px-5 py-2 flex items-center gap-1.5 text-xs text-zinc-600 shrink-0">
+      <template
+        v-for="(crumb, idx) in breadcrumbs"
+        :key="idx"
+      >
+        <span
+          v-if="idx > 0"
+          class="text-zinc-400"
+        >›</span>
+        <button
+          v-if="idx < breadcrumbs.length - 1"
+          class="hover:underline text-zinc-600 font-semibold cursor-pointer bg-transparent border-0 p-0"
+          @click="navigateTo(crumb.view, crumb.model, crumb.id)"
+        >
+          {{ crumb.label }}
+        </button>
+        <span
+          v-else
+          class="text-zinc-800"
+        >{{ crumb.label }}</span>
+      </template>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="flex-1 flex overflow-hidden">
+      <!-- Left Model Navigation Sidebar -->
+      <aside class="w-60 bg-white border-r border-[#e0e0e0] flex flex-col shrink-0 overflow-y-auto">
+        <div class="p-4 bg-[#eaeaea] text-xs font-bold text-zinc-600 border-b border-[#e0e0e0] uppercase tracking-wider">
+          Applications
+        </div>
+        <div class="p-2 space-y-4">
+          <!-- Blog Application -->
+          <div class="space-y-1">
+            <div class="px-2 py-1 text-xs font-bold text-[#1D96B8] uppercase tracking-wide">
+              Blog Journal
+            </div>
+            <div class="flex items-center justify-between px-2.5 py-1 text-xs hover:bg-zinc-50 rounded">
+              <button
+                class="text-zinc-700 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left"
+                @click="navigateTo('list', 'blog')"
+              >
+                Blog posts
+              </button>
+              <div class="flex gap-2">
+                <button
+                  class="text-[10px] text-zinc-400 hover:text-zinc-700 cursor-pointer bg-transparent border-0"
+                  @click="openAddForm('blog')"
+                >
+                  Add
+                </button>
+                <button
+                  class="text-[10px] text-zinc-400 hover:text-zinc-700 cursor-pointer bg-transparent border-0"
+                  @click="navigateTo('list', 'blog')"
+                >
+                  Change
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Portfolio Application -->
+          <div class="space-y-1">
+            <div class="px-2 py-1 text-xs font-bold text-[#1D96B8] uppercase tracking-wide">
+              Portfolio
+            </div>
+            <div class="flex items-center justify-between px-2.5 py-1 text-xs hover:bg-zinc-50 rounded">
+              <button
+                class="text-zinc-700 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left"
+                @click="navigateTo('list', 'portfolio')"
+              >
+                Projects
+              </button>
+              <div class="flex gap-2">
+                <button
+                  class="text-[10px] text-zinc-400 hover:text-zinc-700 cursor-pointer bg-transparent border-0"
+                  @click="openAddForm('portfolio')"
+                >
+                  Add
+                </button>
+                <button
+                  class="text-[10px] text-zinc-400 hover:text-zinc-700 cursor-pointer bg-transparent border-0"
+                  @click="navigateTo('list', 'portfolio')"
+                >
+                  Change
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Case Studies Application -->
+          <div class="space-y-1">
+            <div class="px-2 py-1 text-xs font-bold text-[#1D96B8] uppercase tracking-wide">
+              Case Studies
+            </div>
+            <div class="flex items-center justify-between px-2.5 py-1 text-xs hover:bg-zinc-50 rounded">
+              <button
+                class="text-zinc-700 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left"
+                @click="navigateTo('list', 'case-study')"
+              >
+                Case studies
+              </button>
+              <div class="flex gap-2">
+                <button
+                  class="text-[10px] text-zinc-400 hover:text-zinc-700 cursor-pointer bg-transparent border-0"
+                  @click="openAddForm('case-study')"
+                >
+                  Add
+                </button>
+                <button
+                  class="text-[10px] text-zinc-400 hover:text-zinc-700 cursor-pointer bg-transparent border-0"
+                  @click="navigateTo('list', 'case-study')"
+                >
+                  Change
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Careers Application -->
+          <div class="space-y-1">
+            <div class="px-2 py-1 text-xs font-bold text-[#1D96B8] uppercase tracking-wide">
+              Careers
+            </div>
+            <div class="flex items-center justify-between px-2.5 py-1 text-xs hover:bg-zinc-50 rounded">
+              <button
+                class="text-zinc-700 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left"
+                @click="navigateTo('list', 'career')"
+              >
+                Open roles
+              </button>
+              <div class="flex gap-2">
+                <button
+                  class="text-[10px] text-zinc-400 hover:text-zinc-700 cursor-pointer bg-transparent border-0"
+                  @click="openAddForm('career')"
+                >
+                  Add
+                </button>
+                <button
+                  class="text-[10px] text-zinc-400 hover:text-zinc-700 cursor-pointer bg-transparent border-0"
+                  @click="navigateTo('list', 'career')"
+                >
+                  Change
+                </button>
+              </div>
+            </div>
+
+            <!-- Site Customizer -->
+            <div class="space-y-1">
+              <div class="px-2 py-1 text-xs font-bold text-[#1D96B8] uppercase tracking-wide">
+                Site Customizer
+              </div>
+              <div class="flex items-center justify-between px-2.5 py-1 text-xs hover:bg-zinc-50 rounded">
+                <button
+                  class="text-zinc-700 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left"
+                  @click="navigateTo('list', 'page-settings')"
+                >
+                  Page Settings
+                </button>
+                <div class="flex gap-2">
+                  <button
+                    class="text-[10px] text-zinc-400 hover:text-zinc-700 cursor-pointer bg-transparent border-0"
+                    @click="navigateTo('list', 'page-settings')"
+                  >
+                    Change
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Panel Workspace -->
+      <main class="flex-1 overflow-y-auto p-6 bg-[#fcfcfc]">
+        <!-- ══════════════════════ VIEW 1: DASHBOARD INDEX ══════════════════════ -->
+        <div
+          v-if="currentView === 'dashboard'"
+          class="flex flex-col lg:flex-row gap-6 items-start"
+        >
+          <!-- Left Table Panel -->
+          <div class="flex-1 w-full space-y-6">
+            <h2 class="text-base font-bold text-zinc-700 uppercase tracking-wide border-b border-[#e0e0e0] pb-2">
+              Site Administration Console
+            </h2>
+
+            <div class="border border-[#e0e0e0] rounded overflow-hidden">
+              <table class="w-full text-xs text-left border-collapse bg-white">
+                <thead>
+                  <tr class="bg-[#141111] text-white font-bold border-b border-[#e0e0e0]">
+                    <th class="p-3">
+                      Model Groups
+                    </th>
+                    <th class="p-3 text-right w-36">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Blog -->
+                  <tr class="border-b border-[#e0e0e0] hover:bg-zinc-50">
+                    <td class="p-3 font-semibold text-zinc-800">
+                      <button
+                        class="hover:underline text-left text-zinc-800 font-semibold cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'blog')"
+                      >
+                        Blog Posts
+                      </button>
+                    </td>
+                    <td class="p-3 text-right space-x-3">
+                      <button
+                        class="text-[#1D96B8] hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        @click="openAddForm('blog')"
+                      >
+                        + Add
+                      </button>
+                      <button
+                        class="text-zinc-600 hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'blog')"
+                      >
+                        ✎ Change
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Portfolio -->
+                  <tr class="border-b border-[#e0e0e0] hover:bg-zinc-50">
+                    <td class="p-3 font-semibold text-zinc-800">
+                      <button
+                        class="hover:underline text-left text-zinc-800 font-semibold cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'portfolio')"
+                      >
+                        Portfolio Projects
+                      </button>
+                    </td>
+                    <td class="p-3 text-right space-x-3">
+                      <button
+                        class="text-[#1D96B8] hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        @click="openAddForm('portfolio')"
+                      >
+                        + Add
+                      </button>
+                      <button
+                        class="text-zinc-600 hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'portfolio')"
+                      >
+                        ✎ Change
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Case Study -->
+                  <tr class="border-b border-[#e0e0e0] hover:bg-zinc-50">
+                    <td class="p-3 font-semibold text-zinc-800">
+                      <button
+                        class="hover:underline text-left text-zinc-800 font-semibold cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'case-study')"
+                      >
+                        Case Studies
+                      </button>
+                    </td>
+                    <td class="p-3 text-right space-x-3">
+                      <button
+                        class="text-[#1D96B8] hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        @click="openAddForm('case-study')"
+                      >
+                        + Add
+                      </button>
+                      <button
+                        class="text-zinc-600 hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'case-study')"
+                      >
+                        ✎ Change
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Careers -->
+                  <tr class="border-b border-[#e0e0e0] hover:bg-zinc-50">
+                    <td class="p-3 font-semibold text-zinc-800">
+                      <button
+                        class="hover:underline text-left text-zinc-800 font-semibold cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'career')"
+                      >
+                        Careers (Open Roles)
+                      </button>
+                    </td>
+                    <td class="p-3 text-right space-x-3">
+                      <button
+                        class="text-[#1D96B8] hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        @click="openAddForm('career')"
+                      >
+                        + Add
+                      </button>
+                      <button
+                        class="text-zinc-600 hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'career')"
+                      >
+                        ✎ Change
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Page Settings -->
+                  <tr class="hover:bg-zinc-50">
+                    <td class="p-3 font-semibold text-zinc-800">
+                      <button
+                        class="hover:underline text-left text-zinc-800 font-semibold cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'page-settings')"
+                      >
+                        Page Settings (Site Backgrounds &amp; Assets)
+                      </button>
+                    </td>
+                    <td class="p-3 text-right space-x-3">
+                      <span class="text-zinc-300 text-[10px] select-none pr-3">-</span>
+                      <button
+                        class="text-zinc-600 hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'page-settings')"
+                      >
+                        ✎ Change
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Right Sidebar Log Actions -->
+          <div class="w-full lg:w-72 bg-white border border-[#e0e0e0] rounded p-4 self-stretch lg:self-auto">
+            <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wide border-b border-[#e0e0e0] pb-2 mb-3">
+              Recent Actions Log
+            </h3>
+            <div
+              v-if="recentActions.length === 0"
+              class="text-xs text-zinc-400 italic"
+            >
+              No modifications in this session.
+            </div>
+            <ul
+              v-else
+              class="space-y-3 text-xs"
+            >
+              <li
+                v-for="(log, idx) in recentActions"
+                :key="idx"
+                class="flex items-start gap-2 border-b border-zinc-50 pb-2 last:border-0"
+              >
+                <span
+                  class="font-mono text-[10px] bg-zinc-100 text-zinc-500 px-1 py-0.5 rounded"
+                >{{ log.time }}</span>
+                <div>
+                  <span
+                    class="font-semibold"
+                    :class="[
+                      log.action === 'add' && 'text-green-600',
+                      log.action === 'change' && 'text-amber-600',
+                      log.action === 'delete' && 'text-red-600'
+                    ]"
+                  >{{ log.action.toUpperCase() }}</span>
+                  <span class="text-zinc-600"> {{ log.model }}:</span>
+                  <strong class="text-zinc-800 truncate block max-w-[180px]">{{ log.name }}</strong>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <form
-          class="space-y-5"
-          @submit.prevent="handleFormSubmit"
+        <!-- ══════════════════════ VIEW 2: CHANGE LIST VIEW ══════════════════════ -->
+        <div
+          v-if="currentView === 'list'"
+          class="space-y-4"
         >
-          <!-- ── FORM FOR BLOGS ── -->
-          <div
-            v-if="modalType === 'blog'"
-            class="space-y-4"
-          >
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Blog Title</label>
+          <!-- Header and Add Button -->
+          <div class="flex items-center justify-between border-b border-[#e0e0e0] pb-3">
+            <h2 class="text-base font-bold text-zinc-700 capitalize">
+              Select {{ currentModel === 'case-study' ? 'case study' : currentModel === 'career' ? 'role' : currentModel }} to change
+            </h2>
+            <button
+              class="px-4 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded shadow-sm cursor-pointer"
+              @click="openAddForm(currentModel)"
+            >
+              + Add {{ currentModel === 'case-study' ? 'Case Study' : currentModel === 'career' ? 'Role' : currentModel.toUpperCase() }}
+            </button>
+          </div>
+
+          <!-- Changelist Controls (Search & Filters) -->
+          <div class="flex flex-col lg:flex-row gap-5 items-start">
+            <div class="flex-1 w-full space-y-4">
+              <!-- Search Bar -->
+              <div class="bg-white border border-[#e0e0e0] p-3 rounded flex items-center gap-2">
                 <input
-                  v-model="blogForm.title"
+                  v-model="searchQueries[currentModel]"
                   type="text"
-                  required
-                  placeholder="e.g. Scaling Brand Identity in 2026"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
+                  placeholder="Search title, keyword or key identifiers..."
+                  class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                  @keydown.enter="allSelected = false"
                 >
+                <button
+                  class="px-4 py-1.5 bg-[#141111] hover:bg-black text-white text-xs font-bold rounded cursor-pointer"
+                >
+                  Search
+                </button>
               </div>
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">URL Slug</label>
-                <input
-                  v-model="blogForm.slug"
-                  type="text"
-                  required
-                  placeholder="e.g. scaling-brand-identity-2026"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                  :disabled="modalMode === 'edit'"
+
+              <!-- Bulk Action Bar -->
+              <div class="bg-zinc-100 border border-[#e0e0e0] p-2.5 rounded flex items-center gap-2 text-xs">
+                <label class="text-zinc-600 font-semibold">Action:</label>
+                <select
+                  v-model="selectedBulkAction"
+                  class="px-2.5 py-1 border border-zinc-300 rounded text-xs bg-white focus:outline-none"
                 >
+                  <option value="">
+                    ---------
+                  </option>
+                  <option value="delete">
+                    Delete selected {{ currentModel === 'blog' ? 'blog posts' : currentModel === 'portfolio' ? 'projects' : currentModel === 'case-study' ? 'case studies' : 'open roles' }}
+                  </option>
+                </select>
+                <button
+                  class="px-3.5 py-1 bg-[#141111] hover:bg-black text-white font-bold rounded cursor-pointer text-xs"
+                  @click="executeBulkAction"
+                >
+                  Go
+                </button>
+              </div>
+
+              <!-- Data List Grid Tables -->
+              <div class="border border-[#e0e0e0] rounded bg-white overflow-hidden">
+                <!-- ── Table 1: Blog Changelist ── -->
+                <table
+                  v-if="currentModel === 'blog'"
+                  class="w-full text-xs text-left border-collapse"
+                >
+                  <thead>
+                    <tr class="bg-zinc-100 text-zinc-700 font-bold border-b border-[#e0e0e0] select-none">
+                      <th class="p-3 w-10 text-center">
+                        <input
+                          v-model="allSelected"
+                          type="checkbox"
+                          @change="toggleAllSelections(filteredBlogs)"
+                        >
+                      </th>
+                      <th
+                        class="p-3 cursor-pointer hover:bg-zinc-200"
+                        @click="toggleSort('blog', 'title')"
+                      >
+                        Title <span v-if="sortKeys.blog === 'title'">{{ sortOrders.blog === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th
+                        class="p-3 cursor-pointer hover:bg-zinc-200"
+                        @click="toggleSort('blog', 'slug')"
+                      >
+                        Slug <span v-if="sortKeys.blog === 'slug'">{{ sortOrders.blog === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th
+                        class="p-3 cursor-pointer hover:bg-zinc-200"
+                        @click="toggleSort('blog', 'date')"
+                      >
+                        Publish Date <span v-if="sortKeys.blog === 'date'">{{ sortOrders.blog === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th class="p-3">
+                        Read Time
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="post in filteredBlogs"
+                      :key="post.slug"
+                      class="border-b border-[#e0e0e0] hover:bg-zinc-50"
+                    >
+                      <td class="p-3 text-center">
+                        <input
+                          v-model="selectedIds[post.slug]"
+                          type="checkbox"
+                        >
+                      </td>
+                      <td class="p-3">
+                        <button
+                          class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
+                          @click="openEditForm('blog', post.slug)"
+                        >
+                          {{ post.title }}
+                        </button>
+                      </td>
+                      <td class="p-3 text-zinc-500 font-mono text-[11px]">
+                        {{ post.slug }}
+                      </td>
+                      <td class="p-3">
+                        {{ post.date }}
+                      </td>
+                      <td class="p-3">
+                        {{ post.readTime }}
+                      </td>
+                    </tr>
+                    <tr v-if="filteredBlogs.length === 0">
+                      <td
+                        colspan="5"
+                        class="p-5 text-center text-zinc-400 italic"
+                      >
+                        No matching blog posts found.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- ── Table 2: Portfolio Changelist ── -->
+                <table
+                  v-if="currentModel === 'portfolio'"
+                  class="w-full text-xs text-left border-collapse"
+                >
+                  <thead>
+                    <tr class="bg-zinc-100 text-zinc-700 font-bold border-b border-[#e0e0e0] select-none">
+                      <th class="p-3 w-10 text-center">
+                        <input
+                          v-model="allSelected"
+                          type="checkbox"
+                          @change="toggleAllSelections(filteredPortfolio)"
+                        >
+                      </th>
+                      <th
+                        class="p-3 cursor-pointer hover:bg-zinc-200"
+                        @click="toggleSort('portfolio', 'title')"
+                      >
+                        Title <span v-if="sortKeys.portfolio === 'title'">{{ sortOrders.portfolio === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th
+                        class="p-3 cursor-pointer hover:bg-zinc-200"
+                        @click="toggleSort('portfolio', 'category')"
+                      >
+                        Category <span v-if="sortKeys.portfolio === 'category'">{{ sortOrders.portfolio === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th
+                        class="p-3 cursor-pointer hover:bg-zinc-200"
+                        @click="toggleSort('portfolio', 'featured')"
+                      >
+                        Featured <span v-if="sortKeys.portfolio === 'featured'">{{ sortOrders.portfolio === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th
+                        class="p-3 cursor-pointer hover:bg-zinc-200"
+                        @click="toggleSort('portfolio', 'displayOrder')"
+                      >
+                        Order <span v-if="sortKeys.portfolio === 'displayOrder'">{{ sortOrders.portfolio === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="proj in filteredPortfolio"
+                      :key="proj.slug"
+                      class="border-b border-[#e0e0e0] hover:bg-zinc-50"
+                    >
+                      <td class="p-3 text-center">
+                        <input
+                          v-model="selectedIds[proj.slug]"
+                          type="checkbox"
+                        >
+                      </td>
+                      <td class="p-3">
+                        <button
+                          class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
+                          @click="openEditForm('portfolio', proj.slug)"
+                        >
+                          {{ proj.title }}
+                        </button>
+                      </td>
+                      <td class="p-3">
+                        {{ proj.category }}
+                      </td>
+                      <td class="p-3">
+                        <span
+                          class="px-2 py-0.5 rounded font-bold text-[10px]"
+                          :class="proj.featured !== false ? 'bg-amber-100 text-amber-700' : 'bg-zinc-100 text-zinc-600'"
+                        >
+                          {{ proj.featured !== false ? 'Featured' : 'Standard' }}
+                        </span>
+                      </td>
+                      <td class="p-3 font-mono">
+                        {{ proj.displayOrder }}
+                      </td>
+                    </tr>
+                    <tr v-if="filteredPortfolio.length === 0">
+                      <td
+                        colspan="5"
+                        class="p-5 text-center text-zinc-400 italic"
+                      >
+                        No matching portfolio projects found.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- ── Table 3: Case Studies Changelist ── -->
+                <table
+                  v-if="currentModel === 'case-study'"
+                  class="w-full text-xs text-left border-collapse"
+                >
+                  <thead>
+                    <tr class="bg-zinc-100 text-zinc-700 font-bold border-b border-[#e0e0e0] select-none">
+                      <th class="p-3 w-10 text-center">
+                        <input
+                          v-model="allSelected"
+                          type="checkbox"
+                          @change="toggleAllSelections(filteredCaseStudies)"
+                        >
+                      </th>
+                      <th
+                        class="p-3 cursor-pointer hover:bg-zinc-200"
+                        @click="toggleSort('case-study', 'title')"
+                      >
+                        Title <span v-if="sortKeys['case-study'] === 'title'">{{ sortOrders['case-study'] === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th
+                        class="p-3 cursor-pointer hover:bg-zinc-200"
+                        @click="toggleSort('case-study', 'client')"
+                      >
+                        Client <span v-if="sortKeys['case-study'] === 'client'">{{ sortOrders['case-study'] === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th class="p-3">
+                        Slug
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="study in filteredCaseStudies"
+                      :key="study.slug"
+                      class="border-b border-[#e0e0e0] hover:bg-zinc-50"
+                    >
+                      <td class="p-3 text-center">
+                        <input
+                          v-model="selectedIds[study.slug]"
+                          type="checkbox"
+                        >
+                      </td>
+                      <td class="p-3">
+                        <button
+                          class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
+                          @click="openEditForm('case-study', study.slug)"
+                        >
+                          {{ study.title }}
+                        </button>
+                      </td>
+                      <td class="p-3">
+                        {{ study.client }}
+                      </td>
+                      <td class="p-3 text-zinc-500 font-mono text-[11px]">
+                        {{ study.slug }}
+                      </td>
+                    </tr>
+                    <tr v-if="filteredCaseStudies.length === 0">
+                      <td
+                        colspan="4"
+                        class="p-5 text-center text-zinc-400 italic"
+                      >
+                        No matching case studies found.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- ── Table 4: Careers Changelist ── -->
+                <table
+                  v-if="currentModel === 'career'"
+                  class="w-full text-xs text-left border-collapse"
+                >
+                  <thead>
+                    <tr class="bg-zinc-100 text-zinc-700 font-bold border-b border-[#e0e0e0] select-none">
+                      <th class="p-3 w-10 text-center">
+                        <input
+                          v-model="allSelected"
+                          type="checkbox"
+                          @change="toggleAllSelections(filteredCareers)"
+                        >
+                      </th>
+                      <th
+                        class="p-3 cursor-pointer hover:bg-zinc-200"
+                        @click="toggleSort('career', 'title')"
+                      >
+                        Job Title <span v-if="sortKeys.career === 'title'">{{ sortOrders.career === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th
+                        class="p-3 cursor-pointer hover:bg-zinc-200"
+                        @click="toggleSort('career', 'department')"
+                      >
+                        Department <span v-if="sortKeys.career === 'department'">{{ sortOrders.career === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th
+                        class="p-3 cursor-pointer hover:bg-zinc-200"
+                        @click="toggleSort('career', 'location')"
+                      >
+                        Location <span v-if="sortKeys.career === 'location'">{{ sortOrders.career === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th class="p-3">
+                        Job Type
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="job in filteredCareers"
+                      :key="job.id"
+                      class="border-b border-[#e0e0e0] hover:bg-zinc-50"
+                    >
+                      <td class="p-3 text-center">
+                        <input
+                          v-model="selectedIds[job.id]"
+                          type="checkbox"
+                        >
+                      </td>
+                      <td class="p-3">
+                        <button
+                          class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
+                          @click="openEditForm('career', job.id)"
+                        >
+                          {{ job.title }}
+                        </button>
+                      </td>
+                      <td class="p-3">
+                        {{ job.department }}
+                      </td>
+                      <td class="p-3">
+                        {{ job.location }}
+                      </td>
+                      <td class="p-3">
+                        {{ job.type }}
+                      </td>
+                    </tr>
+                    <tr v-if="filteredCareers.length === 0">
+                      <td
+                        colspan="5"
+                        class="p-5 text-center text-zinc-400 italic"
+                      >
+                        No matching careers found.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
 
-            <div>
-              <label class="block text-xs font-bold text-zinc-700 mb-1.5">Excerpt</label>
-              <textarea
-                v-model="blogForm.excerpt"
-                required
-                rows="2"
-                placeholder="Brief summary of the blog post to display in the card..."
-                class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-              />
-            </div>
+            <!-- Right side Filters Sidebar -->
+            <div class="w-full lg:w-56 bg-white border border-[#e0e0e0] rounded shrink-0 p-4">
+              <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wide border-b border-[#e0e0e0] pb-2 mb-3">
+                Filter
+              </h3>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Publish Date</label>
-                <input
-                  v-model="blogForm.date"
-                  type="date"
-                  required
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Read Time</label>
-                <input
-                  v-model="blogForm.readTime"
-                  type="text"
-                  required
-                  placeholder="e.g. 6 Min Read"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Cover Image Path / URL</label>
-                <input
-                  v-model="blogForm.image"
-                  type="text"
-                  required
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-            </div>
-
-            <!-- Quick template image select -->
-            <div>
-              <label class="block text-xs font-bold text-zinc-400 mb-1">Select from Template Images</label>
-              <select
-                class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 text-xs focus:outline-none"
-                @change="blogForm.image = ($event.target as HTMLSelectElement).value"
+              <!-- Filters for Portfolio -->
+              <div
+                v-if="currentModel === 'portfolio'"
+                class="space-y-4 text-xs"
               >
-                <option
-                  value=""
-                  disabled
-                  selected
-                >
-                  -- Choose local template asset --
-                </option>
-                <option
-                  v-for="img in templateImages"
-                  :key="img.value"
-                  :value="img.value"
-                >
-                  {{ img.label }}
-                </option>
-              </select>
+                <div>
+                  <h4 class="font-bold text-zinc-400 mb-1.5">
+                    By Category
+                  </h4>
+                  <ul class="space-y-1">
+                    <li
+                      v-for="cat in ['All', 'Branding', 'Marketing', 'Video Production']"
+                      :key="cat"
+                    >
+                      <button
+                        class="hover:underline text-left cursor-pointer bg-transparent border-0 p-0"
+                        :class="activeFilters.portfolioCategory === cat ? 'text-[#1D96B8] font-bold' : 'text-zinc-600'"
+                        @click="activeFilters.portfolioCategory = cat; allSelected = false"
+                      >
+                        {{ cat }}
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-bold text-zinc-400 mb-1.5">
+                    By Home Placement
+                  </h4>
+                  <ul class="space-y-1">
+                    <li
+                      v-for="feat in ['All', 'Featured', 'Not Featured']"
+                      :key="feat"
+                    >
+                      <button
+                        class="hover:underline text-left cursor-pointer bg-transparent border-0 p-0"
+                        :class="activeFilters.portfolioFeatured === feat ? 'text-[#1D96B8] font-bold' : 'text-zinc-600'"
+                        @click="activeFilters.portfolioFeatured = feat; allSelected = false"
+                      >
+                        {{ feat }}
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Filters for Blog -->
+              <div
+                v-if="currentModel === 'blog'"
+                class="space-y-4 text-xs"
+              >
+                <div>
+                  <h4 class="font-bold text-zinc-400 mb-1.5">
+                    By Year
+                  </h4>
+                  <ul class="space-y-1">
+                    <li
+                      v-for="yr in ['All', '2026', '2025']"
+                      :key="yr"
+                    >
+                      <button
+                        class="hover:underline text-left cursor-pointer bg-transparent border-0 p-0"
+                        :class="activeFilters.blogYear === yr ? 'text-[#1D96B8] font-bold' : 'text-zinc-600'"
+                        @click="activeFilters.blogYear = yr; allSelected = false"
+                      >
+                        {{ yr }}
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Default Placeholder Filters for non-filtered models -->
+              <div
+                v-if="currentModel === 'case-study' || currentModel === 'career'"
+                class="text-xs text-zinc-400 italic"
+              >
+                No filter choices active for this model.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════ VIEW 3: CHANGE FORM VIEW (Add/Edit) ══════════════════════ -->
+        <div
+          v-if="currentView === 'change'"
+          class="space-y-4"
+        >
+          <!-- Header title -->
+          <div class="border-b border-[#e0e0e0] pb-3">
+            <h2 class="text-base font-bold text-zinc-700 capitalize">
+              {{ currentId === null ? 'Add' : 'Change' }} {{ currentModel === 'case-study' ? 'case study' : currentModel === 'career' ? 'role' : currentModel }}
+            </h2>
+          </div>
+
+          <form
+            class="space-y-6"
+            @submit.prevent="handleSave('save')"
+          >
+            <!-- ── FORM CARD (Structured Grid Layout, matching Django table rows) ── -->
+            <div class="bg-white border border-[#e0e0e0] rounded overflow-hidden divide-y divide-[#eaeaea]">
+              <!-- ▓▓ PAGE SETTINGS FORM FIELDS ▓▓ -->
+              <template v-if="currentModel === 'page-settings'">
+                <!-- Index Page Settings Group Header -->
+                <div class="bg-zinc-50 px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">
+                  Index Page Background Customizations
+                </div>
+                <!-- Row: Index Hero Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Index Hero Image Path/URL:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <input
+                      v-model="settingsForm.indexHeroImage"
+                      type="text"
+                      required
+                      placeholder="e.g. /Images/hero.png"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                    <div class="flex items-center gap-2">
+                      <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
+                      <select
+                        class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
+                        @change="settingsForm.indexHeroImage = ($event.target as HTMLSelectElement).value"
+                      >
+                        <option
+                          value=""
+                          disabled
+                          selected
+                        >
+                          -- select template image --
+                        </option>
+                        <option
+                          v-for="img in templateImages"
+                          :key="img.value"
+                          :value="img.value"
+                        >
+                          {{ img.label }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <!-- Row: Index Hero Video -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Index Hero Video Path/URL (Optional):</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="settingsForm.indexHeroVideo"
+                      type="text"
+                      placeholder="e.g. /Background Videos/Hero.mp4 (leave empty to show background image)"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                    <p class="text-[10px] text-zinc-400">
+                      If set, plays as the background video. If empty, displays the hero image instead.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- About Page Settings Group Header -->
+                <div class="bg-zinc-50 px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">
+                  About Page Background Customizations
+                </div>
+                <!-- Row: About Hero Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">About Hero Image Path/URL:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <input
+                      v-model="settingsForm.aboutHeroImage"
+                      type="text"
+                      required
+                      placeholder="e.g. /Images/Branding.jpeg"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                    <div class="flex items-center gap-2">
+                      <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
+                      <select
+                        class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
+                        @change="settingsForm.aboutHeroImage = ($event.target as HTMLSelectElement).value"
+                      >
+                        <option
+                          value=""
+                          disabled
+                          selected
+                        >
+                          -- select template image --
+                        </option>
+                        <option
+                          v-for="img in templateImages"
+                          :key="img.value"
+                          :value="img.value"
+                        >
+                          {{ img.label }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <!-- Row: About Hero Video -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">About Hero Video Path/URL:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="settingsForm.aboutHeroVideo"
+                      type="text"
+                      required
+                      placeholder="e.g. /Background Videos/About.mp4"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                  </div>
+                </div>
+
+                <!-- Blog Page Settings Group Header -->
+                <div class="bg-zinc-50 px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">
+                  Blog Page Background Customizations
+                </div>
+                <!-- Row: Blog Hero Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Blog Hero Image Path/URL:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <input
+                      v-model="settingsForm.blogHeroImage"
+                      type="text"
+                      required
+                      placeholder="e.g. /Images/Branding.jpeg"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                    <div class="flex items-center gap-2">
+                      <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
+                      <select
+                        class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
+                        @change="settingsForm.blogHeroImage = ($event.target as HTMLSelectElement).value"
+                      >
+                        <option
+                          value=""
+                          disabled
+                          selected
+                        >
+                          -- select template image --
+                        </option>
+                        <option
+                          v-for="img in templateImages"
+                          :key="img.value"
+                          :value="img.value"
+                        >
+                          {{ img.label }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <!-- Row: Blog Hero Video -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Blog Hero Video Path/URL:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="settingsForm.blogHeroVideo"
+                      type="text"
+                      required
+                      placeholder="e.g. /Background Videos/Blog.mp4"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                  </div>
+                </div>
+
+                <!-- Services Section Settings Group Header -->
+                <div class="bg-zinc-50 px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">
+                  Homepage Services Section Cards Customizations
+                </div>
+                <!-- Row: Services Branding Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Branding &amp; Design Card Image:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <input
+                      v-model="settingsForm.servicesBrandingImage"
+                      type="text"
+                      required
+                      placeholder="e.g. /Images/Branding.jpeg"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                    <div class="flex items-center gap-2">
+                      <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
+                      <select
+                        class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
+                        @change="settingsForm.servicesBrandingImage = ($event.target as HTMLSelectElement).value"
+                      >
+                        <option
+                          value=""
+                          disabled
+                          selected
+                        >
+                          -- select template image --
+                        </option>
+                        <option
+                          v-for="img in templateImages"
+                          :key="img.value"
+                          :value="img.value"
+                        >
+                          {{ img.label }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <!-- Row: Services Marketing Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Digital Marketing Card Image:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <input
+                      v-model="settingsForm.servicesMarketingImage"
+                      type="text"
+                      required
+                      placeholder="e.g. /Images/Digital Marketing.jpeg"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                    <div class="flex items-center gap-2">
+                      <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
+                      <select
+                        class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
+                        @change="settingsForm.servicesMarketingImage = ($event.target as HTMLSelectElement).value"
+                      >
+                        <option
+                          value=""
+                          disabled
+                          selected
+                        >
+                          -- select template image --
+                        </option>
+                        <option
+                          v-for="img in templateImages"
+                          :key="img.value"
+                          :value="img.value"
+                        >
+                          {{ img.label }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <!-- Row: Services Video Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Video Production Card Image:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <input
+                      v-model="settingsForm.servicesVideoImage"
+                      type="text"
+                      required
+                      placeholder="e.g. /Images/Video Production.jpeg"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                    <div class="flex items-center gap-2">
+                      <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
+                      <select
+                        class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
+                        @change="settingsForm.servicesVideoImage = ($event.target as HTMLSelectElement).value"
+                      >
+                        <option
+                          value=""
+                          disabled
+                          selected
+                        >
+                          -- select template image --
+                        </option>
+                        <option
+                          v-for="img in templateImages"
+                          :key="img.value"
+                          :value="img.value"
+                        >
+                          {{ img.label }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Careers & Contact Page Settings Group Header -->
+                <div class="bg-zinc-50 px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">
+                  Careers &amp; Contact Page Customizations
+                </div>
+                <!-- Row: Careers Hero Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Careers Hero Image Path/URL:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <input
+                      v-model="settingsForm.careersHeroImage"
+                      type="text"
+                      required
+                      placeholder="e.g. /Images/Designing.jpeg"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                    <div class="flex items-center gap-2">
+                      <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
+                      <select
+                        class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
+                        @change="settingsForm.careersHeroImage = ($event.target as HTMLSelectElement).value"
+                      >
+                        <option
+                          value=""
+                          disabled
+                          selected
+                        >
+                          -- select template image --
+                        </option>
+                        <option
+                          v-for="img in templateImages"
+                          :key="img.value"
+                          :value="img.value"
+                        >
+                          {{ img.label }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <!-- Row: Careers Hero Video -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Careers Hero Video Path/URL:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="settingsForm.careersHeroVideo"
+                      type="text"
+                      required
+                      placeholder="e.g. /Background Videos/Careers.mp4"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Contact Hero Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Contact Hero Image Path/URL:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <input
+                      v-model="settingsForm.contactHeroImage"
+                      type="text"
+                      required
+                      placeholder="e.g. /Images/Marketing.jpeg"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                    <div class="flex items-center gap-2">
+                      <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
+                      <select
+                        class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
+                        @change="settingsForm.contactHeroImage = ($event.target as HTMLSelectElement).value"
+                      >
+                        <option
+                          value=""
+                          disabled
+                          selected
+                        >
+                          -- select template image --
+                        </option>
+                        <option
+                          v-for="img in templateImages"
+                          :key="img.value"
+                          :value="img.value"
+                        >
+                          {{ img.label }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <!-- Row: Contact Hero Video -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Contact Hero Video Path/URL:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="settingsForm.contactHeroVideo"
+                      type="text"
+                      required
+                      placeholder="e.g. /Background Videos/Contact.mp4"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                  </div>
+                </div>
+              </template>
+
+              <!-- ▓▓ BLOG FORM FIELDS ▓▓ -->
+              <template v-if="currentModel === 'blog'">
+                <!-- Row: Title -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Blog Title:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="blogForm.title"
+                      type="text"
+                      required
+                      placeholder="e.g. Scaling Brand Identity in 2026"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                    <p class="text-[10px] text-zinc-400">
+                      The core heading of the journal page.
+                    </p>
+                  </div>
+                </div>
+                <!-- Row: Slug -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">URL Slug:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="blogForm.slug"
+                      type="text"
+                      required
+                      placeholder="e.g. scaling-brand-identity-2026"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      :disabled="currentId !== null"
+                    >
+                    <p class="text-[10px] text-zinc-400">
+                      Used for SEO URL matching. Must be unique and hyphens-only. Auto-generated from title for new items.
+                    </p>
+                  </div>
+                </div>
+                <!-- Row: Excerpt -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Excerpt Summary:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <textarea
+                      v-model="blogForm.excerpt"
+                      required
+                      rows="2"
+                      placeholder="A short card synopsis summary..."
+                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    />
+                  </div>
+                </div>
+                <!-- Row: Date -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Publish Date:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="blogForm.date"
+                      type="date"
+                      required
+                      class="w-48 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Read Time -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Read Time Duration:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="blogForm.readTime"
+                      type="text"
+                      required
+                      placeholder="e.g. 5 Min Read"
+                      class="w-48 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Cover Image Asset:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <input
+                      v-model="blogForm.image"
+                      type="text"
+                      required
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                    <div class="flex items-center gap-2">
+                      <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
+                      <select
+                        class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
+                        @change="blogForm.image = ($event.target as HTMLSelectElement).value"
+                      >
+                        <option
+                          value=""
+                          disabled
+                          selected
+                        >
+                          -- select local image --
+                        </option>
+                        <option
+                          v-for="img in templateImages"
+                          :key="img.value"
+                          :value="img.value"
+                        >
+                          {{ img.label }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </template>
+
+              <!-- ▓▓ PORTFOLIO FORM FIELDS ▓▓ -->
+              <template v-else-if="currentModel === 'portfolio'">
+                <!-- Row: Title -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Project Title:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="portfolioForm.title"
+                      type="text"
+                      required
+                      placeholder="e.g. Lecrown Brand Launch"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Slug -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">URL Slug:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="portfolioForm.slug"
+                      type="text"
+                      required
+                      placeholder="e.g. lecrown"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      :disabled="currentId !== null"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Subtitle -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Subtitle Tagline:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="portfolioForm.subtitle"
+                      type="text"
+                      required
+                      placeholder="e.g. Branding & Strategy Development"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Category -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Category:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <select
+                      v-model="portfolioForm.category"
+                      class="w-48 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                      <option value="Branding">
+                        Branding
+                      </option>
+                      <option value="Marketing">
+                        Marketing
+                      </option>
+                      <option value="Video Production">
+                        Video Production
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!-- Row: Tagline -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Tagline:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="portfolioForm.tagline"
+                      type="text"
+                      placeholder="e.g. A comprehensive brand transformation for a mountain resort..."
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Services -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Services Provided:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="portfolioForm.services"
+                      type="text"
+                      placeholder="e.g. Branding, Designing, Video Production"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Industry -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Industry Segment:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="portfolioForm.industry"
+                      type="text"
+                      placeholder="e.g. Resorts & Hospitality"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Project Date -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Project Date / Season:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="portfolioForm.date"
+                      type="text"
+                      placeholder="e.g. June, 2026"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Cover Image URL:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <input
+                      v-model="portfolioForm.image"
+                      type="text"
+                      required
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                    <select
+                      class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
+                      @change="portfolioForm.image = ($event.target as HTMLSelectElement).value"
+                    >
+                      <option
+                        value=""
+                        disabled
+                        selected
+                      >
+                        -- select template cover --
+                      </option>
+                      <option
+                        v-for="img in templateImages"
+                        :key="img.value"
+                        :value="img.value"
+                      >
+                        {{ img.label }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!-- Row: Hero Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Hero Header Image URL:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <input
+                      v-model="portfolioForm.heroImage"
+                      type="text"
+                      required
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                    <select
+                      class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
+                      @change="portfolioForm.heroImage = ($event.target as HTMLSelectElement).value"
+                    >
+                      <option
+                        value=""
+                        disabled
+                        selected
+                      >
+                        -- select template hero --
+                      </option>
+                      <option
+                        v-for="img in templateImages"
+                        :key="img.value"
+                        :value="img.value"
+                      >
+                        {{ img.label }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!-- Row: Tags -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Tags (comma-separated):</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="portfolioForm.tagsString"
+                      type="text"
+                      placeholder="Branding, Marketing, Social Media"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Gallery Image String -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Gallery Images (comma-separated):</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="portfolioForm.galleryImagesString"
+                      type="text"
+                      placeholder="/Images/Pinklabel.jpg, /Images/Lecrown.png"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Story -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Story narrative:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <textarea
+                      v-model="portfolioForm.story"
+                      required
+                      rows="5"
+                      placeholder="Write the detailed story behind this project here..."
+                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    />
+                  </div>
+                </div>
+                <!-- Row: Order -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Display Order index:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="portfolioForm.displayOrder"
+                      type="number"
+                      required
+                      class="w-32 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Featured Checkbox -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-center">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 shrink-0">Featured Placement:</label>
+                  <div class="flex-1 flex items-center gap-2">
+                    <input
+                      id="form-feat-checkbox"
+                      v-model="portfolioForm.featured"
+                      type="checkbox"
+                      class="w-4 h-4 rounded text-[#1D96B8] focus:ring-[#1D96B8] border-zinc-300"
+                    >
+                    <label
+                      for="form-feat-checkbox"
+                      class="text-xs text-zinc-600 select-none cursor-pointer"
+                    >Feature on the homepage featured work grid</label>
+                  </div>
+                </div>
+              </template>
+
+              <!-- ▓▓ CASE STUDY FORM FIELDS ▓▓ -->
+              <template v-else-if="currentModel === 'case-study'">
+                <!-- Row: Title -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Case Study Title:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="caseStudyForm.title"
+                      type="text"
+                      required
+                      placeholder="e.g. Campaign Title"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Slug -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">URL Slug:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="caseStudyForm.slug"
+                      type="text"
+                      required
+                      placeholder="e.g. campaign-slug"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      :disabled="currentId !== null"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Client -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Client Name:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="caseStudyForm.client"
+                      type="text"
+                      required
+                      placeholder="e.g. Client Ltd."
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Tagline -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Tagline:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="caseStudyForm.tagline"
+                      type="text"
+                      placeholder="e.g. Luxury Hospitality Branding & Marketing..."
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Services -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Services Provided:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="caseStudyForm.services"
+                      type="text"
+                      placeholder="e.g. Branding, Designing, Video Production"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Industry -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Industry Segment:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="caseStudyForm.industry"
+                      type="text"
+                      placeholder="e.g. Resorts & Hospitality"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Case Study Date -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Case Study Date / Season:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="caseStudyForm.date"
+                      type="text"
+                      placeholder="e.g. June, 2026"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Tags -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Tags (comma-separated):</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="caseStudyForm.tagsString"
+                      type="text"
+                      required
+                      placeholder="Branding, Campaigns"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Card Cover Image URL:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="caseStudyForm.image"
+                      type="text"
+                      required
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Hero Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Hero Banner Image URL:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="caseStudyForm.heroImage"
+                      type="text"
+                      required
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Challenge -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">The Challenge statement:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <textarea
+                      v-model="caseStudyForm.challenge"
+                      required
+                      rows="3"
+                      placeholder="Describe the challenge..."
+                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    />
+                  </div>
+                </div>
+                <!-- Row: Approach -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Our Strategic Approach:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <textarea
+                      v-model="caseStudyForm.approach"
+                      required
+                      rows="3"
+                      placeholder="Describe our strategic design approach..."
+                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    />
+                  </div>
+                </div>
+                <!-- Row: Results Summary -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Results Summary Copy:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <textarea
+                      v-model="caseStudyForm.resultsSummary"
+                      rows="3"
+                      placeholder="e.g. The project established a cohesive and recognizable visual identity..."
+                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    />
+                  </div>
+                </div>
+              </template>
+
+              <!-- ▓▓ CAREER FORM FIELDS ▓▓ -->
+              <template v-else-if="currentModel === 'career'">
+                <!-- Row: Job Title -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Job Position Title:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="careerForm.title"
+                      type="text"
+                      required
+                      placeholder="e.g. Senior Copywriter"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Department -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Department Unit:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="careerForm.department"
+                      type="text"
+                      required
+                      placeholder="e.g. Creative Strategy"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Location -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Location / Workplace:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="careerForm.location"
+                      type="text"
+                      required
+                      placeholder="e.g. Kochi, Kerala (Onsite / Hybrid)"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Job Type -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Job Type:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="careerForm.type"
+                      type="text"
+                      required
+                      placeholder="e.g. Full-Time or Contract"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+                <!-- Row: Experience -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Experience requirement:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="careerForm.experience"
+                      type="text"
+                      required
+                      placeholder="e.g. 3+ Years Experience"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                  </div>
+                </div>
+              </template>
             </div>
 
-            <!-- Dynamic Blog Content Sections -->
-            <div class="border-t border-zinc-200 pt-4 space-y-4">
-              <div class="flex items-center justify-between">
-                <h3 class="text-sm font-bold text-zinc-800">
-                  Blog Body Sections
+            <!-- ── DJANGO INLINE SECTIONS (Body, solutions, metrics) ── -->
+            <!-- Portfolio Story Paragraphs Inlines -->
+            <div
+              v-if="currentModel === 'portfolio'"
+              class="space-y-4"
+            >
+              <div class="flex items-center justify-between border-b border-[#e0e0e0] pb-2">
+                <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wide">
+                  Project Story Paragraphs Inlines
                 </h3>
                 <button
                   type="button"
-                  class="text-xs px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-brand-dark rounded-lg transition border border-zinc-200"
+                  class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 border border-zinc-300 text-zinc-700 text-xs font-bold rounded cursor-pointer"
+                  @click="addPortfolioStoryParagraph"
+                >
+                  + Add Story Paragraph
+                </button>
+              </div>
+
+              <div class="bg-white border border-[#e0e0e0] rounded p-4 space-y-3">
+                <div
+                  v-for="(para, index) in portfolioForm.storyParagraphs"
+                  :key="index"
+                  class="flex gap-2 items-start"
+                >
+                  <span class="text-xs text-zinc-400 font-mono w-6 pt-2">{{ index + 1 }}.</span>
+                  <textarea
+                    v-model="portfolioForm.storyParagraphs[index]"
+                    required
+                    rows="3"
+                    placeholder="Write a paragraph describing the project's story..."
+                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                  />
+                  <button
+                    type="button"
+                    class="text-red-500 hover:underline font-bold text-xs p-1 pt-2 cursor-pointer"
+                    @click="removePortfolioStoryParagraph(index)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 1. Blog Body Inlines -->
+            <div
+              v-if="currentModel === 'blog'"
+              class="space-y-4"
+            >
+              <div class="flex items-center justify-between border-b border-[#e0e0e0] pb-2">
+                <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wide">
+                  Blog Body Inline Sections
+                </h3>
+                <button
+                  type="button"
+                  class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 border border-zinc-300 text-zinc-700 text-xs font-bold rounded cursor-pointer"
                   @click="addBlogBodySection"
                 >
-                  + Add Paragraph Section
+                  + Add Another Paragraph Section
                 </button>
               </div>
 
@@ -820,479 +2580,272 @@ const resetAllDynamicState = () => {
                 <div
                   v-for="(section, idx) in blogForm.body"
                   :key="idx"
-                  class="p-4 bg-zinc-50 border border-zinc-200 rounded-xl space-y-3 relative"
+                  class="bg-white border border-[#e0e0e0] rounded overflow-hidden relative"
                 >
-                  <button
-                    type="button"
-                    class="absolute top-2 right-2 text-red-500 hover:text-red-600 text-xs font-bold"
-                    @click="removeBlogBodySection(idx)"
-                  >
-                    Remove
-                  </button>
-                  <div>
-                    <label class="block text-xs text-zinc-500 mb-1">Section Heading (Optional)</label>
-                    <input
-                      v-model="section.heading"
-                      type="text"
-                      placeholder="e.g. The Psychology of Color"
-                      class="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-brand-dark text-xs"
+                  <div class="bg-zinc-100 px-4 py-2 border-b border-[#e0e0e0] flex items-center justify-between">
+                    <span class="text-xs font-bold text-zinc-600">Paragraph Section #{{ idx + 1 }}</span>
+                    <button
+                      type="button"
+                      class="text-xs text-red-500 hover:underline cursor-pointer"
+                      @click="removeBlogBodySection(idx)"
                     >
+                      Delete
+                    </button>
                   </div>
-                  <div>
-                    <label class="block text-xs text-zinc-500 mb-1">Section Content</label>
-                    <textarea
-                      v-model="section.content"
-                      required
-                      rows="4"
-                      placeholder="Write paragraph content here..."
-                      class="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-brand-dark text-xs"
-                    />
+                  <div class="p-4 space-y-3">
+                    <div class="flex flex-col md:flex-row gap-4 items-start">
+                      <label class="w-full md:w-36 text-xs text-zinc-500 pt-2 shrink-0">Section Heading:</label>
+                      <input
+                        v-model="section.heading"
+                        type="text"
+                        placeholder="e.g. The Psychology of Color"
+                        class="flex-1 w-full px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      >
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-4 items-start">
+                      <label class="w-full md:w-36 text-xs text-zinc-500 pt-2 shrink-0">Section Content:</label>
+                      <textarea
+                        v-model="section.content"
+                        required
+                        rows="4"
+                        placeholder="Write body paragraph text here..."
+                        class="flex-1 w-full px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- ── FORM FOR PORTFOLIO ── -->
-          <div
-            v-if="modalType === 'portfolio'"
-            class="space-y-4"
-          >
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Project Title</label>
-                <input
-                  v-model="portfolioForm.title"
-                  type="text"
-                  required
-                  placeholder="e.g. Lecrown"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">URL Slug</label>
-                <input
-                  v-model="portfolioForm.slug"
-                  type="text"
-                  required
-                  placeholder="e.g. lecrown"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                  :disabled="modalMode === 'edit'"
-                >
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Subtitle</label>
-                <input
-                  v-model="portfolioForm.subtitle"
-                  type="text"
-                  required
-                  placeholder="e.g. Branding & Marketing"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Category</label>
-                <select
-                  v-model="portfolioForm.category"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-                  <option value="Branding">
-                    Branding
-                  </option>
-                  <option value="Marketing">
-                    Marketing
-                  </option>
-                  <option value="Video Production">
-                    Video Production
-                  </option>
-                </select>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Image Cover Path</label>
-                <input
-                  v-model="portfolioForm.image"
-                  type="text"
-                  required
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Hero Image Path</label>
-                <input
-                  v-model="portfolioForm.heroImage"
-                  type="text"
-                  required
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-            </div>
-
-            <!-- Quick Template dropdowns for Cover / Hero -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-zinc-400 mb-1">Cover Template Select</label>
-                <select
-                  class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 text-xs focus:outline-none"
-                  @change="portfolioForm.image = ($event.target as HTMLSelectElement).value"
-                >
-                  <option
-                    value=""
-                    disabled
-                    selected
-                  >
-                    -- Choose cover asset --
-                  </option>
-                  <option
-                    v-for="img in templateImages"
-                    :key="img.value"
-                    :value="img.value"
-                  >
-                    {{ img.label }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-zinc-400 mb-1">Hero Template Select</label>
-                <select
-                  class="w-full px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 text-xs focus:outline-none"
-                  @change="portfolioForm.heroImage = ($event.target as HTMLSelectElement).value"
-                >
-                  <option
-                    value=""
-                    disabled
-                    selected
-                  >
-                    -- Choose hero asset --
-                  </option>
-                  <option
-                    v-for="img in templateImages"
-                    :key="img.value"
-                    :value="img.value"
-                  >
-                    {{ img.label }}
-                  </option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-zinc-700 mb-1.5">Tags (Comma Separated)</label>
-              <input
-                v-model="portfolioForm.tagsString"
-                type="text"
-                placeholder="Branding, Designing, Video Production"
-                class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-              >
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-zinc-700 mb-1.5">Gallery Image URLs (Comma Separated)</label>
-              <input
-                v-model="portfolioForm.galleryImagesString"
-                type="text"
-                placeholder="/Images/Lecrown- 1.png, /Images/Lecrown.png"
-                class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-              >
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-zinc-700 mb-1.5">Project Story</label>
-              <textarea
-                v-model="portfolioForm.story"
-                required
-                rows="4"
-                placeholder="The detailed story behind the project execution..."
-                class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-              />
-            </div>
-
-            <!-- Featured check box -->
-            <div class="flex items-center gap-3 bg-zinc-50 p-4 border border-zinc-200 rounded-xl">
-              <input
-                id="feat-checkbox"
-                v-model="portfolioForm.featured"
-                type="checkbox"
-                class="w-4 h-4 rounded text-brand-teal-500 focus:ring-brand-teal-500 border-zinc-200 bg-white"
-              >
-              <label
-                for="feat-checkbox"
-                class="text-sm font-semibold select-none cursor-pointer text-zinc-700"
-              >
-                Feature this project on the Homepage
-              </label>
-            </div>
-          </div>
-
-          <!-- ── FORM FOR CASE STUDIES ── -->
-          <div
-            v-if="modalType === 'case-study'"
-            class="space-y-4"
-          >
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Case Study Title</label>
-                <input
-                  v-model="caseStudyForm.title"
-                  type="text"
-                  required
-                  placeholder="e.g. Le Crown Vagamon Campaign"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">URL Slug</label>
-                <input
-                  v-model="caseStudyForm.slug"
-                  type="text"
-                  required
-                  placeholder="e.g. le-crown-vagamon"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                  :disabled="modalMode === 'edit'"
-                >
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Client Name</label>
-                <input
-                  v-model="caseStudyForm.client"
-                  type="text"
-                  required
-                  placeholder="e.g. Le Crown Vagamon"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Tags (Comma Separated)</label>
-                <input
-                  v-model="caseStudyForm.tagsString"
-                  type="text"
-                  required
-                  placeholder="Resorts & Hospitality, Branding"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Card Image URL</label>
-                <input
-                  v-model="caseStudyForm.image"
-                  type="text"
-                  required
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Hero Image URL</label>
-                <input
-                  v-model="caseStudyForm.heroImage"
-                  type="text"
-                  required
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-zinc-700 mb-1.5">The Challenge</label>
-              <textarea
-                v-model="caseStudyForm.challenge"
-                required
-                rows="3"
-                placeholder="The problem statements..."
-                class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-              />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-zinc-700 mb-1.5">Our Approach</label>
-              <textarea
-                v-model="caseStudyForm.approach"
-                required
-                rows="3"
-                placeholder="The creative strategic approach taken..."
-                class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-              />
-            </div>
-
-            <!-- Dynamic solutions section -->
-            <div class="border-t border-zinc-200 pt-4 space-y-3">
-              <div class="flex items-center justify-between">
-                <h3 class="text-sm font-bold text-zinc-800">
-                  The Solutions Bullet Points
+            <!-- Case Study Challenge Paragraphs Inlines -->
+            <div
+              v-if="currentModel === 'case-study'"
+              class="space-y-4"
+            >
+              <div class="flex items-center justify-between border-b border-[#e0e0e0] pb-2">
+                <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wide">
+                  Case Study Challenge Paragraphs Inlines
                 </h3>
                 <button
                   type="button"
-                  class="text-xs px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-brand-dark rounded-lg transition border border-zinc-200"
+                  class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 border border-zinc-300 text-zinc-700 text-xs font-bold rounded cursor-pointer"
+                  @click="addCaseStudyChallengeParagraph"
+                >
+                  + Add Challenge Paragraph
+                </button>
+              </div>
+
+              <div class="bg-white border border-[#e0e0e0] rounded p-4 space-y-3">
+                <div
+                  v-for="(para, index) in caseStudyForm.challengeParagraphs"
+                  :key="index"
+                  class="flex gap-2 items-start"
+                >
+                  <span class="text-xs text-zinc-400 font-mono w-6 pt-2">{{ index + 1 }}.</span>
+                  <textarea
+                    v-model="caseStudyForm.challengeParagraphs[index]"
+                    required
+                    rows="3"
+                    placeholder="Write a paragraph describing the challenge..."
+                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                  />
+                  <button
+                    type="button"
+                    class="text-red-500 hover:underline font-bold text-xs p-1 pt-2 cursor-pointer"
+                    @click="removeCaseStudyChallengeParagraph(index)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Case Study Approach Paragraphs Inlines -->
+            <div
+              v-if="currentModel === 'case-study'"
+              class="space-y-4"
+            >
+              <div class="flex items-center justify-between border-b border-[#e0e0e0] pb-2">
+                <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wide">
+                  Case Study Approach Paragraphs Inlines
+                </h3>
+                <button
+                  type="button"
+                  class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 border border-zinc-300 text-zinc-700 text-xs font-bold rounded cursor-pointer"
+                  @click="addCaseStudyApproachParagraph"
+                >
+                  + Add Approach Paragraph
+                </button>
+              </div>
+
+              <div class="bg-white border border-[#e0e0e0] rounded p-4 space-y-3">
+                <div
+                  v-for="(para, index) in caseStudyForm.approachParagraphs"
+                  :key="index"
+                  class="flex gap-2 items-start"
+                >
+                  <span class="text-xs text-zinc-400 font-mono w-6 pt-2">{{ index + 1 }}.</span>
+                  <textarea
+                    v-model="caseStudyForm.approachParagraphs[index]"
+                    required
+                    rows="3"
+                    placeholder="Write a paragraph describing the strategic approach..."
+                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                  />
+                  <button
+                    type="button"
+                    class="text-red-500 hover:underline font-bold text-xs p-1 pt-2 cursor-pointer"
+                    @click="removeCaseStudyApproachParagraph(index)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Case Study Solution Points Inlines -->
+            <div
+              v-if="currentModel === 'case-study'"
+              class="space-y-4"
+            >
+              <div class="flex items-center justify-between border-b border-[#e0e0e0] pb-2">
+                <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wide">
+                  The Solutions Inline Bullet Points
+                </h3>
+                <button
+                  type="button"
+                  class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 border border-zinc-300 text-zinc-700 text-xs font-bold rounded cursor-pointer"
                   @click="addSolutionPoint"
                 >
                   + Add Point
                 </button>
               </div>
 
-              <div class="space-y-2">
+              <div class="bg-white border border-[#e0e0e0] rounded p-4 space-y-2">
                 <div
                   v-for="(point, index) in caseStudyForm.solution"
                   :key="index"
                   class="flex gap-2 items-center"
                 >
+                  <span class="text-xs text-zinc-400 font-mono w-6">{{ index + 1 }}.</span>
                   <input
                     v-model="caseStudyForm.solution[index]"
                     type="text"
                     required
                     placeholder="e.g. Professional photography and videography capturing the property"
-                    class="flex-1 px-3 py-2 rounded-lg border border-zinc-200 bg-zinc-50 text-brand-dark text-xs"
+                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
                   >
                   <button
                     type="button"
-                    class="p-2 text-red-500 hover:text-red-600 font-bold"
+                    class="text-red-500 hover:underline font-bold text-xs p-1 cursor-pointer"
                     @click="removeSolutionPoint(index)"
                   >
-                    ✕
+                    Delete
                   </button>
                 </div>
               </div>
             </div>
 
-            <!-- Dynamic results metrics section -->
-            <div class="border-t border-zinc-200 pt-4 space-y-3">
-              <div class="flex items-center justify-between">
-                <h3 class="text-sm font-bold text-zinc-800">
-                  Results & Metrics
+            <!-- 3. Case Study Results Metrics Inlines -->
+            <div
+              v-if="currentModel === 'case-study'"
+              class="space-y-4"
+            >
+              <div class="flex items-center justify-between border-b border-[#e0e0e0] pb-2">
+                <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wide">
+                  Results & Metrics Inlines
                 </h3>
                 <button
                   type="button"
-                  class="text-xs px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-brand-dark rounded-lg transition border border-zinc-200"
+                  class="px-3 py-1 bg-zinc-200 hover:bg-zinc-300 border border-zinc-300 text-zinc-700 text-xs font-bold rounded cursor-pointer"
                   @click="addResultMetric"
                 >
                   + Add Metric
                 </button>
               </div>
 
-              <div class="space-y-2">
+              <div class="space-y-3">
                 <div
                   v-for="(metric, idx) in caseStudyForm.results"
                   :key="idx"
-                  class="flex gap-3 items-center bg-zinc-50 p-3 rounded-lg border border-zinc-200"
+                  class="bg-white border border-[#e0e0e0] rounded overflow-hidden"
                 >
-                  <div class="flex-1 grid grid-cols-2 gap-2">
-                    <input
-                      v-model="metric.metric"
-                      type="text"
-                      required
-                      placeholder="e.g. +180% or 3.2x"
-                      class="px-3 py-2 rounded-lg border border-zinc-200 bg-white text-brand-dark text-xs"
+                  <div class="bg-zinc-100 px-4 py-2 border-b border-[#e0e0e0] flex items-center justify-between">
+                    <span class="text-xs font-bold text-zinc-600">Metric Inline Row #{{ idx + 1 }}</span>
+                    <button
+                      type="button"
+                      class="text-xs text-red-500 hover:underline cursor-pointer"
+                      @click="removeResultMetric(idx)"
                     >
-                    <input
-                      v-model="metric.label"
-                      type="text"
-                      required
-                      placeholder="e.g. Growth in Social Reach"
-                      class="px-3 py-2 rounded-lg border border-zinc-200 bg-white text-brand-dark text-xs"
-                    >
+                      Delete
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    class="text-red-500 hover:text-red-600 font-bold"
-                    @click="removeResultMetric(idx)"
-                  >
-                    ✕
-                  </button>
+                  <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-1">
+                      <label class="text-[10px] font-bold text-zinc-500">Metric Value:</label>
+                      <input
+                        v-model="metric.metric"
+                        type="text"
+                        required
+                        placeholder="e.g. +180% or 3.2x"
+                        class="px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      >
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <label class="text-[10px] font-bold text-zinc-500">Label description:</label>
+                      <input
+                        v-model="metric.label"
+                        type="text"
+                        required
+                        placeholder="e.g. Growth in Social Reach"
+                        class="px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      >
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- ── FORM FOR CAREERS ── -->
-          <div
-            v-if="modalType === 'career'"
-            class="space-y-4"
-          >
-            <div>
-              <label class="block text-xs font-bold text-zinc-700 mb-1.5">Job Title</label>
-              <input
-                v-model="careerForm.title"
-                type="text"
-                required
-                placeholder="e.g. Senior Copywriter"
-                class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-              >
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- ── STICKY DJANGO SAVE CONTROL BAR ── -->
+            <div class="bg-zinc-100 border border-[#e0e0e0] p-4 rounded flex items-center justify-between shrink-0">
               <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Department</label>
-                <input
-                  v-model="careerForm.department"
-                  type="text"
-                  required
-                  placeholder="e.g. Marketing"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
+                <button
+                  v-if="currentId !== null && currentModel !== 'page-settings'"
+                  type="button"
+                  class="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded cursor-pointer"
+                  @click="deleteCurrentItem"
                 >
+                  Delete
+                </button>
               </div>
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Location</label>
-                <input
-                  v-model="careerForm.location"
-                  type="text"
-                  required
-                  placeholder="e.g. Kochi (Hybrid / Onsite)"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
+              <div class="flex flex-wrap gap-2.5">
+                <button
+                  v-if="currentModel !== 'page-settings'"
+                  type="button"
+                  class="px-4 py-1.5 bg-white border border-zinc-300 hover:bg-zinc-50 text-zinc-700 text-xs font-bold rounded cursor-pointer"
+                  @click="handleSave('save_and_add')"
                 >
+                  Save and add another
+                </button>
+                <button
+                  v-if="currentModel !== 'page-settings'"
+                  type="button"
+                  class="px-4 py-1.5 bg-white border border-zinc-300 hover:bg-zinc-50 text-zinc-700 text-xs font-bold rounded cursor-pointer"
+                  @click="handleSave('save_and_continue')"
+                >
+                  Save and continue editing
+                </button>
+                <button
+                  type="submit"
+                  class="px-5 py-1.5 bg-[#141111] hover:bg-black text-white text-xs font-bold rounded cursor-pointer"
+                >
+                  Save
+                </button>
               </div>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Type</label>
-                <input
-                  v-model="careerForm.type"
-                  type="text"
-                  required
-                  placeholder="e.g. Full-Time or Internship"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-zinc-700 mb-1.5">Experience Requirement</label>
-                <input
-                  v-model="careerForm.experience"
-                  type="text"
-                  required
-                  placeholder="e.g. 2+ Years Experience"
-                  class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-brand-dark text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal-500"
-                >
-              </div>
-            </div>
-          </div>
-
-          <!-- Form Submissions -->
-          <div class="flex items-center justify-end gap-3 border-t border-zinc-200 pt-5">
-            <button
-              type="button"
-              class="px-5 py-3 rounded-full border border-zinc-300 text-zinc-600 hover:bg-zinc-50 transition text-sm font-semibold"
-              @click="isModalOpen = false"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="px-7 py-3 bg-brand-yellow-500 text-brand-dark text-sm font-bold rounded-full hover:bg-brand-yellow-400 transition"
-            >
-              {{ modalMode === 'create' ? 'Save New Item' : 'Save Changes' }}
-            </button>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      </main>
     </div>
   </div>
 </template>
