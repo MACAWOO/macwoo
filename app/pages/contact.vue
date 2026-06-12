@@ -13,106 +13,56 @@ const form = reactive({ name: '', service: '', email: '', phone: '', message: ''
 <template>
   <div>
     <PageHero
-      title-html="Let's Build Something<br><em class='not-italic text-brand-yellow-500'>Powerful.</em>"
+      title-html="<em class='not-italic text-brand-yellow-500'>Let's Build Something Powerful.</em>"
       :video="settings.contactHeroVideo"
-      :image="settings.contactHeroImage"
       description="Ready to elevate your brand? Drop us a line and let's start crafting a narrative that commands attention and drives results."
+      class="custom-hero-ratio"
     />
 
     <!-- Form + Direct Lines -->
-    <section class="py-20 bg-brand-yellow-500">
+    <section class="py-24 bg-brand-yellow-500">
       <div class="max-w-7xl mx-auto px-6">
-        <div class="flex flex-col lg:flex-row gap-10">
+        <div class="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center justify-center">
           <!-- Form -->
-          <div class="flex-1">
+          <div class="w-full lg:max-w-[600px]">
             <form
               class="space-y-5"
               @submit.prevent
             >
-              <div class="grid sm:grid-cols-2 gap-5">
+              <div class="grid sm:grid-cols-2 gap-x-2.5 gap-y-5">
                 <div>
-                  <label class="block text-xs font-semibold text-brand-dark mb-1.5">Full Name</label>
+                  <label class="block text-xl text-black mb-2 pl-2">Full Name</label>
                   <input
                     v-model="form.name"
                     type="text"
                     placeholder="John Doe"
-                    class="w-full px-4 py-3 rounded-xl border border-brand-dark/20 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark placeholder:text-zinc-400"
+                    class="w-full h-[45px] px-4 rounded-[11px] border border-black bg-transparent text-base text-brand-dark focus:outline-none focus:ring-2 focus:ring-black placeholder:text-brand-dark/40"
                   >
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-brand-dark mb-1.5">Select Service's</label>
-                  <select
-                    v-model="form.service"
-                    class="w-full px-4 py-3 rounded-xl border border-brand-dark/20 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark text-zinc-600 appearance-none"
-                  >
-                    <option
-                      value=""
-                      disabled
+                  <label class="block text-xl text-black mb-2 pl-2">Select Service's</label>
+                  <div class="relative">
+                    <select
+                      v-model="form.service"
+                      class="w-full h-[45px] px-4 pr-10 rounded-[11px] border border-black bg-transparent text-base focus:outline-none focus:ring-2 focus:ring-black appearance-none"
+                      :class="form.service ? 'text-brand-dark' : 'text-brand-dark/40'"
                     >
-                      Select Services
-                    </option>
-                    <option
-                      v-for="s in services"
-                      :key="s"
-                      :value="s"
-                    >
-                      {{ s }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="grid sm:grid-cols-2 gap-5">
-                <div>
-                  <label class="block text-xs font-semibold text-brand-dark mb-1.5">Email</label>
-                  <input
-                    v-model="form.email"
-                    type="email"
-                    placeholder="john@gmail.com"
-                    class="w-full px-4 py-3 rounded-xl border border-brand-dark/20 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark placeholder:text-zinc-400"
-                  >
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold text-brand-dark mb-1.5">Phone Number</label>
-                  <input
-                    v-model="form.phone"
-                    type="tel"
-                    placeholder="+91 00000 00000"
-                    class="w-full px-4 py-3 rounded-xl border border-brand-dark/20 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark placeholder:text-zinc-400"
-                  >
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-xs font-semibold text-brand-dark mb-1.5">Message</label>
-                <textarea
-                  v-model="form.message"
-                  rows="4"
-                  placeholder="Tell us about your project, goals, and any specific requirements. We'll get back to you shortly."
-                  class="w-full px-4 py-3 rounded-xl border border-brand-dark/20 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark placeholder:text-zinc-400 resize-none"
-                />
-              </div>
-
-              <button
-                type="submit"
-                class="px-8 py-3.5 bg-brand-dark text-white text-sm font-bold rounded-full hover:bg-brand-dark/80 transition-colors flex items-center gap-2"
-              >
-                Get Started ×
-              </button>
-            </form>
-          </div>
-
-          <!-- Direct Lines -->
-          <div class="lg:w-72 shrink-0">
-            <div class="bg-white rounded-2xl p-8 h-full">
-              <h3 class="font-bold text-brand-dark text-lg mb-6">
-                Direct Lines
-              </h3>
-              <div class="space-y-6">
-                <div class="flex gap-4 items-start">
-                  <div class="w-8 h-8 bg-brand-teal-50 rounded-lg flex items-center justify-center shrink-0">
+                      <option
+                        value=""
+                        disabled
+                      >
+                        Select Services
+                      </option>
+                      <option
+                        v-for="s in services"
+                        :key="s"
+                        :value="s"
+                      >
+                        {{ s }}
+                      </option>
+                    </select>
                     <svg
-                      class="w-4 h-4 text-brand-teal-500"
+                      class="w-4 h-4 text-black absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -121,79 +71,128 @@ const form = reactive({ name: '', service: '', email: '', phone: '', message: ''
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        d="M19 9l-7 7-7-7"
                       />
                     </svg>
                   </div>
+                </div>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-x-2.5 gap-y-5">
+                <div>
+                  <label class="block text-xl text-black mb-2 pl-2">Email</label>
+                  <input
+                    v-model="form.email"
+                    type="email"
+                    placeholder="john@gmail.com"
+                    class="w-full h-[45px] px-4 rounded-[11px] border border-black bg-transparent text-base text-brand-dark focus:outline-none focus:ring-2 focus:ring-black placeholder:text-brand-dark/40"
+                  >
+                </div>
+                <div>
+                  <label class="block text-xl text-black mb-2 pl-2">Phone Number</label>
+                  <input
+                    v-model="form.phone"
+                    type="tel"
+                    placeholder="+91 00000 00000"
+                    class="w-full h-[45px] px-4 rounded-[11px] border border-black bg-transparent text-base text-brand-dark focus:outline-none focus:ring-2 focus:ring-black placeholder:text-brand-dark/40"
+                  >
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xl text-black mb-2 pl-2">Message</label>
+                <textarea
+                  v-model="form.message"
+                  rows="4"
+                  placeholder="Tell us about your project, goals, and any specific requirements. We'll get back to you shortly."
+                  class="w-full h-[114px] px-4 py-3 rounded-[11px] border border-black bg-transparent text-base text-brand-dark focus:outline-none focus:ring-2 focus:ring-black placeholder:text-brand-dark/40 resize-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="w-full h-[43px] bg-white text-[#201F1F] text-xl font-bold rounded-full hover:bg-zinc-100 transition-colors flex items-center justify-center gap-3"
+              >
+                Get Started
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2.5"
+                    d="M7 17L17 7M17 7H8M17 7v9"
+                  />
+                </svg>
+              </button>
+            </form>
+          </div>
+
+          <!-- Direct Lines -->
+          <div class="w-full lg:w-[416px] shrink-0">
+            <div class="bg-brand-teal-500 rounded-[21px] p-7 lg:min-h-[410px] text-white">
+              <h3 class="font-fredoka font-medium text-[32px] mt-5 mb-10">
+                Direct Lines
+              </h3>
+              <div class="space-y-4">
+                <div class="flex gap-3.5 items-center">
+                  <svg
+                    class="w-6 h-6 shrink-0"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
+                  </svg>
                   <div>
-                    <p class="text-xs font-semibold text-zinc-500 mb-1">
+                    <p class="font-fredoka font-medium text-xl">
                       Email Us
                     </p>
                     <a
                       href="mailto:macawooofficial@gmail.com"
-                      class="text-brand-dark text-sm font-medium hover:text-brand-teal-500 transition-colors break-all"
+                      class="text-lg font-medium hover:underline break-all"
                     >
                       macawooofficial@gmail.com
                     </a>
                   </div>
                 </div>
 
-                <div class="flex gap-4 items-start">
-                  <div class="w-8 h-8 bg-brand-teal-50 rounded-lg flex items-center justify-center shrink-0">
-                    <svg
-                      class="w-4 h-4 text-brand-teal-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
-                  </div>
+                <div class="flex gap-3.5 items-center">
+                  <svg
+                    class="w-6 h-6 shrink-0"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+                  </svg>
                   <div>
-                    <p class="text-xs font-semibold text-zinc-500 mb-1">
+                    <p class="font-fredoka font-medium text-xl">
                       Call Us
                     </p>
                     <a
-                      href="tel:+919847043210"
-                      class="text-brand-dark text-sm font-medium hover:text-brand-teal-500 transition-colors"
+                      href="tel:+919876543210"
+                      class="text-lg font-medium hover:underline"
                     >
-                      +91 98760 43210
+                      +91 98765 43210
                     </a>
                   </div>
                 </div>
 
-                <div class="flex gap-4 items-start">
-                  <div class="w-8 h-8 bg-brand-teal-50 rounded-lg flex items-center justify-center shrink-0">
-                    <svg
-                      class="w-4 h-4 text-brand-teal-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                      />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                  </div>
+                <div class="flex gap-3.5 items-center">
+                  <svg
+                    class="w-6 h-6 shrink-0"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z" />
+                  </svg>
                   <div>
-                    <p class="text-xs font-semibold text-zinc-500 mb-1">
+                    <p class="font-fredoka font-medium text-xl">
                       Location
                     </p>
-                    <p class="text-brand-dark text-sm font-medium">
+                    <p class="text-lg font-medium">
                       Kerala | UAE
                     </p>
                   </div>

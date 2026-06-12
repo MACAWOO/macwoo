@@ -203,6 +203,36 @@ const handleScroll = () => {
   trackProgress.value = progress
 }
 
+const approachTrackRef = ref<HTMLElement | null>(null)
+const approachProgress = ref(0)
+
+const handleApproachScroll = () => {
+  if (!approachTrackRef.value) return
+  const rect = approachTrackRef.value.getBoundingClientRect()
+  const windowHeight = window.innerHeight
+
+  const totalDistance = rect.height - windowHeight
+  const scrolledDistance = -rect.top
+
+  const progress = Math.max(0, Math.min(1, scrolledDistance / totalDistance))
+  approachProgress.value = progress
+}
+
+const whatWeDoTrackRef = ref<HTMLElement | null>(null)
+const whatWeDoProgress = ref(0)
+
+const handleWhatWeDoScroll = () => {
+  if (!whatWeDoTrackRef.value) return
+  const rect = whatWeDoTrackRef.value.getBoundingClientRect()
+  const windowHeight = window.innerHeight
+
+  const totalDistance = rect.height - windowHeight
+  const scrolledDistance = -rect.top
+
+  const progress = Math.max(0, Math.min(1, scrolledDistance / totalDistance))
+  whatWeDoProgress.value = progress
+}
+
 const handleSubmit = async () => {
   isSubmitting.value = true
   // Simulate API submission
@@ -242,8 +272,12 @@ onMounted(() => {
   }
 
   window.addEventListener('scroll', handleScroll)
+  window.addEventListener('scroll', handleApproachScroll)
+  window.addEventListener('scroll', handleWhatWeDoScroll)
   window.addEventListener('resize', updateLogoOffset)
   handleScroll()
+  handleApproachScroll()
+  handleWhatWeDoScroll()
 
   nextTick(() => {
     updateLogoOffset()
@@ -252,6 +286,8 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('scroll', handleApproachScroll)
+  window.removeEventListener('scroll', handleWhatWeDoScroll)
   window.removeEventListener('resize', updateLogoOffset)
 })
 </script>
@@ -359,116 +395,131 @@ onUnmounted(() => {
     </section>
 
     <!-- What We Do -->
-    <section class="py-16 md:py-20 bg-white">
-      <div class="max-w-[1201px] mx-auto px-6 md:px-0">
-        <!-- Title — Fredoka 48px / 500 weight per Figma -->
-        <h2
-          class="text-center text-[#1D96B8] text-[36px] md:text-[48px] leading-[58px] font-medium mb-[63px]"
-          style="font-family: 'Fredoka', sans-serif;"
-        >
-          What We Do
-        </h2>
-
-        <!-- Cards — equal width, fixed 492px height, ~13px gap -->
-        <div
-          ref="containerRef"
-          class="grid grid-cols-1 md:grid-cols-3 gap-[13px]"
-        >
-          <!-- Branding & Design -->
-          <NuxtLink
-            to="/services/branding-design"
-            class="relative rounded-[10px] overflow-hidden group block h-[320px] md:h-[492px] reveal-card"
-            style="transition-delay: 0ms;"
-          >
-            <img
-              :src="settings.servicesBrandingImage"
-              alt="Branding & Design"
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+    <section ref="whatWeDoTrackRef" class="relative h-[220vh] bg-white">
+      <div class="sticky top-0 h-screen w-full flex flex-col justify-between py-16 bg-white overflow-hidden">
+        <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8 flex-1 flex flex-col justify-between">
+          <!-- Header (Centered) -->
+          <div class="text-center shrink-0">
+            <h2 
+              class="text-[#1D96B8] text-3xl md:text-[48px] font-bold font-fredoka leading-tight"
             >
-            <!-- gradient starts at 39.84% from top -->
-            <div
-              class="absolute inset-x-0 bottom-0 rounded-b-[10px]"
-              style="top: 39.84%; background: linear-gradient(360deg, #000000 0%, rgba(0,0,0,0) 100%);"
-            />
-            <!-- Hover overlay -->
-            <div
-              class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
-            />
-            <!-- label centered bottom by default, moves to center on hover -->
-            <div class="absolute inset-0 flex items-center justify-center">
-              <p
-                class="text-white text-[24px] md:text-[32px] font-normal leading-[38px] text-center transition-transform duration-500 ease-out translate-y-[96px] md:translate-y-[153px] group-hover:translate-y-0"
-                style="font-family: 'Bricolage Grotesque', sans-serif;"
-              >
-                <span class="font-bold">Branding</span><br>&amp; Design
-              </p>
-            </div>
-          </NuxtLink>
-
-          <!-- Digital Marketing -->
-          <NuxtLink
-            to="/services/digital-marketing"
-            class="relative rounded-[10px] overflow-hidden group block h-[320px] md:h-[492px] reveal-card"
-            style="transition-delay: 150ms;"
-          >
-            <img
-              :src="settings.servicesMarketingImage"
-              alt="Digital Marketing"
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              What We Do
+            </h2>
+            <p 
+              class="text-zinc-600 mt-4 text-base md:text-xl font-normal leading-relaxed"
+              style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
-            <div
-              class="absolute inset-x-0 bottom-0 rounded-b-[10px]"
-              style="top: 39.84%; background: linear-gradient(360deg, #000000 0%, rgba(0,0,0,0) 100%);"
-            />
-            <!-- Hover overlay -->
-            <div
-              class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
-            />
-            <!-- label centered bottom by default, moves to center on hover -->
-            <div class="absolute inset-0 flex items-center justify-center">
-              <p
-                class="text-white text-[24px] md:text-[32px] font-normal leading-[38px] text-center transition-transform duration-500 ease-out translate-y-[96px] md:translate-y-[153px] group-hover:translate-y-0"
-                style="font-family: 'Bricolage Grotesque', sans-serif;"
-              >
-                <span class="font-bold">Digital</span><br>Marketing
-              </p>
-            </div>
-          </NuxtLink>
-
-          <!-- Video Production -->
-          <NuxtLink
-            to="/services/video-production"
-            class="relative rounded-[10px] overflow-hidden group block h-[320px] md:h-[492px] reveal-card"
-            style="transition-delay: 300ms;"
-          >
-            <img
-              :src="settings.servicesVideoImage"
-              alt="Video Production"
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              We blend raw creative energy with executive precision to craft brands that command attention and drive growth.
+            </p>
+          </div>
+          
+          <!-- Cards Grid (Horizontal Alignment restored) -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-[13px] my-auto">
+            
+            <!-- Card 1: Branding & Design -->
+            <NuxtLink
+              to="/services/branding-design"
+              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg transition-all duration-700 ease-out"
+              :class="[
+                whatWeDoProgress >= 0 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              ]"
             >
-            <div
-              class="absolute inset-x-0 bottom-0 rounded-b-[10px]"
-              style="top: 39.84%; background: linear-gradient(360deg, #000000 0%, rgba(0,0,0,0) 100%);"
-            />
-            <!-- Hover overlay -->
-            <div
-              class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
-            />
-            <!-- label centered bottom by default, moves to center on hover -->
-            <div class="absolute inset-0 flex items-center justify-center">
-              <p
-                class="text-white text-[24px] md:text-[32px] font-normal leading-[38px] text-center transition-transform duration-500 ease-out translate-y-[96px] md:translate-y-[153px] group-hover:translate-y-0"
-                style="font-family: 'Bricolage Grotesque', sans-serif;"
+              <img
+                :src="settings.servicesBrandingImage"
+                alt="Branding & Design"
+                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               >
-                <span class="font-bold">Video</span><br>Production
-              </p>
-            </div>
-          </NuxtLink>
-        </div>
+              <div
+                class="absolute inset-x-0 bottom-0 rounded-b-[10px]"
+                style="top: 39.84%; background: linear-gradient(360deg, #000000 0%, rgba(0,0,0,0) 100%);"
+              />
+              <!-- Hover overlay -->
+              <div
+                class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
+              />
+              <div class="absolute inset-0 flex items-center justify-center">
+                <p
+                  class="text-white text-[24px] md:text-[32px] font-normal leading-tight text-center transition-transform duration-500 ease-out translate-y-[96px] md:translate-y-[133px] group-hover:translate-y-0"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >
+                  <span class="font-bold">Branding</span><br>&amp; Design
+                </p>
+              </div>
+            </NuxtLink>
 
-        <!-- Client Logos -->
-        <div class="mt-16 md:mt-24">
-          <ClientLogos />
+            <!-- Card 2: Digital Marketing -->
+            <NuxtLink
+              to="/services/digital-marketing"
+              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg transition-all duration-700 ease-out"
+              :class="[
+                whatWeDoProgress >= 0.33 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+              ]"
+            >
+              <img
+                :src="settings.servicesMarketingImage"
+                alt="Digital Marketing"
+                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              >
+              <div
+                class="absolute inset-x-0 bottom-0 rounded-b-[10px]"
+                style="top: 39.84%; background: linear-gradient(360deg, #000000 0%, rgba(0,0,0,0) 100%);"
+              />
+              <!-- Hover overlay -->
+              <div
+                class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
+              />
+              <div class="absolute inset-0 flex items-center justify-center">
+                <p
+                  class="text-white text-[24px] md:text-[32px] font-normal leading-tight text-center transition-transform duration-500 ease-out translate-y-[96px] md:translate-y-[133px] group-hover:translate-y-0"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >
+                  <span class="font-bold">Digital</span><br>Marketing
+                </p>
+              </div>
+            </NuxtLink>
+
+            <!-- Card 3: Video Production -->
+            <NuxtLink
+              to="/services/video-production"
+              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg transition-all duration-700 ease-out"
+              :class="[
+                whatWeDoProgress >= 0.66 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+              ]"
+            >
+              <img
+                :src="settings.servicesVideoImage"
+                alt="Video Production"
+                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              >
+              <div
+                class="absolute inset-x-0 bottom-0 rounded-b-[10px]"
+                style="top: 39.84%; background: linear-gradient(360deg, #000000 0%, rgba(0,0,0,0) 100%);"
+              />
+              <!-- Hover overlay -->
+              <div
+                class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
+              />
+              <div class="absolute inset-0 flex items-center justify-center">
+                <p
+                  class="text-white text-[24px] md:text-[32px] font-normal leading-tight text-center transition-transform duration-500 ease-out translate-y-[96px] md:translate-y-[133px] group-hover:translate-y-0"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >
+                  <span class="font-bold">Video</span><br>Production
+                </p>
+              </div>
+            </NuxtLink>
+
+          </div>
+
+          <!-- Client Logos Carousel (Centered bottom) -->
+          <div 
+            class="mt-8 md:mt-12 w-full transition-all duration-700 shrink-0"
+            :class="[
+              whatWeDoProgress >= 0.66 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+            ]"
+          >
+            <ClientLogos />
+          </div>
         </div>
       </div>
     </section>
@@ -477,70 +528,108 @@ onUnmounted(() => {
     <FeaturedWork />
 
     <!-- Our Approach -->
-    <section class="py-20 bg-white">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="flex flex-col md:flex-row gap-12 items-start">
-          <div class="md:w-1/3">
-            <p class="text-brand-yellow-500 text-xs font-semibold uppercase tracking-widest mb-3">
+    <section ref="approachTrackRef" class="relative h-[220vh] bg-white">
+      <div class="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center py-12 md:py-20 bg-white">
+        <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8 flex-1 flex flex-col justify-center">
+          <!-- Header -->
+          <div class="mb-12 md:mb-16">
+            <h2 
+              class="text-[#1D96B8] text-3xl md:text-[48px] font-bold font-fredoka leading-tight"
+            >
               Our Approach
-            </p>
-            <h2 class="text-3xl md:text-4xl font-bold text-brand-dark">
-              How we turn ideas into impact
             </h2>
+            <p class="text-zinc-600 mt-3 text-base md:text-xl font-normal leading-relaxed">
+              We don't just execute we build systems for growth.
+            </p>
           </div>
-          <div class="md:w-2/3 grid sm:grid-cols-2 gap-8">
-            <div class="flex gap-4">
-              <div class="w-10 h-10 shrink-0 bg-brand-yellow-500 rounded-full flex items-center justify-center text-brand-dark font-bold text-sm">
-                01
+
+          <!-- Timeline Container -->
+          <div class="relative w-full max-w-4xl mx-auto pl-16 md:pl-28 py-4">
+            
+            <!-- Stretching Yellow Pill background -->
+            <div 
+              class="absolute left-4 md:left-6 top-0 w-16 md:w-24 bg-gradient-to-b from-[#FCFFC1] to-[#E8F600] rounded-t-full rounded-b-full transition-all duration-75 ease-out z-0"
+              :style="{ height: approachProgress === 0 ? '80px' : `calc(80px + (100% - 80px) * ${approachProgress})` }"
+            />
+
+            <!-- Steps -->
+            <div class="relative z-10 flex flex-col gap-12 md:gap-20 py-4">
+              
+              <!-- Step 1: Think -->
+              <div class="flex items-center relative min-h-[64px] md:min-h-[80px]">
+                <div class="absolute left-[-40px] md:left-[-80px] w-12 md:w-20 flex justify-center">
+                  <div 
+                    class="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center font-fredoka font-semibold text-base md:text-xl bg-[#201F1F] text-white transition-all duration-300 shadow-md"
+                  >
+                    01
+                  </div>
+                </div>
+                <div class="pl-4 md:pl-8">
+                  <h3 class="text-xl md:text-[28px] font-bold text-zinc-950 leading-none" style="font-family: 'Fredoka', sans-serif;">
+                    Think
+                  </h3>
+                  <p class="text-zinc-600 text-sm md:text-lg mt-3 max-w-2xl leading-relaxed" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                    We uncover insights, define strategy, and create a clear roadmap for success.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 class="font-bold text-brand-dark mb-2">
-                  Think
-                </h3>
-                <p class="text-zinc-600 text-sm leading-relaxed">
-                  We start with deep discovery — understanding your brand, your audience, and your goals before any creative work begins.
-                </p>
+
+              <!-- Step 2: Create -->
+              <div 
+                class="flex items-center relative min-h-[64px] md:min-h-[80px] transition-all duration-700 ease-out"
+                :class="approachProgress >= 0.35 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'"
+              >
+                <div class="absolute left-[-40px] md:left-[-80px] w-12 md:w-20 flex justify-center">
+                  <div 
+                    class="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center font-fredoka font-semibold text-base md:text-xl transition-all duration-300"
+                    :class="[
+                      approachProgress >= 0.5 
+                        ? 'bg-[#201F1F] text-white scale-100 shadow-md' 
+                        : 'bg-zinc-200 text-zinc-400 scale-90'
+                    ]"
+                  >
+                    02
+                  </div>
+                </div>
+                <div class="pl-4 md:pl-8">
+                  <h3 class="text-xl md:text-[28px] font-bold text-zinc-950 leading-none" style="font-family: 'Fredoka', sans-serif;">
+                    Create
+                  </h3>
+                  <p class="text-zinc-600 text-sm md:text-lg mt-3 max-w-2xl leading-relaxed" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                    We craft compelling brand experiences that connect with your audience.
+                  </p>
+                </div>
               </div>
+
+              <!-- Step 3: Scale -->
+              <div 
+                class="flex items-center relative min-h-[64px] md:min-h-[80px] transition-all duration-700 ease-out"
+                :class="approachProgress >= 0.70 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'"
+              >
+                <div class="absolute left-[-40px] md:left-[-80px] w-12 md:w-20 flex justify-center">
+                  <div 
+                    class="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center font-fredoka font-semibold text-base md:text-xl transition-all duration-300"
+                    :class="[
+                      approachProgress >= 0.85 
+                        ? 'bg-[#201F1F] text-white scale-100 shadow-md' 
+                        : 'bg-zinc-200 text-zinc-400 scale-90'
+                    ]"
+                  >
+                    03
+                  </div>
+                </div>
+                <div class="pl-4 md:pl-8">
+                  <h3 class="text-xl md:text-[28px] font-bold text-zinc-950 leading-none" style="font-family: 'Fredoka', sans-serif;">
+                    Scale
+                  </h3>
+                  <p class="text-zinc-600 text-sm md:text-lg mt-3 max-w-2xl leading-relaxed" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                    We accelerate growth through optimization, performance, and continuous innovation.
+                  </p>
+                </div>
+              </div>
+
             </div>
-            <div class="flex gap-4">
-              <div class="w-10 h-10 shrink-0 bg-brand-yellow-500 rounded-full flex items-center justify-center text-brand-dark font-bold text-sm">
-                02
-              </div>
-              <div>
-                <h3 class="font-bold text-brand-dark mb-2">
-                  Focus
-                </h3>
-                <p class="text-zinc-600 text-sm leading-relaxed">
-                  We define the strategy — narrowing in on what will genuinely move the needle and align with your business objectives.
-                </p>
-              </div>
-            </div>
-            <div class="flex gap-4">
-              <div class="w-10 h-10 shrink-0 bg-brand-yellow-500 rounded-full flex items-center justify-center text-brand-dark font-bold text-sm">
-                03
-              </div>
-              <div>
-                <h3 class="font-bold text-brand-dark mb-2">
-                  Create
-                </h3>
-                <p class="text-zinc-600 text-sm leading-relaxed">
-                  We build — crafting every visual, word, and interaction with intentionality and craft that reflects your brand at its best.
-                </p>
-              </div>
-            </div>
-            <div class="flex gap-4">
-              <div class="w-10 h-10 shrink-0 bg-brand-yellow-500 rounded-full flex items-center justify-center text-brand-dark font-bold text-sm">
-                04
-              </div>
-              <div>
-                <h3 class="font-bold text-brand-dark mb-2">
-                  Deliver
-                </h3>
-                <p class="text-zinc-600 text-sm leading-relaxed">
-                  We launch, measure, and optimise — ensuring the work performs in the real world, not just in a presentation deck.
-                </p>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>

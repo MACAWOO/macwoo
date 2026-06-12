@@ -106,38 +106,30 @@ function sendMessage() {
         viewBox="0 0 100 100"
         fill="none"
       >
-        <path
-          d="M 46 6 A 40 40 0 0 1 84.6 56.3 Q 86 70 88 88 Q 70 82 56.3 84.6 A 40 40 0 1 1 46 6 Z"
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          fill="#EDE000"
+        />
+        <polygon
+          points="65,82 82,65 88,88"
           fill="#EDE000"
         />
       </svg>
 
-      <!-- SVG Filter for the logo color conversion -->
-      <svg
-        style="position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px;"
-      >
-        <defs>
-          <filter id="tealize-logo">
-            <feColorMatrix
-              type="matrix"
-              values="
-                0 0 -0.93 0 0.93
-                0 0 -0.27 0 0.88
-                0 0 0.72 0 0
-                0 0 0 1 0
-              "
-            />
-          </filter>
-        </defs>
-      </svg>
+      <!-- Blue inner circle to fill transparent 'm' in Logo -->
+      <div
+        v-if="!isOpen"
+        class="w-[28px] h-[28px] bg-[#1D96B8] rounded-full absolute z-0"
+      />
 
-      <!-- Logo image with filter (tealized) -->
+      <!-- Logo image (transparent 'm' allows blue circle to show through) -->
       <img
         v-if="!isOpen"
         src="/Images/Logo.png"
         alt="Macawoo"
         class="w-12 h-12 object-contain select-none pointer-events-none z-10"
-        style="filter: url(#tealize-logo);"
       >
       <svg
         v-else

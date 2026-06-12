@@ -27,8 +27,17 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 const isBlog = computed(() => route.path.startsWith('/blog'))
-const footerBgColor = computed(() => isBlog.value ? 'bg-[#1D96B8]' : undefined)
-const footerColor = computed(() => isBlog.value ? 'bg-brand-yellow-500' : undefined)
+const isContact = computed(() => route.path === '/contact')
+const footerBgColor = computed(() => {
+  if (isBlog.value) return 'bg-[#1D96B8]'
+  if (isContact.value) return 'bg-brand-yellow-500'
+  return undefined
+})
+const footerColor = computed(() => {
+  if (isBlog.value) return 'bg-brand-yellow-500'
+  if (isContact.value) return 'bg-[#1D96B8]'
+  return undefined
+})
 const isAdmin = computed(() => route.path.startsWith('/admin'))
 </script>
 
