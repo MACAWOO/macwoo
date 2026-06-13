@@ -3,7 +3,7 @@ export interface PortfolioProject {
   title: string
   subtitle: string
   tags: string[]
-  category: 'Branding' | 'Marketing' | 'Video Production'
+  category: string
   image: string
   heroImage: string
   galleryImages: string[]

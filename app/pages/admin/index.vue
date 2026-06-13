@@ -1,12 +1,28 @@
 <script setup lang="ts">
 import type { BlogPost } from '~/data/blog'
 
+definePageMeta({
+  middleware: 'admin-auth'
+})
+
+const { user, init, signOut } = useAuth()
+
+onMounted(() => {
+  init()
+})
+
+const handleSignOut = async () => {
+  await signOut()
+  navigateTo('/admin/login')
+}
+
 // Dynamic state composables
 const { posts: blogs, addPost, updatePost, deletePost, resetBlogs } = useBlogs()
 const { projects: portfolio, addProject, updateProject, deleteProject, resetPortfolio } = usePortfolio()
 const { jobs: careers, addJob, updateJob, deleteJob, resetCareers } = useCareers()
 const { caseStudies, addCaseStudy, updateCaseStudy, deleteCaseStudy, resetCaseStudies } = useCaseStudies()
 const { settings, updateSettings, resetSettings } = usePageSettings()
+const { categories, addCategory, deleteCategory, resetCategories } = useCategories()
 
 useSeoMeta({
   title: 'Site Administration — Macawoo',
@@ -15,7 +31,7 @@ useSeoMeta({
 
 // Navigation & SPA view states
 type View = 'dashboard' | 'list' | 'change'
-type ModelType = 'blog' | 'portfolio' | 'case-study' | 'career' | 'page-settings'
+type ModelType = 'blog' | 'portfolio' | 'case-study' | 'career' | 'page-settings' | 'uploads' | 'categories'
 
 const currentView = ref<View>('dashboard')
 const currentModel = ref<ModelType>('blog')
@@ -34,7 +50,9 @@ const searchQueries = reactive({
   'portfolio': '',
   'case-study': '',
   'career': '',
-  'page-settings': ''
+  'page-settings': '',
+  'uploads': '',
+  'categories': ''
 })
 
 const activeFilters = reactive({
@@ -50,7 +68,9 @@ const sortKeys = reactive({
   'portfolio': 'displayOrder',
   'case-study': 'title',
   'career': 'title',
-  'page-settings': ''
+  'page-settings': '',
+  'uploads': '',
+  'categories': ''
 })
 
 const sortOrders = reactive({
@@ -58,7 +78,9 @@ const sortOrders = reactive({
   'portfolio': 'asc',
   'case-study': 'asc',
   'career': 'asc',
-  'page-settings': 'asc'
+  'page-settings': 'asc',
+  'uploads': 'asc',
+  'categories': 'asc'
 })
 
 // Recent actions log
@@ -131,7 +153,7 @@ const portfolioForm = ref({
   title: '',
   slug: '',
   subtitle: '',
-  category: 'Branding' as 'Branding' | 'Marketing' | 'Video Production',
+  category: 'Branding' as string,
   tagsString: '',
   image: '/Images/Lecrown.png',
   heroImage: '/Images/Lecrown.png',
@@ -150,6 +172,7 @@ const caseStudyForm = ref({
   title: '',
   slug: '',
   client: '',
+  category: '',
   tagsString: '',
   image: '/Images/Lecrown.png',
   heroImage: '/Images/Lecrown.png',
@@ -174,6 +197,24 @@ const careerForm = ref({
   type: 'Full-Time',
   experience: '4+ Years Experience'
 })
+
+// Media Picker integration states
+const isMediaPickerOpen = ref(false)
+const activeFieldRef = ref<{ obj: any, key: string } | null>(null)
+
+const openMediaPicker = (obj: any, key: string) => {
+  activeFieldRef.value = { obj, key }
+  isMediaPickerOpen.value = true
+}
+
+const handleMediaSelect = (url: string) => {
+  if (activeFieldRef.value) {
+    const { obj, key } = activeFieldRef.value
+    obj[key] = url
+  }
+  isMediaPickerOpen.value = false
+  activeFieldRef.value = null
+}
 
 // Watchers for slug generation
 watch(() => blogForm.value.title, (newTitle) => {
@@ -229,7 +270,7 @@ const openAddForm = (model: ModelType) => {
       title: '',
       slug: '',
       subtitle: '',
-      category: 'Branding',
+      category: categories.value[0] || '',
       tagsString: '',
       image: '/Images/Lecrown.png',
       heroImage: '/Images/Lecrown.png',
@@ -248,6 +289,7 @@ const openAddForm = (model: ModelType) => {
       title: '',
       slug: '',
       client: '',
+      category: categories.value[0] || '',
       tagsString: '',
       image: '/Images/Lecrown.png',
       heroImage: '/Images/Lecrown.png',
@@ -306,6 +348,7 @@ const openEditForm = (model: ModelType, id: string | number) => {
     if (original) {
       caseStudyForm.value = {
         ...JSON.parse(JSON.stringify(original)),
+        category: original.category || '',
         tagsString: original.tags.join(', '),
         tagline: original.tagline || '',
         services: original.services || '',
@@ -544,7 +587,8 @@ const resetAllDynamicState = () => {
     resetCareers()
     resetCaseStudies()
     resetSettings()
-    logAction('change', 'Database', 'Reset all local storage mock records and page settings')
+    resetCategories()
+    logAction('change', 'Database', 'Reset all local storage mock records, page settings and categories')
     alert('Local data reset completed successfully.')
     navigateTo('dashboard')
   }
@@ -564,7 +608,9 @@ const breadcrumbs = computed(() => {
     'portfolio': 'Portfolio',
     'case-study': 'Case Studies',
     'career': 'Careers',
-    'page-settings': 'Page Settings'
+    'page-settings': 'Page Settings',
+    'uploads': 'Media Library',
+    'categories': 'Categories'
   }
 
   crumbs.push({
@@ -692,7 +738,7 @@ const filteredCareers = computed(() => {
         </h1>
       </div>
       <div class="flex items-center gap-4 text-xs text-zinc-300">
-        <span>Welcome, <strong>administrator</strong>.</span>
+        <span>Welcome, <strong>{{ user?.email || 'administrator' }}</strong>.</span>
         <span class="text-zinc-500">|</span>
         <NuxtLink
           to="/"
@@ -706,6 +752,13 @@ const filteredCareers = computed(() => {
           @click="resetAllDynamicState"
         >
           Reset data
+        </button>
+        <span class="text-zinc-500">|</span>
+        <button
+          class="hover:underline hover:text-white cursor-pointer bg-transparent border-0"
+          @click="handleSignOut"
+        >
+          Log out
         </button>
       </div>
     </header>
@@ -878,6 +931,38 @@ const filteredCareers = computed(() => {
                   </button>
                 </div>
               </div>
+              <div class="flex items-center justify-between px-2.5 py-1 text-xs hover:bg-zinc-50 rounded">
+                <button
+                  class="text-zinc-700 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left"
+                  @click="navigateTo('list', 'uploads')"
+                >
+                  Media Library
+                </button>
+                <div class="flex gap-2">
+                  <button
+                    class="text-[10px] text-zinc-400 hover:text-zinc-700 cursor-pointer bg-transparent border-0"
+                    @click="navigateTo('list', 'uploads')"
+                  >
+                    View
+                  </button>
+                </div>
+              </div>
+              <div class="flex items-center justify-between px-2.5 py-1 text-xs hover:bg-zinc-50 rounded">
+                <button
+                  class="text-zinc-700 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left"
+                  @click="navigateTo('list', 'categories')"
+                >
+                  Categories
+                </button>
+                <div class="flex gap-2">
+                  <button
+                    class="text-[10px] text-zinc-400 hover:text-zinc-700 cursor-pointer bg-transparent border-0"
+                    @click="navigateTo('list', 'categories')"
+                  >
+                    View
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1010,7 +1095,7 @@ const filteredCareers = computed(() => {
                     </td>
                   </tr>
                   <!-- Page Settings -->
-                  <tr class="hover:bg-zinc-50">
+                  <tr class="border-b border-[#e0e0e0] hover:bg-zinc-50">
                     <td class="p-3 font-semibold text-zinc-800">
                       <button
                         class="hover:underline text-left text-zinc-800 font-semibold cursor-pointer bg-transparent border-0 p-0"
@@ -1024,6 +1109,46 @@ const filteredCareers = computed(() => {
                       <button
                         class="text-zinc-600 hover:underline cursor-pointer bg-transparent border-0 p-0"
                         @click="navigateTo('list', 'page-settings')"
+                      >
+                        ✎ Change
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Media Uploads -->
+                  <tr class="border-b border-[#e0e0e0] hover:bg-zinc-50">
+                    <td class="p-3 font-semibold text-zinc-800">
+                      <button
+                        class="hover:underline text-left text-zinc-800 font-semibold cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'uploads')"
+                      >
+                        Media Library (Uploads &amp; Management)
+                      </button>
+                    </td>
+                    <td class="p-3 text-right space-x-3">
+                      <span class="text-zinc-300 text-[10px] select-none pr-3">-</span>
+                      <button
+                        class="text-zinc-600 hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'uploads')"
+                      >
+                        👁 View
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Categories -->
+                  <tr class="hover:bg-zinc-50">
+                    <td class="p-3 font-semibold text-zinc-800">
+                      <button
+                        class="hover:underline text-left text-zinc-800 font-semibold cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'categories')"
+                      >
+                        Categories (Portfolio &amp; Case Studies)
+                      </button>
+                    </td>
+                    <td class="p-3 text-right space-x-3">
+                      <span class="text-zinc-300 text-[10px] select-none pr-3">-</span>
+                      <button
+                        class="text-zinc-600 hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        @click="navigateTo('list', 'categories')"
                       >
                         ✎ Change
                       </button>
@@ -1079,7 +1204,54 @@ const filteredCareers = computed(() => {
           v-if="currentView === 'list'"
           class="space-y-4"
         >
-          <!-- Header and Add Button -->
+          <template v-if="currentModel === 'uploads'">
+            <MediaPicker :inline="true" />
+          </template>
+          <template v-else-if="currentModel === 'categories'">
+            <!-- Categories Management View -->
+            <div class="space-y-6 bg-white border border-[#e0e0e0] p-6 rounded shadow-sm">
+              <div class="border-b border-[#e0e0e0] pb-3 flex items-center justify-between">
+                <h2 class="text-base font-bold text-zinc-700">Manage Categories</h2>
+                <span class="text-xs text-zinc-400">Manage categories used in Portfolio and Case Studies.</span>
+              </div>
+              
+              <!-- Add category inline form -->
+              <form @submit.prevent="const input = ($event.target as HTMLFormElement).elements.namedItem('categoryInput') as HTMLInputElement; addCategory(input.value); logAction('add', 'Category', input.value); input.value = ''" class="flex gap-2 items-center bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
+                <label class="text-xs font-bold text-zinc-700">Add New Category:</label>
+                <input name="categoryInput" type="text" placeholder="e.g. Branding & Identity" required class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-white focus:outline-none focus:border-[#1D96B8]">
+                <button type="submit" class="px-4 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded shadow-sm cursor-pointer">
+                  + Add Category
+                </button>
+              </form>
+
+              <!-- Categories List -->
+              <div class="border border-[#e0e0e0] rounded overflow-hidden">
+                <table class="w-full text-xs text-left border-collapse bg-white">
+                  <thead>
+                    <tr class="bg-[#141111] text-white font-bold border-b border-[#e0e0e0]">
+                      <th class="p-3">Category Name</th>
+                      <th class="p-3 text-right w-36">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="cat in categories" :key="cat" class="border-b border-[#e0e0e0] hover:bg-zinc-50">
+                      <td class="p-3 font-semibold text-zinc-800">{{ cat }}</td>
+                      <td class="p-3 text-right">
+                        <button type="button" @click="deleteCategory(cat); logAction('delete', 'Category', cat)" class="text-red-600 hover:underline cursor-pointer bg-transparent border-0 p-0 font-semibold">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                    <tr v-if="categories.length === 0">
+                      <td colspan="2" class="p-4 text-center text-zinc-400 italic">No categories created yet.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </template>
+          <template v-else>
+            <!-- Header and Add Button -->
           <div class="flex items-center justify-between border-b border-[#e0e0e0] pb-3">
             <h2 class="text-base font-bold text-zinc-700 capitalize">
               Select {{ currentModel === 'case-study' ? 'case study' : currentModel === 'career' ? 'role' : currentModel }} to change
@@ -1534,6 +1706,7 @@ const filteredCareers = computed(() => {
               </div>
             </div>
           </div>
+          </template>
         </div>
 
         <!-- ══════════════════════ VIEW 3: CHANGE FORM VIEW (Add/Edit) ══════════════════════ -->
@@ -1564,13 +1737,22 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Index Hero Image Path/URL:</label>
                   <div class="flex-1 w-full space-y-2">
-                    <input
-                      v-model="settingsForm.indexHeroImage"
-                      type="text"
-                      required
-                      placeholder="e.g. /Images/hero.png"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.indexHeroImage"
+                        type="text"
+                        required
+                        placeholder="e.g. /Images/hero.png"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'indexHeroImage')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                     <div class="flex items-center gap-2">
                       <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
                       <select
@@ -1599,12 +1781,21 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Index Hero Video Path/URL (Optional):</label>
                   <div class="flex-1 w-full space-y-1">
-                    <input
-                      v-model="settingsForm.indexHeroVideo"
-                      type="text"
-                      placeholder="e.g. /Background Videos/Hero.mp4 (leave empty to show background image)"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.indexHeroVideo"
+                        type="text"
+                        placeholder="e.g. /Background Videos/Hero.mp4 (leave empty to show background image)"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'indexHeroVideo')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                     <p class="text-[10px] text-zinc-400">
                       If set, plays as the background video. If empty, displays the hero image instead.
                     </p>
@@ -1619,13 +1810,22 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">About Hero Image Path/URL:</label>
                   <div class="flex-1 w-full space-y-2">
-                    <input
-                      v-model="settingsForm.aboutHeroImage"
-                      type="text"
-                      required
-                      placeholder="e.g. /Images/Branding.jpeg"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.aboutHeroImage"
+                        type="text"
+                        required
+                        placeholder="e.g. /Images/Branding.jpeg"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'aboutHeroImage')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                     <div class="flex items-center gap-2">
                       <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
                       <select
@@ -1654,13 +1854,22 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">About Hero Video Path/URL:</label>
                   <div class="flex-1 w-full space-y-1">
-                    <input
-                      v-model="settingsForm.aboutHeroVideo"
-                      type="text"
-                      required
-                      placeholder="e.g. /Background Videos/About.mp4"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.aboutHeroVideo"
+                        type="text"
+                        required
+                        placeholder="e.g. /Background Videos/About.mp4"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'aboutHeroVideo')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -1672,13 +1881,22 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Blog Hero Image Path/URL:</label>
                   <div class="flex-1 w-full space-y-2">
-                    <input
-                      v-model="settingsForm.blogHeroImage"
-                      type="text"
-                      required
-                      placeholder="e.g. /Images/Branding.jpeg"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.blogHeroImage"
+                        type="text"
+                        required
+                        placeholder="e.g. /Images/Branding.jpeg"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'blogHeroImage')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                     <div class="flex items-center gap-2">
                       <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
                       <select
@@ -1707,13 +1925,22 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Blog Hero Video Path/URL:</label>
                   <div class="flex-1 w-full space-y-1">
-                    <input
-                      v-model="settingsForm.blogHeroVideo"
-                      type="text"
-                      required
-                      placeholder="e.g. /Background Videos/Blog.mp4"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.blogHeroVideo"
+                        type="text"
+                        required
+                        placeholder="e.g. /Background Videos/Blog.mp4"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'blogHeroVideo')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -1725,13 +1952,22 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Branding &amp; Design Card Image:</label>
                   <div class="flex-1 w-full space-y-2">
-                    <input
-                      v-model="settingsForm.servicesBrandingImage"
-                      type="text"
-                      required
-                      placeholder="e.g. /Images/Branding.jpeg"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.servicesBrandingImage"
+                        type="text"
+                        required
+                        placeholder="e.g. /Images/Branding.jpeg"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'servicesBrandingImage')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                     <div class="flex items-center gap-2">
                       <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
                       <select
@@ -1760,13 +1996,22 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Digital Marketing Card Image:</label>
                   <div class="flex-1 w-full space-y-2">
-                    <input
-                      v-model="settingsForm.servicesMarketingImage"
-                      type="text"
-                      required
-                      placeholder="e.g. /Images/Digital Marketing.jpeg"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.servicesMarketingImage"
+                        type="text"
+                        required
+                        placeholder="e.g. /Images/Digital Marketing.jpeg"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'servicesMarketingImage')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                     <div class="flex items-center gap-2">
                       <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
                       <select
@@ -1795,13 +2040,22 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Video Production Card Image:</label>
                   <div class="flex-1 w-full space-y-2">
-                    <input
-                      v-model="settingsForm.servicesVideoImage"
-                      type="text"
-                      required
-                      placeholder="e.g. /Images/Video Production.jpeg"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.servicesVideoImage"
+                        type="text"
+                        required
+                        placeholder="e.g. /Images/Video Production.jpeg"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'servicesVideoImage')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                     <div class="flex items-center gap-2">
                       <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
                       <select
@@ -1835,13 +2089,22 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Careers Hero Image Path/URL:</label>
                   <div class="flex-1 w-full space-y-2">
-                    <input
-                      v-model="settingsForm.careersHeroImage"
-                      type="text"
-                      required
-                      placeholder="e.g. /Images/Designing.jpeg"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.careersHeroImage"
+                        type="text"
+                        required
+                        placeholder="e.g. /Images/Designing.jpeg"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'careersHeroImage')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                     <div class="flex items-center gap-2">
                       <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
                       <select
@@ -1870,26 +2133,44 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Careers Hero Video Path/URL:</label>
                   <div class="flex-1 w-full space-y-1">
-                    <input
-                      v-model="settingsForm.careersHeroVideo"
-                      type="text"
-                      required
-                      placeholder="e.g. /Background Videos/Careers.mp4"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.careersHeroVideo"
+                        type="text"
+                        required
+                        placeholder="e.g. /Background Videos/Careers.mp4"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'careersHeroVideo')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <!-- Row: Contact Hero Image -->
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Contact Hero Image Path/URL:</label>
                   <div class="flex-1 w-full space-y-2">
-                    <input
-                      v-model="settingsForm.contactHeroImage"
-                      type="text"
-                      required
-                      placeholder="e.g. /Images/Marketing.jpeg"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.contactHeroImage"
+                        type="text"
+                        required
+                        placeholder="e.g. /Images/Marketing.jpeg"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'contactHeroImage')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                     <div class="flex items-center gap-2">
                       <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
                       <select
@@ -1918,13 +2199,22 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Contact Hero Video Path/URL:</label>
                   <div class="flex-1 w-full space-y-1">
-                    <input
-                      v-model="settingsForm.contactHeroVideo"
-                      type="text"
-                      required
-                      placeholder="e.g. /Background Videos/Contact.mp4"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.contactHeroVideo"
+                        type="text"
+                        required
+                        placeholder="e.g. /Background Videos/Contact.mp4"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'contactHeroVideo')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                   </div>
                 </div>
               </template>
@@ -2006,12 +2296,21 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Cover Image Asset:</label>
                   <div class="flex-1 w-full space-y-2">
-                    <input
-                      v-model="blogForm.image"
-                      type="text"
-                      required
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="blogForm.image"
+                        type="text"
+                        required
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(blogForm, 'image')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                     <div class="flex items-center gap-2">
                       <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
                       <select
@@ -2088,14 +2387,12 @@ const filteredCareers = computed(() => {
                       v-model="portfolioForm.category"
                       class="w-48 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
                     >
-                      <option value="Branding">
-                        Branding
-                      </option>
-                      <option value="Marketing">
-                        Marketing
-                      </option>
-                      <option value="Video Production">
-                        Video Production
+                      <option
+                        v-for="cat in categories"
+                        :key="cat"
+                        :value="cat"
+                      >
+                        {{ cat }}
                       </option>
                     </select>
                   </div>
@@ -2152,12 +2449,21 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Cover Image URL:</label>
                   <div class="flex-1 w-full space-y-2">
-                    <input
-                      v-model="portfolioForm.image"
-                      type="text"
-                      required
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="portfolioForm.image"
+                        type="text"
+                        required
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(portfolioForm, 'image')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                     <select
                       class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
                       @change="portfolioForm.image = ($event.target as HTMLSelectElement).value"
@@ -2183,12 +2489,21 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Hero Header Image URL:</label>
                   <div class="flex-1 w-full space-y-2">
-                    <input
-                      v-model="portfolioForm.heroImage"
-                      type="text"
-                      required
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="portfolioForm.heroImage"
+                        type="text"
+                        required
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(portfolioForm, 'heroImage')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                     <select
                       class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
                       @change="portfolioForm.heroImage = ($event.target as HTMLSelectElement).value"
@@ -2319,6 +2634,27 @@ const filteredCareers = computed(() => {
                     >
                   </div>
                 </div>
+                <!-- Row: Category -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Category:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <select
+                      v-model="caseStudyForm.category"
+                      class="w-48 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                      <option value="">
+                        -- select category --
+                      </option>
+                      <option
+                        v-for="cat in categories"
+                        :key="cat"
+                        :value="cat"
+                      >
+                        {{ cat }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
                 <!-- Row: Tagline -->
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Tagline:</label>
@@ -2384,24 +2720,42 @@ const filteredCareers = computed(() => {
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Card Cover Image URL:</label>
                   <div class="flex-1 w-full space-y-1">
-                    <input
-                      v-model="caseStudyForm.image"
-                      type="text"
-                      required
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="caseStudyForm.image"
+                        type="text"
+                        required
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(caseStudyForm, 'image')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <!-- Row: Hero Image -->
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
                   <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Hero Banner Image URL:</label>
                   <div class="flex-1 w-full space-y-1">
-                    <input
-                      v-model="caseStudyForm.heroImage"
-                      type="text"
-                      required
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
-                    >
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="caseStudyForm.heroImage"
+                        type="text"
+                        required
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(caseStudyForm, 'heroImage')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <!-- Row: Challenge -->
@@ -2848,4 +3202,10 @@ const filteredCareers = computed(() => {
       </main>
     </div>
   </div>
+
+  <!-- Media Picker Modal Component -->
+  <MediaPicker
+    v-model="isMediaPickerOpen"
+    @select="handleMediaSelect"
+  />
 </template>

@@ -14,6 +14,7 @@ export interface CaseStudy {
   approach: string
   solution: string[]
   results: CaseStudyResult[]
+  category?: string
   tagline?: string
   services?: string
   industry?: string
@@ -31,6 +32,7 @@ export const caseStudies: CaseStudy[] = [
     tags: ['Le Crown Vagamon', 'Resorts & Hospitality'],
     image: '/Images/Lecrown.png',
     heroImage: '/Images/Lecrown.png',
+    category: 'Branding',
     tagline: 'Luxury Hospitality Branding & Marketing',
     services: 'Branding, Designing, Video Production, Marketing',
     industry: 'Resorts & Hospitality',
@@ -68,6 +70,7 @@ export const caseStudies: CaseStudy[] = [
     tags: ['TakeMyFamily', 'Tourism & Hospitality'],
     image: '/Images/Take my family.png',
     heroImage: '/Images/Take my family.png',
+    category: 'Marketing',
     tagline: 'Family Travel Brand Growth & Digital Marketing',
     services: 'Designing, Video Production, Marketing',
     industry: 'Tourism & Hospitality',
@@ -105,6 +108,7 @@ export const caseStudies: CaseStudy[] = [
     tags: ['Pinklabel', 'Fashion Brand'],
     image: '/Images/Pinklabel.jpg',
     heroImage: '/Images/Pinklabel.jpg',
+    category: 'Video Production',
     tagline: 'Fashion Brand Launch & Video Production Campaign',
     services: 'Designing, Video Production, Marketing',
     industry: 'Fashion Brand',
@@ -142,6 +146,7 @@ export const caseStudies: CaseStudy[] = [
     tags: ['TAB', 'Study Abroad & Immigration'],
     image: '/Images/TAB.png',
     heroImage: '/Images/TAB.png',
+    category: 'Branding',
     tagline: 'Brand Identity & Website Design for Education Consultancy',
     services: 'Branding, Designing, Video Production, Marketing',
     industry: 'Study Abroad, Immigration, Recruitment',

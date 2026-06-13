@@ -1,22 +1,18 @@
 <script setup lang="ts">
 const { projects } = usePortfolio()
+const { categories } = useCategories()
 
 useSeoMeta({
   title: 'Portfolio — Macawoo',
   description: 'Work that speaks. Results that matter. A curated showcase of our finest projects.'
 })
 
-const activeFilter = ref<'All' | 'Branding' | 'Marketing' | 'Video Production'>('All')
-const filters = ['All', 'Branding', 'Marketing', 'Video Production'] as const
+const activeFilter = ref<string>('All')
+const filters = computed(() => ['All', ...categories.value])
 
 const filtered = computed(() => {
   if (activeFilter.value === 'All') return projects.value
-  return projects.value.filter((p) => {
-    if (activeFilter.value === 'Branding') return p.category === 'Branding'
-    if (activeFilter.value === 'Marketing') return p.category === 'Marketing'
-    if (activeFilter.value === 'Video Production') return p.category === 'Video Production'
-    return true
-  })
+  return projects.value.filter((p) => p.category === activeFilter.value)
 })
 
 const pairs = computed(() => {

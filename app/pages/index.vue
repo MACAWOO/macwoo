@@ -11,6 +11,11 @@ const { settings } = usePageSettings()
 const containerRef = ref<HTMLElement | null>(null)
 const textRevealRef = ref<HTMLElement | null>(null)
 
+const isMobile = ref(false)
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 768
+}
+
 // Scroll-bound About Us section animation variables
 const aboutTrackRef = ref<HTMLElement | null>(null)
 const logoPlaceholderRef = ref<HTMLElement | null>(null)
@@ -42,12 +47,14 @@ const updateLogoOffset = () => {
 }
 
 const disperseScale = computed(() => {
+  if (isMobile.value) return 0
   const t = Math.max(0, Math.min(1, trackProgress.value / 0.22))
   // Progressive scale of dispersion distortion
   return t * t * 250
 })
 
 const heroOpacity = computed(() => {
+  if (isMobile.value) return 1
   // Pinned PageHero wrapper container is active until the background image completely fades out at 0.50
   if (trackProgress.value <= 0.25) return 1
   if (trackProgress.value >= 0.50) return 0
@@ -55,6 +62,7 @@ const heroOpacity = computed(() => {
 })
 
 const heroBgStyle = computed(() => {
+  if (isMobile.value) return { opacity: 0.6 }
   // Keep background image fully visible (at !opacity-60, which is 0.6) until progress reaches 0.25.
   // Fades out between 0.25 and 0.50.
   if (trackProgress.value <= 0.25) return { opacity: 0.6 }
@@ -66,6 +74,7 @@ const heroBgStyle = computed(() => {
 })
 
 const heroContentStyle = computed(() => {
+  if (isMobile.value) return { opacity: 1, filter: 'none', transform: 'none', pointerEvents: 'auto' }
   // Hero text / content blurs out and disperses out between progress 0.0 and 0.22.
   const t = Math.max(0, Math.min(1, trackProgress.value / 0.22))
   const opacityVal = Math.max(0, 1 - t * 1.2) // Fully fades out slightly before 0.22
@@ -80,6 +89,7 @@ const heroContentStyle = computed(() => {
 })
 
 const backgroundStyle = computed(() => {
+  if (isMobile.value) return { opacity: 1 }
   // Teal background overlay arrives when logo starts moving to left (progress >= 0.25)
   if (trackProgress.value <= 0.25) return { opacity: 0 }
   if (trackProgress.value >= 0.50) return { opacity: 1 }
@@ -91,6 +101,7 @@ const backgroundStyle = computed(() => {
 })
 
 const logoOpacity = computed(() => {
+  if (isMobile.value) return 1
   // Logo fades in between progress 0.0 and 0.20
   if (trackProgress.value <= 0.20) {
     return trackProgress.value / 0.20
@@ -99,6 +110,12 @@ const logoOpacity = computed(() => {
 })
 
 const logoStyle = computed(() => {
+  if (isMobile.value) {
+    return {
+      transform: 'none',
+      opacity: 1
+    }
+  }
   let scale = 1
   let x = 0
   let y = 0
@@ -133,27 +150,31 @@ const logoStyle = computed(() => {
 })
 
 const taglineOpacity = computed(() => {
+  if (isMobile.value) return 1
   if (trackProgress.value < 0.40) return 0
   const t = Math.max(0, Math.min(1, (trackProgress.value - 0.40) / 0.25))
   return t
 })
 
 const textColumnOpacity = computed(() => {
+  if (isMobile.value) return 1
   if (trackProgress.value < 0.30) return 0
   const t = Math.max(0, Math.min(1, (trackProgress.value - 0.30) / 0.30))
   return t
 })
 
 const aboutSectionStyle = computed(() => {
+  if (isMobile.value) return {} as any
   // Interactive only once Phase 2 begins
   const isInteractive = trackProgress.value >= 0.25
   return {
-    pointerEvents: (isInteractive ? 'auto' : 'none') as 'auto' | 'none',
+    pointerEvents: (isInteractive ? 'auto' : 'none'),
     zIndex: 30
-  }
+  } as any
 })
 
 const labelOpacity = computed(() => {
+  if (isMobile.value) return 1
   if (trackProgress.value < 0.25) return 0
   const t = Math.max(0, Math.min(1, (trackProgress.value - 0.25) / 0.25)) // Fades in between 0.25 and 0.50
   return t
@@ -169,6 +190,12 @@ const isSubmitting = ref(false)
 const isSubmitted = ref(false)
 
 const getWordStyle = (index: number) => {
+  if (isMobile.value) {
+    return {
+      opacity: 1,
+      transition: 'none'
+    }
+  }
   const totalWords = words.length
   const start = (index / totalWords) * 0.35
   const end = start + 0.1
@@ -271,6 +298,9 @@ onMounted(() => {
     cards.forEach(card => observer.observe(card))
   }
 
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
+
   window.addEventListener('scroll', handleScroll)
   window.addEventListener('scroll', handleApproachScroll)
   window.addEventListener('scroll', handleWhatWeDoScroll)
@@ -285,6 +315,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
   window.removeEventListener('scroll', handleScroll)
   window.removeEventListener('scroll', handleApproachScroll)
   window.removeEventListener('scroll', handleWhatWeDoScroll)
@@ -297,14 +328,14 @@ onUnmounted(() => {
     <!-- Unified Scroll Track (400vh height for Hero + About Us scroll story) -->
     <section
       ref="aboutTrackRef"
-      class="relative h-[400vh] bg-transparent"
+      :class="isMobile ? 'relative h-auto bg-transparent' : 'relative h-[400vh] bg-transparent'"
     >
       <!-- Pinned Viewport Container (Sticky h-screen) -->
-      <div class="sticky top-0 h-screen w-full overflow-hidden bg-brand-dark">
+      <div :class="isMobile ? 'relative h-auto w-full bg-[#1D96B8]' : 'sticky top-0 h-screen w-full overflow-hidden bg-brand-dark'">
         <!-- 1. Hero Section (Pinned and fades out) -->
         <div
-          class="absolute inset-0 z-20 transition-opacity duration-75"
-          :style="{ opacity: heroOpacity, pointerEvents: heroOpacity > 0 ? 'auto' : 'none' }"
+          :class="isMobile ? 'relative z-20' : 'absolute inset-0 z-20 transition-opacity duration-75'"
+          :style="isMobile ? {} : { opacity: heroOpacity, pointerEvents: heroOpacity > 0 ? 'auto' : 'none' }"
         >
           <PageHero
             title-html="FEEL THE <span class=&quot;text-brand-yellow-500&quot;>WOO</span>"
@@ -312,27 +343,28 @@ onUnmounted(() => {
             :video="settings.indexHeroVideo"
             description="From strategy to storytelling, we create brands, campaigns, and content that don't just look good but perform, connect, and grow."
             image-class="!opacity-60"
-            class="h-full w-full"
-            :image-style="heroBgStyle"
-            :content-style="heroContentStyle"
+            :class="isMobile ? 'min-h-[calc(100vh-80px)]' : 'h-full w-full'"
+            :image-style="isMobile ? {} : heroBgStyle"
+            :content-style="isMobile ? {} : heroContentStyle"
           />
         </div>
 
         <!-- 2. Sliding/Fading Teal Background Overlay -->
         <div
+          v-if="!isMobile"
           class="absolute inset-0 bg-[#1D96B8] transition-opacity duration-75 z-10"
           :style="backgroundStyle"
         />
 
         <!-- 3. About Us Content Section -->
         <div
-          class="absolute inset-0 flex items-center"
+          :class="isMobile ? 'relative z-30 py-16 bg-[#1D96B8]' : 'absolute inset-0 flex items-center'"
           :style="aboutSectionStyle"
         >
           <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8">
             <div class="flex flex-col md:flex-row gap-12 md:gap-20 items-center md:items-start relative">
               <!-- Left column -->
-              <div class="md:w-[340px] shrink-0 flex flex-col gap-6">
+              <div class="md:w-[340px] shrink-0 flex flex-col gap-6 items-center md:items-start text-center md:text-left">
                 <!-- ABOUT US label (fades in as teal bg arrives) -->
                 <div
                   class="flex items-center gap-2 transition-opacity duration-300"
@@ -353,7 +385,7 @@ onUnmounted(() => {
                   <img
                     src="/Images/Logo.png"
                     alt="Macawoo logo"
-                    class="absolute w-[140px] h-[140px] object-contain"
+                    class="absolute left-0 top-0 w-[140px] h-[140px] object-contain"
                     :style="logoStyle"
                   >
                 </div>
@@ -375,7 +407,7 @@ onUnmounted(() => {
                 :style="{ opacity: textColumnOpacity }"
               >
                 <p
-                  class="text-white text-[28px] md:text-[36px] lg:text-[42px] font-semibold leading-[1.25]"
+                  class="text-white text-[24px] sm:text-[28px] md:text-[36px] lg:text-[42px] font-semibold leading-[1.25]"
                   style="font-family: 'Bricolage Grotesque', sans-serif;"
                 >
                   <span
@@ -395,9 +427,9 @@ onUnmounted(() => {
     </section>
 
     <!-- What We Do -->
-    <section ref="whatWeDoTrackRef" class="relative h-[220vh] bg-white">
-      <div class="sticky top-0 h-screen w-full flex flex-col justify-between py-16 bg-white overflow-hidden">
-        <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8 flex-1 flex flex-col justify-between">
+    <section ref="whatWeDoTrackRef" :class="isMobile ? 'relative h-auto bg-white' : 'relative h-[220vh] bg-white'">
+      <div :class="isMobile ? 'relative h-auto w-full flex flex-col justify-between py-16 bg-white' : 'sticky top-0 h-screen w-full flex flex-col justify-between py-16 bg-white overflow-hidden'">
+        <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8 flex-1 flex flex-col justify-between gap-8">
           <!-- Header (Centered) -->
           <div class="text-center shrink-0">
             <h2 
@@ -421,7 +453,7 @@ onUnmounted(() => {
               to="/services/branding-design"
               class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg transition-all duration-700 ease-out"
               :class="[
-                whatWeDoProgress >= 0 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                isMobile || whatWeDoProgress >= 0 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               ]"
             >
               <img
@@ -452,7 +484,7 @@ onUnmounted(() => {
               to="/services/digital-marketing"
               class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg transition-all duration-700 ease-out"
               :class="[
-                whatWeDoProgress >= 0.33 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+                isMobile || whatWeDoProgress >= 0.33 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
               ]"
             >
               <img
@@ -483,7 +515,7 @@ onUnmounted(() => {
               to="/services/video-production"
               class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg transition-all duration-700 ease-out"
               :class="[
-                whatWeDoProgress >= 0.66 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+                isMobile || whatWeDoProgress >= 0.66 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
               ]"
             >
               <img
@@ -515,7 +547,7 @@ onUnmounted(() => {
           <div 
             class="mt-8 md:mt-12 w-full transition-all duration-700 shrink-0"
             :class="[
-              whatWeDoProgress >= 0.66 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+              isMobile || whatWeDoProgress >= 0.66 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
             ]"
           >
             <ClientLogos />
@@ -528,11 +560,11 @@ onUnmounted(() => {
     <FeaturedWork />
 
     <!-- Our Approach -->
-    <section ref="approachTrackRef" class="relative h-[220vh] bg-white">
-      <div class="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center py-12 md:py-20 bg-white">
-        <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8 flex-1 flex flex-col justify-center">
+    <section ref="approachTrackRef" :class="isMobile ? 'relative h-auto bg-white' : 'relative h-[220vh] bg-white'">
+      <div :class="isMobile ? 'relative h-auto w-full flex flex-col justify-center py-16 bg-white' : 'sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center py-12 md:py-20 bg-white'">
+        <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8 flex-1 flex flex-col justify-center gap-8">
           <!-- Header -->
-          <div class="mb-12 md:mb-16">
+          <div class="mb-6 md:mb-16">
             <h2 
               class="text-[#1D96B8] text-3xl md:text-[48px] font-bold font-fredoka leading-tight"
             >
@@ -549,7 +581,7 @@ onUnmounted(() => {
             <!-- Stretching Yellow Pill background -->
             <div 
               class="absolute left-4 md:left-6 top-0 w-16 md:w-24 bg-gradient-to-b from-[#FCFFC1] to-[#E8F600] rounded-t-full rounded-b-full transition-all duration-75 ease-out z-0"
-              :style="{ height: approachProgress === 0 ? '80px' : `calc(80px + (100% - 80px) * ${approachProgress})` }"
+              :style="{ height: isMobile ? '100%' : (approachProgress === 0 ? '80px' : `calc(80px + (100% - 80px) * ${approachProgress})`) }"
             />
 
             <!-- Steps -->
@@ -577,13 +609,13 @@ onUnmounted(() => {
               <!-- Step 2: Create -->
               <div 
                 class="flex items-center relative min-h-[64px] md:min-h-[80px] transition-all duration-700 ease-out"
-                :class="approachProgress >= 0.35 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'"
+                :class="isMobile || approachProgress >= 0.35 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'"
               >
                 <div class="absolute left-[-40px] md:left-[-80px] w-12 md:w-20 flex justify-center">
                   <div 
                     class="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center font-fredoka font-semibold text-base md:text-xl transition-all duration-300"
                     :class="[
-                      approachProgress >= 0.5 
+                      isMobile || approachProgress >= 0.5 
                         ? 'bg-[#201F1F] text-white scale-100 shadow-md' 
                         : 'bg-zinc-200 text-zinc-400 scale-90'
                     ]"
@@ -604,13 +636,13 @@ onUnmounted(() => {
               <!-- Step 3: Scale -->
               <div 
                 class="flex items-center relative min-h-[64px] md:min-h-[80px] transition-all duration-700 ease-out"
-                :class="approachProgress >= 0.70 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'"
+                :class="isMobile || approachProgress >= 0.70 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'"
               >
                 <div class="absolute left-[-40px] md:left-[-80px] w-12 md:w-20 flex justify-center">
                   <div 
                     class="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center font-fredoka font-semibold text-base md:text-xl transition-all duration-300"
                     :class="[
-                      approachProgress >= 0.85 
+                      isMobile || approachProgress >= 0.85 
                         ? 'bg-[#201F1F] text-white scale-100 shadow-md' 
                         : 'bg-zinc-200 text-zinc-400 scale-90'
                     ]"

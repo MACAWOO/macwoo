@@ -26,7 +26,10 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    '/': { prerender: true }
+    '/': { prerender: true },
+    // Admin area is a client-rendered SPA: never prerender, never SSR,
+    // so the auth middleware (which reads the Supabase session) runs.
+    '/admin/**': { ssr: false, prerender: false, index: false }
   },
 
   devServer: {
