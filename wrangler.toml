@@ -1,0 +1,10 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "macawoo"
+pages_build_output_dir = ".output/public"
+compatibility_date = "2025-01-15"
+compatibility_flags = [ "nodejs_compat" ]
+
+[vars]
+# Public environment variables can be set here.
+# For production secrets (like SUPABASE_KEY), configure them in your Cloudflare Pages dashboard.
+SUPABASE_URL = "https://zzbgqivhggtmrtnizcgm.supabase.co"

@@ -6,6 +6,8 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "preview": "nuxt preview",
+    "pages:preview": "wrangler pages dev .output/public",
+    "deploy": "wrangler pages deploy .output/public",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck"
@@ -17,7 +19,8 @@
     "@nuxt/ui": "^4.8.1",
     "@supabase/supabase-js": "^2.107.0",
     "nuxt": "^4.4.6",
-    "tailwindcss": "^4.3.0"
+    "tailwindcss": "^4.3.0",
+    "wrangler": "^4.100.0"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.15.2",
