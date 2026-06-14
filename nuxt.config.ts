@@ -39,6 +39,16 @@ export default defineNuxtConfig({
     prerender: {
       crawlLinks: true,
       routes: ['/admin', '/admin/login']
+    },
+    cloudflare: {
+      pages: {
+        routes: {
+          exclude: [
+            '/admin',
+            '/admin/*'
+          ]
+        }
+      }
     }
   },
 
