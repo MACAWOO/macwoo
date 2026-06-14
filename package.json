@@ -29,5 +29,10 @@
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.3"
   },
+  "onlyBuiltDependencies": [
+    "workerd",
+    "esbuild",
+    "sharp"
+  ],
   "packageManager": "pnpm@11.5.0"
 }
