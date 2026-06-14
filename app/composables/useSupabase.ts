@@ -11,7 +11,7 @@ export function useSupabase() {
   const supabaseKey = config.public.supabaseKey as string
 
   if (!supabaseUrl || !supabaseKey) {
-    if (import.meta.env.PROD) {
+    if (import.meta.env.PROD && import.meta.client) {
       throw new Error('Supabase URL or Key is missing in public runtimeConfig. Supabase integration is required in production.')
     }
     console.warn('Supabase URL or Key is missing in public runtimeConfig. Using fallback client.')

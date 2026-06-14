@@ -27,16 +27,18 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/': { prerender: true },
-    // Admin area requires SSR so that requests hit Cloudflare Pages Functions dynamically.
-    // This allows the server-side auth middleware to run on every request and avoids 404s.
-    '/admin/**': { ssr: true, prerender: false }
+    // Admin area is client-rendered SPA. Prerendering the SPA shells ensures
+    // Cloudflare Pages serves them directly, avoiding 404s.
+    '/admin': { ssr: false },
+    '/admin/**': { ssr: false }
   },
 
   compatibilityDate: '2025-01-15',
 
   nitro: {
     prerender: {
-      crawlLinks: true
+      crawlLinks: true,
+      routes: ['/admin', '/admin/login']
     }
   },
 
