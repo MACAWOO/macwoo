@@ -1,5 +1,37 @@
-import { fileURLToPath } from 'node:url'
 import { defineNuxtConfig } from 'nuxt/config'
+
+// Nitro injects `unenv/polyfill/process` as a side-effect import at the
+// Cloudflare worker entry. unenv v2's polyfill wraps `process` in a Proxy whose
+// `get` trap forwards reads using the Proxy itself as the `receiver`. unenv's
+// Process class implements stdout/stderr/stdin as getters backed by private
+// fields (`get stdout(){ return this.#stdout ??= ... }`); when the getter runs
+// with the Proxy as `this` it throws "Cannot read private member #t from an
+// object whose class did not declare it", which crashes the Function on publish.
+// Nitro resolves this polyfill to an absolute path before user aliases apply,
+// so we patch the module source at bundle time to forward reads against the
+// real target object (the getter's home) instead of the Proxy.
+function fixUnenvProcessPolyfill() {
+  return {
+    name: 'fix-unenv-process-polyfill',
+    load(id: string) {
+      if (!id.replace(/\\/g, '/').endsWith('unenv/dist/runtime/polyfill/process.mjs')) {
+        return null
+      }
+      return `import processModule from "node:process";
+const originalProcess = globalThis["process"];
+globalThis.process = originalProcess ? new Proxy(originalProcess, {
+  get(target, prop) {
+    if (Reflect.has(target, prop)) {
+      return Reflect.get(target, prop, target);
+    }
+    return Reflect.get(processModule, prop, processModule);
+  }
+}) : processModule;
+export default globalThis.process;
+`
+    }
+  }
+}
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -48,8 +80,8 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'cloudflare-pages',
-    alias: {
-      'unenv/runtime/polyfill/process': fileURLToPath(new URL('./app/compat/process.mjs', import.meta.url))
+    rollupConfig: {
+      plugins: [fixUnenvProcessPolyfill()]
     },
     prerender: {
       crawlLinks: true,
