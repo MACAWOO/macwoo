@@ -27,13 +27,9 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/': { prerender: true },
-    // Admin area is a client-rendered SPA: never prerender, never SSR,
-    // so the auth middleware (which reads the Supabase session) runs.
-    '/admin/**': { ssr: false, prerender: false, index: false }
-  },
-
-  devServer: {
-    host: '0.0.0.0'
+    // Admin area requires SSR so that requests hit Cloudflare Pages Functions dynamically.
+    // This allows the server-side auth middleware to run on every request and avoids 404s.
+    '/admin/**': { ssr: true, prerender: false }
   },
 
   compatibilityDate: '2025-01-15',
@@ -41,12 +37,6 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true
-    }
-  },
-
-  vite: {
-    server: {
-      allowedHosts: true
     }
   },
 

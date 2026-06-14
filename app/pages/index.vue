@@ -163,14 +163,14 @@ const textColumnOpacity = computed(() => {
   return t
 })
 
-const aboutSectionStyle = computed(() => {
-  if (isMobile.value) return {} as any
+const aboutSectionStyle = computed<import('vue').StyleValue>(() => {
+  if (isMobile.value) return {}
   // Interactive only once Phase 2 begins
   const isInteractive = trackProgress.value >= 0.25
   return {
-    pointerEvents: (isInteractive ? 'auto' : 'none'),
+    pointerEvents: isInteractive ? 'auto' : 'none',
     zIndex: 30
-  } as any
+  }
 })
 
 const labelOpacity = computed(() => {
@@ -427,27 +427,29 @@ onUnmounted(() => {
     </section>
 
     <!-- What We Do -->
-    <section ref="whatWeDoTrackRef" :class="isMobile ? 'relative h-auto bg-white' : 'relative h-[220vh] bg-white'">
+    <section
+      ref="whatWeDoTrackRef"
+      :class="isMobile ? 'relative h-auto bg-white' : 'relative h-[220vh] bg-white'"
+    >
       <div :class="isMobile ? 'relative h-auto w-full flex flex-col justify-between py-16 bg-white' : 'sticky top-0 h-screen w-full flex flex-col justify-between py-16 bg-white overflow-hidden'">
         <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8 flex-1 flex flex-col justify-between gap-8">
           <!-- Header (Centered) -->
           <div class="text-center shrink-0">
-            <h2 
+            <h2
               class="text-[#1D96B8] text-3xl md:text-[48px] font-bold font-fredoka leading-tight"
             >
               What We Do
             </h2>
-            <p 
+            <p
               class="text-zinc-600 mt-4 text-base md:text-xl font-normal leading-relaxed"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
               We blend raw creative energy with executive precision to craft brands that command attention and drive growth.
             </p>
           </div>
-          
+
           <!-- Cards Grid (Horizontal Alignment restored) -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-[13px] my-auto">
-            
             <!-- Card 1: Branding & Design -->
             <NuxtLink
               to="/services/branding-design"
@@ -540,11 +542,10 @@ onUnmounted(() => {
                 </p>
               </div>
             </NuxtLink>
-
           </div>
 
           <!-- Client Logos Carousel (Centered bottom) -->
-          <div 
+          <div
             class="mt-8 md:mt-12 w-full transition-all duration-700 shrink-0"
             :class="[
               isMobile || whatWeDoProgress >= 0.66 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
@@ -560,12 +561,15 @@ onUnmounted(() => {
     <FeaturedWork />
 
     <!-- Our Approach -->
-    <section ref="approachTrackRef" :class="isMobile ? 'relative h-auto bg-white' : 'relative h-[220vh] bg-white'">
+    <section
+      ref="approachTrackRef"
+      :class="isMobile ? 'relative h-auto bg-white' : 'relative h-[220vh] bg-white'"
+    >
       <div :class="isMobile ? 'relative h-auto w-full flex flex-col justify-center py-16 bg-white' : 'sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center py-12 md:py-20 bg-white'">
         <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8 flex-1 flex flex-col justify-center gap-8">
           <!-- Header -->
           <div class="mb-6 md:mb-16">
-            <h2 
+            <h2
               class="text-[#1D96B8] text-3xl md:text-[48px] font-bold font-fredoka leading-tight"
             >
               Our Approach
@@ -577,46 +581,50 @@ onUnmounted(() => {
 
           <!-- Timeline Container -->
           <div class="relative w-full max-w-4xl mx-auto pl-16 md:pl-28 py-4">
-            
             <!-- Stretching Yellow Pill background -->
-            <div 
+            <div
               class="absolute left-4 md:left-6 top-0 w-16 md:w-24 bg-gradient-to-b from-[#FCFFC1] to-[#E8F600] rounded-t-full rounded-b-full transition-all duration-75 ease-out z-0"
               :style="{ height: isMobile ? '100%' : (approachProgress === 0 ? '80px' : `calc(80px + (100% - 80px) * ${approachProgress})`) }"
             />
 
             <!-- Steps -->
             <div class="relative z-10 flex flex-col gap-12 md:gap-20 py-4">
-              
               <!-- Step 1: Think -->
               <div class="flex items-center relative min-h-[64px] md:min-h-[80px]">
                 <div class="absolute left-[-40px] md:left-[-80px] w-12 md:w-20 flex justify-center">
-                  <div 
+                  <div
                     class="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center font-fredoka font-semibold text-base md:text-xl bg-[#201F1F] text-white transition-all duration-300 shadow-md"
                   >
                     01
                   </div>
                 </div>
                 <div class="pl-4 md:pl-8">
-                  <h3 class="text-xl md:text-[28px] font-bold text-zinc-950 leading-none" style="font-family: 'Fredoka', sans-serif;">
+                  <h3
+                    class="text-xl md:text-[28px] font-bold text-zinc-950 leading-none"
+                    style="font-family: 'Fredoka', sans-serif;"
+                  >
                     Think
                   </h3>
-                  <p class="text-zinc-600 text-sm md:text-lg mt-3 max-w-2xl leading-relaxed" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                  <p
+                    class="text-zinc-600 text-sm md:text-lg mt-3 max-w-2xl leading-relaxed"
+                    style="font-family: 'Bricolage Grotesque', sans-serif;"
+                  >
                     We uncover insights, define strategy, and create a clear roadmap for success.
                   </p>
                 </div>
               </div>
 
               <!-- Step 2: Create -->
-              <div 
+              <div
                 class="flex items-center relative min-h-[64px] md:min-h-[80px] transition-all duration-700 ease-out"
                 :class="isMobile || approachProgress >= 0.35 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'"
               >
                 <div class="absolute left-[-40px] md:left-[-80px] w-12 md:w-20 flex justify-center">
-                  <div 
+                  <div
                     class="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center font-fredoka font-semibold text-base md:text-xl transition-all duration-300"
                     :class="[
-                      isMobile || approachProgress >= 0.5 
-                        ? 'bg-[#201F1F] text-white scale-100 shadow-md' 
+                      isMobile || approachProgress >= 0.5
+                        ? 'bg-[#201F1F] text-white scale-100 shadow-md'
                         : 'bg-zinc-200 text-zinc-400 scale-90'
                     ]"
                   >
@@ -624,26 +632,32 @@ onUnmounted(() => {
                   </div>
                 </div>
                 <div class="pl-4 md:pl-8">
-                  <h3 class="text-xl md:text-[28px] font-bold text-zinc-950 leading-none" style="font-family: 'Fredoka', sans-serif;">
+                  <h3
+                    class="text-xl md:text-[28px] font-bold text-zinc-950 leading-none"
+                    style="font-family: 'Fredoka', sans-serif;"
+                  >
                     Create
                   </h3>
-                  <p class="text-zinc-600 text-sm md:text-lg mt-3 max-w-2xl leading-relaxed" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                  <p
+                    class="text-zinc-600 text-sm md:text-lg mt-3 max-w-2xl leading-relaxed"
+                    style="font-family: 'Bricolage Grotesque', sans-serif;"
+                  >
                     We craft compelling brand experiences that connect with your audience.
                   </p>
                 </div>
               </div>
 
               <!-- Step 3: Scale -->
-              <div 
+              <div
                 class="flex items-center relative min-h-[64px] md:min-h-[80px] transition-all duration-700 ease-out"
                 :class="isMobile || approachProgress >= 0.70 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'"
               >
                 <div class="absolute left-[-40px] md:left-[-80px] w-12 md:w-20 flex justify-center">
-                  <div 
+                  <div
                     class="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center font-fredoka font-semibold text-base md:text-xl transition-all duration-300"
                     :class="[
-                      isMobile || approachProgress >= 0.85 
-                        ? 'bg-[#201F1F] text-white scale-100 shadow-md' 
+                      isMobile || approachProgress >= 0.85
+                        ? 'bg-[#201F1F] text-white scale-100 shadow-md'
                         : 'bg-zinc-200 text-zinc-400 scale-90'
                     ]"
                   >
@@ -651,17 +665,21 @@ onUnmounted(() => {
                   </div>
                 </div>
                 <div class="pl-4 md:pl-8">
-                  <h3 class="text-xl md:text-[28px] font-bold text-zinc-950 leading-none" style="font-family: 'Fredoka', sans-serif;">
+                  <h3
+                    class="text-xl md:text-[28px] font-bold text-zinc-950 leading-none"
+                    style="font-family: 'Fredoka', sans-serif;"
+                  >
                     Scale
                   </h3>
-                  <p class="text-zinc-600 text-sm md:text-lg mt-3 max-w-2xl leading-relaxed" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                  <p
+                    class="text-zinc-600 text-sm md:text-lg mt-3 max-w-2xl leading-relaxed"
+                    style="font-family: 'Bricolage Grotesque', sans-serif;"
+                  >
                     We accelerate growth through optimization, performance, and continuous innovation.
                   </p>
                 </div>
               </div>
-
             </div>
-
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let supabaseInstance: any = null
 
 export function useSupabase() {
@@ -10,6 +11,9 @@ export function useSupabase() {
   const supabaseKey = config.public.supabaseKey as string
 
   if (!supabaseUrl || !supabaseKey) {
+    if (import.meta.env.PROD) {
+      throw new Error('Supabase URL or Key is missing in public runtimeConfig. Supabase integration is required in production.')
+    }
     console.warn('Supabase URL or Key is missing in public runtimeConfig. Using fallback client.')
     return createDummyClient()
   }
@@ -23,14 +27,15 @@ export function useSupabase() {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createDummyClient(): any {
   const dummy = () => {}
   return new Proxy(dummy, {
-    get(target, prop) {
+    get(_target, prop) {
       if (prop === 'then') return undefined
       return createDummyClient()
     },
-    apply(target, thisArg, argArray) {
+    apply(_target, _thisArg, _argArray) {
       return createDummyClient()
     }
   })

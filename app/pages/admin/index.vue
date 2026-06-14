@@ -13,7 +13,7 @@ onMounted(() => {
 
 const handleSignOut = async () => {
   await signOut()
-  navigateTo('/admin/login')
+  useRouter().push('/admin/login')
 }
 
 // Dynamic state composables
@@ -200,8 +200,10 @@ const careerForm = ref({
 
 // Media Picker integration states
 const isMediaPickerOpen = ref(false)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const activeFieldRef = ref<{ obj: any, key: string } | null>(null)
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const openMediaPicker = (obj: any, key: string) => {
   activeFieldRef.value = { obj, key }
   isMediaPickerOpen.value = true
@@ -1211,15 +1213,29 @@ const filteredCareers = computed(() => {
             <!-- Categories Management View -->
             <div class="space-y-6 bg-white border border-[#e0e0e0] p-6 rounded shadow-sm">
               <div class="border-b border-[#e0e0e0] pb-3 flex items-center justify-between">
-                <h2 class="text-base font-bold text-zinc-700">Manage Categories</h2>
+                <h2 class="text-base font-bold text-zinc-700">
+                  Manage Categories
+                </h2>
                 <span class="text-xs text-zinc-400">Manage categories used in Portfolio and Case Studies.</span>
               </div>
-              
+
               <!-- Add category inline form -->
-              <form @submit.prevent="const input = ($event.target as HTMLFormElement).elements.namedItem('categoryInput') as HTMLInputElement; addCategory(input.value); logAction('add', 'Category', input.value); input.value = ''" class="flex gap-2 items-center bg-zinc-50 p-4 border border-zinc-200 rounded-lg">
+              <form
+                class="flex gap-2 items-center bg-zinc-50 p-4 border border-zinc-200 rounded-lg"
+                @submit.prevent="const input = ($event.target as HTMLFormElement).elements.namedItem('categoryInput') as HTMLInputElement; addCategory(input.value); logAction('add', 'Category', input.value); input.value = ''"
+              >
                 <label class="text-xs font-bold text-zinc-700">Add New Category:</label>
-                <input name="categoryInput" type="text" placeholder="e.g. Branding & Identity" required class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-white focus:outline-none focus:border-[#1D96B8]">
-                <button type="submit" class="px-4 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded shadow-sm cursor-pointer">
+                <input
+                  name="categoryInput"
+                  type="text"
+                  placeholder="e.g. Branding & Identity"
+                  required
+                  class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-white focus:outline-none focus:border-[#1D96B8]"
+                >
+                <button
+                  type="submit"
+                  class="px-4 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded shadow-sm cursor-pointer"
+                >
                   + Add Category
                 </button>
               </form>
@@ -1229,21 +1245,40 @@ const filteredCareers = computed(() => {
                 <table class="w-full text-xs text-left border-collapse bg-white">
                   <thead>
                     <tr class="bg-[#141111] text-white font-bold border-b border-[#e0e0e0]">
-                      <th class="p-3">Category Name</th>
-                      <th class="p-3 text-right w-36">Actions</th>
+                      <th class="p-3">
+                        Category Name
+                      </th>
+                      <th class="p-3 text-right w-36">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="cat in categories" :key="cat" class="border-b border-[#e0e0e0] hover:bg-zinc-50">
-                      <td class="p-3 font-semibold text-zinc-800">{{ cat }}</td>
+                    <tr
+                      v-for="cat in categories"
+                      :key="cat"
+                      class="border-b border-[#e0e0e0] hover:bg-zinc-50"
+                    >
+                      <td class="p-3 font-semibold text-zinc-800">
+                        {{ cat }}
+                      </td>
                       <td class="p-3 text-right">
-                        <button type="button" @click="deleteCategory(cat); logAction('delete', 'Category', cat)" class="text-red-600 hover:underline cursor-pointer bg-transparent border-0 p-0 font-semibold">
+                        <button
+                          type="button"
+                          class="text-red-600 hover:underline cursor-pointer bg-transparent border-0 p-0 font-semibold"
+                          @click="deleteCategory(cat); logAction('delete', 'Category', cat)"
+                        >
                           Delete
                         </button>
                       </td>
                     </tr>
                     <tr v-if="categories.length === 0">
-                      <td colspan="2" class="p-4 text-center text-zinc-400 italic">No categories created yet.</td>
+                      <td
+                        colspan="2"
+                        class="p-4 text-center text-zinc-400 italic"
+                      >
+                        No categories created yet.
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -1252,460 +1287,460 @@ const filteredCareers = computed(() => {
           </template>
           <template v-else>
             <!-- Header and Add Button -->
-          <div class="flex items-center justify-between border-b border-[#e0e0e0] pb-3">
-            <h2 class="text-base font-bold text-zinc-700 capitalize">
-              Select {{ currentModel === 'case-study' ? 'case study' : currentModel === 'career' ? 'role' : currentModel }} to change
-            </h2>
-            <button
-              class="px-4 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded shadow-sm cursor-pointer"
-              @click="openAddForm(currentModel)"
-            >
-              + Add {{ currentModel === 'case-study' ? 'Case Study' : currentModel === 'career' ? 'Role' : currentModel.toUpperCase() }}
-            </button>
-          </div>
+            <div class="flex items-center justify-between border-b border-[#e0e0e0] pb-3">
+              <h2 class="text-base font-bold text-zinc-700 capitalize">
+                Select {{ currentModel === 'case-study' ? 'case study' : currentModel === 'career' ? 'role' : currentModel }} to change
+              </h2>
+              <button
+                class="px-4 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded shadow-sm cursor-pointer"
+                @click="openAddForm(currentModel)"
+              >
+                + Add {{ currentModel === 'case-study' ? 'Case Study' : currentModel === 'career' ? 'Role' : currentModel.toUpperCase() }}
+              </button>
+            </div>
 
-          <!-- Changelist Controls (Search & Filters) -->
-          <div class="flex flex-col lg:flex-row gap-5 items-start">
-            <div class="flex-1 w-full space-y-4">
-              <!-- Search Bar -->
-              <div class="bg-white border border-[#e0e0e0] p-3 rounded flex items-center gap-2">
-                <input
-                  v-model="searchQueries[currentModel]"
-                  type="text"
-                  placeholder="Search title, keyword or key identifiers..."
-                  class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
-                  @keydown.enter="allSelected = false"
-                >
-                <button
-                  class="px-4 py-1.5 bg-[#141111] hover:bg-black text-white text-xs font-bold rounded cursor-pointer"
-                >
-                  Search
-                </button>
+            <!-- Changelist Controls (Search & Filters) -->
+            <div class="flex flex-col lg:flex-row gap-5 items-start">
+              <div class="flex-1 w-full space-y-4">
+                <!-- Search Bar -->
+                <div class="bg-white border border-[#e0e0e0] p-3 rounded flex items-center gap-2">
+                  <input
+                    v-model="searchQueries[currentModel]"
+                    type="text"
+                    placeholder="Search title, keyword or key identifiers..."
+                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    @keydown.enter="allSelected = false"
+                  >
+                  <button
+                    class="px-4 py-1.5 bg-[#141111] hover:bg-black text-white text-xs font-bold rounded cursor-pointer"
+                  >
+                    Search
+                  </button>
+                </div>
+
+                <!-- Bulk Action Bar -->
+                <div class="bg-zinc-100 border border-[#e0e0e0] p-2.5 rounded flex items-center gap-2 text-xs">
+                  <label class="text-zinc-600 font-semibold">Action:</label>
+                  <select
+                    v-model="selectedBulkAction"
+                    class="px-2.5 py-1 border border-zinc-300 rounded text-xs bg-white focus:outline-none"
+                  >
+                    <option value="">
+                      ---------
+                    </option>
+                    <option value="delete">
+                      Delete selected {{ currentModel === 'blog' ? 'blog posts' : currentModel === 'portfolio' ? 'projects' : currentModel === 'case-study' ? 'case studies' : 'open roles' }}
+                    </option>
+                  </select>
+                  <button
+                    class="px-3.5 py-1 bg-[#141111] hover:bg-black text-white font-bold rounded cursor-pointer text-xs"
+                    @click="executeBulkAction"
+                  >
+                    Go
+                  </button>
+                </div>
+
+                <!-- Data List Grid Tables -->
+                <div class="border border-[#e0e0e0] rounded bg-white overflow-hidden">
+                  <!-- ── Table 1: Blog Changelist ── -->
+                  <table
+                    v-if="currentModel === 'blog'"
+                    class="w-full text-xs text-left border-collapse"
+                  >
+                    <thead>
+                      <tr class="bg-zinc-100 text-zinc-700 font-bold border-b border-[#e0e0e0] select-none">
+                        <th class="p-3 w-10 text-center">
+                          <input
+                            v-model="allSelected"
+                            type="checkbox"
+                            @change="toggleAllSelections(filteredBlogs)"
+                          >
+                        </th>
+                        <th
+                          class="p-3 cursor-pointer hover:bg-zinc-200"
+                          @click="toggleSort('blog', 'title')"
+                        >
+                          Title <span v-if="sortKeys.blog === 'title'">{{ sortOrders.blog === 'asc' ? '▲' : '▼' }}</span>
+                        </th>
+                        <th
+                          class="p-3 cursor-pointer hover:bg-zinc-200"
+                          @click="toggleSort('blog', 'slug')"
+                        >
+                          Slug <span v-if="sortKeys.blog === 'slug'">{{ sortOrders.blog === 'asc' ? '▲' : '▼' }}</span>
+                        </th>
+                        <th
+                          class="p-3 cursor-pointer hover:bg-zinc-200"
+                          @click="toggleSort('blog', 'date')"
+                        >
+                          Publish Date <span v-if="sortKeys.blog === 'date'">{{ sortOrders.blog === 'asc' ? '▲' : '▼' }}</span>
+                        </th>
+                        <th class="p-3">
+                          Read Time
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="post in filteredBlogs"
+                        :key="post.slug"
+                        class="border-b border-[#e0e0e0] hover:bg-zinc-50"
+                      >
+                        <td class="p-3 text-center">
+                          <input
+                            v-model="selectedIds[post.slug]"
+                            type="checkbox"
+                          >
+                        </td>
+                        <td class="p-3">
+                          <button
+                            class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
+                            @click="openEditForm('blog', post.slug)"
+                          >
+                            {{ post.title }}
+                          </button>
+                        </td>
+                        <td class="p-3 text-zinc-500 font-mono text-[11px]">
+                          {{ post.slug }}
+                        </td>
+                        <td class="p-3">
+                          {{ post.date }}
+                        </td>
+                        <td class="p-3">
+                          {{ post.readTime }}
+                        </td>
+                      </tr>
+                      <tr v-if="filteredBlogs.length === 0">
+                        <td
+                          colspan="5"
+                          class="p-5 text-center text-zinc-400 italic"
+                        >
+                          No matching blog posts found.
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <!-- ── Table 2: Portfolio Changelist ── -->
+                  <table
+                    v-if="currentModel === 'portfolio'"
+                    class="w-full text-xs text-left border-collapse"
+                  >
+                    <thead>
+                      <tr class="bg-zinc-100 text-zinc-700 font-bold border-b border-[#e0e0e0] select-none">
+                        <th class="p-3 w-10 text-center">
+                          <input
+                            v-model="allSelected"
+                            type="checkbox"
+                            @change="toggleAllSelections(filteredPortfolio)"
+                          >
+                        </th>
+                        <th
+                          class="p-3 cursor-pointer hover:bg-zinc-200"
+                          @click="toggleSort('portfolio', 'title')"
+                        >
+                          Title <span v-if="sortKeys.portfolio === 'title'">{{ sortOrders.portfolio === 'asc' ? '▲' : '▼' }}</span>
+                        </th>
+                        <th
+                          class="p-3 cursor-pointer hover:bg-zinc-200"
+                          @click="toggleSort('portfolio', 'category')"
+                        >
+                          Category <span v-if="sortKeys.portfolio === 'category'">{{ sortOrders.portfolio === 'asc' ? '▲' : '▼' }}</span>
+                        </th>
+                        <th
+                          class="p-3 cursor-pointer hover:bg-zinc-200"
+                          @click="toggleSort('portfolio', 'featured')"
+                        >
+                          Featured <span v-if="sortKeys.portfolio === 'featured'">{{ sortOrders.portfolio === 'asc' ? '▲' : '▼' }}</span>
+                        </th>
+                        <th
+                          class="p-3 cursor-pointer hover:bg-zinc-200"
+                          @click="toggleSort('portfolio', 'displayOrder')"
+                        >
+                          Order <span v-if="sortKeys.portfolio === 'displayOrder'">{{ sortOrders.portfolio === 'asc' ? '▲' : '▼' }}</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="proj in filteredPortfolio"
+                        :key="proj.slug"
+                        class="border-b border-[#e0e0e0] hover:bg-zinc-50"
+                      >
+                        <td class="p-3 text-center">
+                          <input
+                            v-model="selectedIds[proj.slug]"
+                            type="checkbox"
+                          >
+                        </td>
+                        <td class="p-3">
+                          <button
+                            class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
+                            @click="openEditForm('portfolio', proj.slug)"
+                          >
+                            {{ proj.title }}
+                          </button>
+                        </td>
+                        <td class="p-3">
+                          {{ proj.category }}
+                        </td>
+                        <td class="p-3">
+                          <span
+                            class="px-2 py-0.5 rounded font-bold text-[10px]"
+                            :class="proj.featured !== false ? 'bg-amber-100 text-amber-700' : 'bg-zinc-100 text-zinc-600'"
+                          >
+                            {{ proj.featured !== false ? 'Featured' : 'Standard' }}
+                          </span>
+                        </td>
+                        <td class="p-3 font-mono">
+                          {{ proj.displayOrder }}
+                        </td>
+                      </tr>
+                      <tr v-if="filteredPortfolio.length === 0">
+                        <td
+                          colspan="5"
+                          class="p-5 text-center text-zinc-400 italic"
+                        >
+                          No matching portfolio projects found.
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <!-- ── Table 3: Case Studies Changelist ── -->
+                  <table
+                    v-if="currentModel === 'case-study'"
+                    class="w-full text-xs text-left border-collapse"
+                  >
+                    <thead>
+                      <tr class="bg-zinc-100 text-zinc-700 font-bold border-b border-[#e0e0e0] select-none">
+                        <th class="p-3 w-10 text-center">
+                          <input
+                            v-model="allSelected"
+                            type="checkbox"
+                            @change="toggleAllSelections(filteredCaseStudies)"
+                          >
+                        </th>
+                        <th
+                          class="p-3 cursor-pointer hover:bg-zinc-200"
+                          @click="toggleSort('case-study', 'title')"
+                        >
+                          Title <span v-if="sortKeys['case-study'] === 'title'">{{ sortOrders['case-study'] === 'asc' ? '▲' : '▼' }}</span>
+                        </th>
+                        <th
+                          class="p-3 cursor-pointer hover:bg-zinc-200"
+                          @click="toggleSort('case-study', 'client')"
+                        >
+                          Client <span v-if="sortKeys['case-study'] === 'client'">{{ sortOrders['case-study'] === 'asc' ? '▲' : '▼' }}</span>
+                        </th>
+                        <th class="p-3">
+                          Slug
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="study in filteredCaseStudies"
+                        :key="study.slug"
+                        class="border-b border-[#e0e0e0] hover:bg-zinc-50"
+                      >
+                        <td class="p-3 text-center">
+                          <input
+                            v-model="selectedIds[study.slug]"
+                            type="checkbox"
+                          >
+                        </td>
+                        <td class="p-3">
+                          <button
+                            class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
+                            @click="openEditForm('case-study', study.slug)"
+                          >
+                            {{ study.title }}
+                          </button>
+                        </td>
+                        <td class="p-3">
+                          {{ study.client }}
+                        </td>
+                        <td class="p-3 text-zinc-500 font-mono text-[11px]">
+                          {{ study.slug }}
+                        </td>
+                      </tr>
+                      <tr v-if="filteredCaseStudies.length === 0">
+                        <td
+                          colspan="4"
+                          class="p-5 text-center text-zinc-400 italic"
+                        >
+                          No matching case studies found.
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <!-- ── Table 4: Careers Changelist ── -->
+                  <table
+                    v-if="currentModel === 'career'"
+                    class="w-full text-xs text-left border-collapse"
+                  >
+                    <thead>
+                      <tr class="bg-zinc-100 text-zinc-700 font-bold border-b border-[#e0e0e0] select-none">
+                        <th class="p-3 w-10 text-center">
+                          <input
+                            v-model="allSelected"
+                            type="checkbox"
+                            @change="toggleAllSelections(filteredCareers)"
+                          >
+                        </th>
+                        <th
+                          class="p-3 cursor-pointer hover:bg-zinc-200"
+                          @click="toggleSort('career', 'title')"
+                        >
+                          Job Title <span v-if="sortKeys.career === 'title'">{{ sortOrders.career === 'asc' ? '▲' : '▼' }}</span>
+                        </th>
+                        <th
+                          class="p-3 cursor-pointer hover:bg-zinc-200"
+                          @click="toggleSort('career', 'department')"
+                        >
+                          Department <span v-if="sortKeys.career === 'department'">{{ sortOrders.career === 'asc' ? '▲' : '▼' }}</span>
+                        </th>
+                        <th
+                          class="p-3 cursor-pointer hover:bg-zinc-200"
+                          @click="toggleSort('career', 'location')"
+                        >
+                          Location <span v-if="sortKeys.career === 'location'">{{ sortOrders.career === 'asc' ? '▲' : '▼' }}</span>
+                        </th>
+                        <th class="p-3">
+                          Job Type
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="job in filteredCareers"
+                        :key="job.id"
+                        class="border-b border-[#e0e0e0] hover:bg-zinc-50"
+                      >
+                        <td class="p-3 text-center">
+                          <input
+                            v-model="selectedIds[job.id]"
+                            type="checkbox"
+                          >
+                        </td>
+                        <td class="p-3">
+                          <button
+                            class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
+                            @click="openEditForm('career', job.id)"
+                          >
+                            {{ job.title }}
+                          </button>
+                        </td>
+                        <td class="p-3">
+                          {{ job.department }}
+                        </td>
+                        <td class="p-3">
+                          {{ job.location }}
+                        </td>
+                        <td class="p-3">
+                          {{ job.type }}
+                        </td>
+                      </tr>
+                      <tr v-if="filteredCareers.length === 0">
+                        <td
+                          colspan="5"
+                          class="p-5 text-center text-zinc-400 italic"
+                        >
+                          No matching careers found.
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
-              <!-- Bulk Action Bar -->
-              <div class="bg-zinc-100 border border-[#e0e0e0] p-2.5 rounded flex items-center gap-2 text-xs">
-                <label class="text-zinc-600 font-semibold">Action:</label>
-                <select
-                  v-model="selectedBulkAction"
-                  class="px-2.5 py-1 border border-zinc-300 rounded text-xs bg-white focus:outline-none"
-                >
-                  <option value="">
-                    ---------
-                  </option>
-                  <option value="delete">
-                    Delete selected {{ currentModel === 'blog' ? 'blog posts' : currentModel === 'portfolio' ? 'projects' : currentModel === 'case-study' ? 'case studies' : 'open roles' }}
-                  </option>
-                </select>
-                <button
-                  class="px-3.5 py-1 bg-[#141111] hover:bg-black text-white font-bold rounded cursor-pointer text-xs"
-                  @click="executeBulkAction"
-                >
-                  Go
-                </button>
-              </div>
+              <!-- Right side Filters Sidebar -->
+              <div class="w-full lg:w-56 bg-white border border-[#e0e0e0] rounded shrink-0 p-4">
+                <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wide border-b border-[#e0e0e0] pb-2 mb-3">
+                  Filter
+                </h3>
 
-              <!-- Data List Grid Tables -->
-              <div class="border border-[#e0e0e0] rounded bg-white overflow-hidden">
-                <!-- ── Table 1: Blog Changelist ── -->
-                <table
-                  v-if="currentModel === 'blog'"
-                  class="w-full text-xs text-left border-collapse"
-                >
-                  <thead>
-                    <tr class="bg-zinc-100 text-zinc-700 font-bold border-b border-[#e0e0e0] select-none">
-                      <th class="p-3 w-10 text-center">
-                        <input
-                          v-model="allSelected"
-                          type="checkbox"
-                          @change="toggleAllSelections(filteredBlogs)"
-                        >
-                      </th>
-                      <th
-                        class="p-3 cursor-pointer hover:bg-zinc-200"
-                        @click="toggleSort('blog', 'title')"
-                      >
-                        Title <span v-if="sortKeys.blog === 'title'">{{ sortOrders.blog === 'asc' ? '▲' : '▼' }}</span>
-                      </th>
-                      <th
-                        class="p-3 cursor-pointer hover:bg-zinc-200"
-                        @click="toggleSort('blog', 'slug')"
-                      >
-                        Slug <span v-if="sortKeys.blog === 'slug'">{{ sortOrders.blog === 'asc' ? '▲' : '▼' }}</span>
-                      </th>
-                      <th
-                        class="p-3 cursor-pointer hover:bg-zinc-200"
-                        @click="toggleSort('blog', 'date')"
-                      >
-                        Publish Date <span v-if="sortKeys.blog === 'date'">{{ sortOrders.blog === 'asc' ? '▲' : '▼' }}</span>
-                      </th>
-                      <th class="p-3">
-                        Read Time
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="post in filteredBlogs"
-                      :key="post.slug"
-                      class="border-b border-[#e0e0e0] hover:bg-zinc-50"
-                    >
-                      <td class="p-3 text-center">
-                        <input
-                          v-model="selectedIds[post.slug]"
-                          type="checkbox"
-                        >
-                      </td>
-                      <td class="p-3">
-                        <button
-                          class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
-                          @click="openEditForm('blog', post.slug)"
-                        >
-                          {{ post.title }}
-                        </button>
-                      </td>
-                      <td class="p-3 text-zinc-500 font-mono text-[11px]">
-                        {{ post.slug }}
-                      </td>
-                      <td class="p-3">
-                        {{ post.date }}
-                      </td>
-                      <td class="p-3">
-                        {{ post.readTime }}
-                      </td>
-                    </tr>
-                    <tr v-if="filteredBlogs.length === 0">
-                      <td
-                        colspan="5"
-                        class="p-5 text-center text-zinc-400 italic"
-                      >
-                        No matching blog posts found.
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <!-- ── Table 2: Portfolio Changelist ── -->
-                <table
+                <!-- Filters for Portfolio -->
+                <div
                   v-if="currentModel === 'portfolio'"
-                  class="w-full text-xs text-left border-collapse"
+                  class="space-y-4 text-xs"
                 >
-                  <thead>
-                    <tr class="bg-zinc-100 text-zinc-700 font-bold border-b border-[#e0e0e0] select-none">
-                      <th class="p-3 w-10 text-center">
-                        <input
-                          v-model="allSelected"
-                          type="checkbox"
-                          @change="toggleAllSelections(filteredPortfolio)"
-                        >
-                      </th>
-                      <th
-                        class="p-3 cursor-pointer hover:bg-zinc-200"
-                        @click="toggleSort('portfolio', 'title')"
+                  <div>
+                    <h4 class="font-bold text-zinc-400 mb-1.5">
+                      By Category
+                    </h4>
+                    <ul class="space-y-1">
+                      <li
+                        v-for="cat in ['All', 'Branding', 'Marketing', 'Video Production']"
+                        :key="cat"
                       >
-                        Title <span v-if="sortKeys.portfolio === 'title'">{{ sortOrders.portfolio === 'asc' ? '▲' : '▼' }}</span>
-                      </th>
-                      <th
-                        class="p-3 cursor-pointer hover:bg-zinc-200"
-                        @click="toggleSort('portfolio', 'category')"
-                      >
-                        Category <span v-if="sortKeys.portfolio === 'category'">{{ sortOrders.portfolio === 'asc' ? '▲' : '▼' }}</span>
-                      </th>
-                      <th
-                        class="p-3 cursor-pointer hover:bg-zinc-200"
-                        @click="toggleSort('portfolio', 'featured')"
-                      >
-                        Featured <span v-if="sortKeys.portfolio === 'featured'">{{ sortOrders.portfolio === 'asc' ? '▲' : '▼' }}</span>
-                      </th>
-                      <th
-                        class="p-3 cursor-pointer hover:bg-zinc-200"
-                        @click="toggleSort('portfolio', 'displayOrder')"
-                      >
-                        Order <span v-if="sortKeys.portfolio === 'displayOrder'">{{ sortOrders.portfolio === 'asc' ? '▲' : '▼' }}</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="proj in filteredPortfolio"
-                      :key="proj.slug"
-                      class="border-b border-[#e0e0e0] hover:bg-zinc-50"
-                    >
-                      <td class="p-3 text-center">
-                        <input
-                          v-model="selectedIds[proj.slug]"
-                          type="checkbox"
-                        >
-                      </td>
-                      <td class="p-3">
                         <button
-                          class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
-                          @click="openEditForm('portfolio', proj.slug)"
+                          class="hover:underline text-left cursor-pointer bg-transparent border-0 p-0"
+                          :class="activeFilters.portfolioCategory === cat ? 'text-[#1D96B8] font-bold' : 'text-zinc-600'"
+                          @click="activeFilters.portfolioCategory = cat; allSelected = false"
                         >
-                          {{ proj.title }}
+                          {{ cat }}
                         </button>
-                      </td>
-                      <td class="p-3">
-                        {{ proj.category }}
-                      </td>
-                      <td class="p-3">
-                        <span
-                          class="px-2 py-0.5 rounded font-bold text-[10px]"
-                          :class="proj.featured !== false ? 'bg-amber-100 text-amber-700' : 'bg-zinc-100 text-zinc-600'"
-                        >
-                          {{ proj.featured !== false ? 'Featured' : 'Standard' }}
-                        </span>
-                      </td>
-                      <td class="p-3 font-mono">
-                        {{ proj.displayOrder }}
-                      </td>
-                    </tr>
-                    <tr v-if="filteredPortfolio.length === 0">
-                      <td
-                        colspan="5"
-                        class="p-5 text-center text-zinc-400 italic"
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-zinc-400 mb-1.5">
+                      By Home Placement
+                    </h4>
+                    <ul class="space-y-1">
+                      <li
+                        v-for="feat in ['All', 'Featured', 'Not Featured']"
+                        :key="feat"
                       >
-                        No matching portfolio projects found.
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                        <button
+                          class="hover:underline text-left cursor-pointer bg-transparent border-0 p-0"
+                          :class="activeFilters.portfolioFeatured === feat ? 'text-[#1D96B8] font-bold' : 'text-zinc-600'"
+                          @click="activeFilters.portfolioFeatured = feat; allSelected = false"
+                        >
+                          {{ feat }}
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
 
-                <!-- ── Table 3: Case Studies Changelist ── -->
-                <table
-                  v-if="currentModel === 'case-study'"
-                  class="w-full text-xs text-left border-collapse"
+                <!-- Filters for Blog -->
+                <div
+                  v-if="currentModel === 'blog'"
+                  class="space-y-4 text-xs"
                 >
-                  <thead>
-                    <tr class="bg-zinc-100 text-zinc-700 font-bold border-b border-[#e0e0e0] select-none">
-                      <th class="p-3 w-10 text-center">
-                        <input
-                          v-model="allSelected"
-                          type="checkbox"
-                          @change="toggleAllSelections(filteredCaseStudies)"
-                        >
-                      </th>
-                      <th
-                        class="p-3 cursor-pointer hover:bg-zinc-200"
-                        @click="toggleSort('case-study', 'title')"
+                  <div>
+                    <h4 class="font-bold text-zinc-400 mb-1.5">
+                      By Year
+                    </h4>
+                    <ul class="space-y-1">
+                      <li
+                        v-for="yr in ['All', '2026', '2025']"
+                        :key="yr"
                       >
-                        Title <span v-if="sortKeys['case-study'] === 'title'">{{ sortOrders['case-study'] === 'asc' ? '▲' : '▼' }}</span>
-                      </th>
-                      <th
-                        class="p-3 cursor-pointer hover:bg-zinc-200"
-                        @click="toggleSort('case-study', 'client')"
-                      >
-                        Client <span v-if="sortKeys['case-study'] === 'client'">{{ sortOrders['case-study'] === 'asc' ? '▲' : '▼' }}</span>
-                      </th>
-                      <th class="p-3">
-                        Slug
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="study in filteredCaseStudies"
-                      :key="study.slug"
-                      class="border-b border-[#e0e0e0] hover:bg-zinc-50"
-                    >
-                      <td class="p-3 text-center">
-                        <input
-                          v-model="selectedIds[study.slug]"
-                          type="checkbox"
-                        >
-                      </td>
-                      <td class="p-3">
                         <button
-                          class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
-                          @click="openEditForm('case-study', study.slug)"
+                          class="hover:underline text-left cursor-pointer bg-transparent border-0 p-0"
+                          :class="activeFilters.blogYear === yr ? 'text-[#1D96B8] font-bold' : 'text-zinc-600'"
+                          @click="activeFilters.blogYear = yr; allSelected = false"
                         >
-                          {{ study.title }}
+                          {{ yr }}
                         </button>
-                      </td>
-                      <td class="p-3">
-                        {{ study.client }}
-                      </td>
-                      <td class="p-3 text-zinc-500 font-mono text-[11px]">
-                        {{ study.slug }}
-                      </td>
-                    </tr>
-                    <tr v-if="filteredCaseStudies.length === 0">
-                      <td
-                        colspan="4"
-                        class="p-5 text-center text-zinc-400 italic"
-                      >
-                        No matching case studies found.
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
 
-                <!-- ── Table 4: Careers Changelist ── -->
-                <table
-                  v-if="currentModel === 'career'"
-                  class="w-full text-xs text-left border-collapse"
+                <!-- Default Placeholder Filters for non-filtered models -->
+                <div
+                  v-if="currentModel === 'case-study' || currentModel === 'career'"
+                  class="text-xs text-zinc-400 italic"
                 >
-                  <thead>
-                    <tr class="bg-zinc-100 text-zinc-700 font-bold border-b border-[#e0e0e0] select-none">
-                      <th class="p-3 w-10 text-center">
-                        <input
-                          v-model="allSelected"
-                          type="checkbox"
-                          @change="toggleAllSelections(filteredCareers)"
-                        >
-                      </th>
-                      <th
-                        class="p-3 cursor-pointer hover:bg-zinc-200"
-                        @click="toggleSort('career', 'title')"
-                      >
-                        Job Title <span v-if="sortKeys.career === 'title'">{{ sortOrders.career === 'asc' ? '▲' : '▼' }}</span>
-                      </th>
-                      <th
-                        class="p-3 cursor-pointer hover:bg-zinc-200"
-                        @click="toggleSort('career', 'department')"
-                      >
-                        Department <span v-if="sortKeys.career === 'department'">{{ sortOrders.career === 'asc' ? '▲' : '▼' }}</span>
-                      </th>
-                      <th
-                        class="p-3 cursor-pointer hover:bg-zinc-200"
-                        @click="toggleSort('career', 'location')"
-                      >
-                        Location <span v-if="sortKeys.career === 'location'">{{ sortOrders.career === 'asc' ? '▲' : '▼' }}</span>
-                      </th>
-                      <th class="p-3">
-                        Job Type
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="job in filteredCareers"
-                      :key="job.id"
-                      class="border-b border-[#e0e0e0] hover:bg-zinc-50"
-                    >
-                      <td class="p-3 text-center">
-                        <input
-                          v-model="selectedIds[job.id]"
-                          type="checkbox"
-                        >
-                      </td>
-                      <td class="p-3">
-                        <button
-                          class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
-                          @click="openEditForm('career', job.id)"
-                        >
-                          {{ job.title }}
-                        </button>
-                      </td>
-                      <td class="p-3">
-                        {{ job.department }}
-                      </td>
-                      <td class="p-3">
-                        {{ job.location }}
-                      </td>
-                      <td class="p-3">
-                        {{ job.type }}
-                      </td>
-                    </tr>
-                    <tr v-if="filteredCareers.length === 0">
-                      <td
-                        colspan="5"
-                        class="p-5 text-center text-zinc-400 italic"
-                      >
-                        No matching careers found.
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                  No filter choices active for this model.
+                </div>
               </div>
             </div>
-
-            <!-- Right side Filters Sidebar -->
-            <div class="w-full lg:w-56 bg-white border border-[#e0e0e0] rounded shrink-0 p-4">
-              <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wide border-b border-[#e0e0e0] pb-2 mb-3">
-                Filter
-              </h3>
-
-              <!-- Filters for Portfolio -->
-              <div
-                v-if="currentModel === 'portfolio'"
-                class="space-y-4 text-xs"
-              >
-                <div>
-                  <h4 class="font-bold text-zinc-400 mb-1.5">
-                    By Category
-                  </h4>
-                  <ul class="space-y-1">
-                    <li
-                      v-for="cat in ['All', 'Branding', 'Marketing', 'Video Production']"
-                      :key="cat"
-                    >
-                      <button
-                        class="hover:underline text-left cursor-pointer bg-transparent border-0 p-0"
-                        :class="activeFilters.portfolioCategory === cat ? 'text-[#1D96B8] font-bold' : 'text-zinc-600'"
-                        @click="activeFilters.portfolioCategory = cat; allSelected = false"
-                      >
-                        {{ cat }}
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 class="font-bold text-zinc-400 mb-1.5">
-                    By Home Placement
-                  </h4>
-                  <ul class="space-y-1">
-                    <li
-                      v-for="feat in ['All', 'Featured', 'Not Featured']"
-                      :key="feat"
-                    >
-                      <button
-                        class="hover:underline text-left cursor-pointer bg-transparent border-0 p-0"
-                        :class="activeFilters.portfolioFeatured === feat ? 'text-[#1D96B8] font-bold' : 'text-zinc-600'"
-                        @click="activeFilters.portfolioFeatured = feat; allSelected = false"
-                      >
-                        {{ feat }}
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <!-- Filters for Blog -->
-              <div
-                v-if="currentModel === 'blog'"
-                class="space-y-4 text-xs"
-              >
-                <div>
-                  <h4 class="font-bold text-zinc-400 mb-1.5">
-                    By Year
-                  </h4>
-                  <ul class="space-y-1">
-                    <li
-                      v-for="yr in ['All', '2026', '2025']"
-                      :key="yr"
-                    >
-                      <button
-                        class="hover:underline text-left cursor-pointer bg-transparent border-0 p-0"
-                        :class="activeFilters.blogYear === yr ? 'text-[#1D96B8] font-bold' : 'text-zinc-600'"
-                        @click="activeFilters.blogYear = yr; allSelected = false"
-                      >
-                        {{ yr }}
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <!-- Default Placeholder Filters for non-filtered models -->
-              <div
-                v-if="currentModel === 'case-study' || currentModel === 'career'"
-                class="text-xs text-zinc-400 italic"
-              >
-                No filter choices active for this model.
-              </div>
-            </div>
-          </div>
           </template>
         </div>
 
@@ -3201,11 +3236,11 @@ const filteredCareers = computed(() => {
         </div>
       </main>
     </div>
-  </div>
 
-  <!-- Media Picker Modal Component -->
-  <MediaPicker
-    v-model="isMediaPickerOpen"
-    @select="handleMediaSelect"
-  />
+    <!-- Media Picker Modal Component -->
+    <MediaPicker
+      v-model="isMediaPickerOpen"
+      @select="handleMediaSelect"
+    />
+  </div>
 </template>

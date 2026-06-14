@@ -12,7 +12,7 @@ const filters = computed(() => ['All', ...categories.value])
 
 const filtered = computed(() => {
   if (activeFilter.value === 'All') return projects.value
-  return projects.value.filter((p) => p.category === activeFilter.value)
+  return projects.value.filter(p => p.category === activeFilter.value)
 })
 
 const pairs = computed(() => {

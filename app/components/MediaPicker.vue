@@ -31,14 +31,25 @@ const copyUrlToClipboard = () => {
   }
 }
 
+interface MediaFile {
+  name: string
+  id?: string
+  created_at?: string
+  metadata?: Record<string, unknown>
+  publicUrl: string
+  isImage: boolean
+  isVideo: boolean
+  extension: string
+}
+
 // Component State
-const files = ref<any[]>([])
+const files = ref<MediaFile[]>([])
 const isLoading = ref(false)
 const isUploading = ref(false)
 const uploadProgress = ref(0)
 const errorMessage = ref<string | null>(null)
 const searchQuery = ref('')
-const selectedFile = ref<any | null>(null)
+const selectedFile = ref<MediaFile | null>(null)
 
 // Drag and drop dragover state
 const isDragging = ref(false)
@@ -58,7 +69,7 @@ const fetchFiles = async () => {
     if (error) throw error
 
     if (data) {
-      files.value = data.map((file: any) => {
+      files.value = data.map((file) => {
         const { data: urlData } = supabase.storage
           .from(bucketName)
           .getPublicUrl(file.name)
@@ -69,7 +80,10 @@ const fetchFiles = async () => {
         const isVideo = ['mp4', 'webm', 'ogg', 'mov'].includes(ext)
 
         return {
-          ...file,
+          name: file.name,
+          id: file.id,
+          created_at: file.created_at,
+          metadata: file.metadata,
           publicUrl: urlData?.publicUrl || '',
           isImage,
           isVideo,
@@ -77,9 +91,9 @@ const fetchFiles = async () => {
         }
       })
     }
-  } catch (err: any) {
+  } catch (err) {
     console.error('Error fetching media from Supabase:', err)
-    errorMessage.value = err.message || 'Failed to retrieve files.'
+    errorMessage.value = 'Failed to retrieve files. Please try again later.'
   } finally {
     isLoading.value = false
   }
@@ -107,45 +121,59 @@ const formatBytes = (bytes: number, decimals = 2) => {
 // Upload file implementation
 const uploadFile = async (file: File) => {
   if (!file) return
-  isUploading.value = true
   errorMessage.value = null
-  uploadProgress.value = 10 // Mock progress initial
+
+  // File type validation (MIME type check)
+  const isImage = file.type.startsWith('image/')
+  const isVideo = file.type.startsWith('video/')
+
+  if (!isImage && !isVideo) {
+    errorMessage.value = 'Invalid file type. Only image and video files are permitted.'
+    return
+  }
+
+  // File extension validation
+  const ext = file.name.split('.').pop()?.toLowerCase() || ''
+  const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'mp4', 'webm', 'mov', 'ogg']
+  if (!allowedExtensions.includes(ext)) {
+    errorMessage.value = `Unsupported file extension. Allowed: ${allowedExtensions.join(', ')}`
+    return
+  }
+
+  // File size validation: 10MB limit for images, 20MB limit for videos
+  const maxBytes = isVideo ? 20 * 1024 * 1024 : 10 * 1024 * 1024
+  if (file.size > maxBytes) {
+    errorMessage.value = `File size exceeds the limit of ${isVideo ? '20MB' : '10MB'} for this asset type.`
+    return
+  }
+
+  isUploading.value = true
+  uploadProgress.value = 15
 
   try {
-    // Generate a unique filename to prevent conflicts
-    const cleanedName = file.name.replace(/[^a-zA-Z0-9.]/g, '_')
-    const fileName = `${Date.now()}_${cleanedName}`
+    uploadProgress.value = 40
+    const formData = new FormData()
+    formData.append('file', file)
 
-    uploadProgress.value = 30
+    const res = await $fetch<{ success: boolean, publicUrl: string }>('/api/media/upload', {
+      method: 'POST',
+      body: formData
+    })
 
-    const { data, error } = await supabase.storage
-      .from(bucketName)
-      .upload(fileName, file, {
-        cacheControl: '3600',
-        upsert: false
-      })
-
-    if (error) throw error
-
-    uploadProgress.value = 80
+    uploadProgress.value = 85
 
     // Refresh list in background
-    fetchFiles().catch((err: any) => console.error('Error refreshing list:', err))
+    fetchFiles().catch(err => console.error('Error refreshing list:', err))
 
     uploadProgress.value = 100
 
-    const { data: urlData } = supabase.storage
-      .from(bucketName)
-      .getPublicUrl(fileName)
-
-    if (urlData?.publicUrl) {
-      emit('select', urlData.publicUrl)
+    if (res.publicUrl) {
+      emit('select', res.publicUrl)
       isOpen.value = false
     }
-
-  } catch (err: any) {
+  } catch (err) {
     console.error('Error uploading file:', err)
-    errorMessage.value = err.message || 'File upload failed.'
+    errorMessage.value = 'File upload failed. Please verify the asset is valid and try again.'
   } finally {
     setTimeout(() => {
       isUploading.value = false
@@ -173,21 +201,20 @@ const onDrop = (event: DragEvent) => {
 }
 
 // Delete file from Supabase Storage
-const deleteFile = async (file: any) => {
+const deleteFile = async (file: MediaFile) => {
   if (!confirm(`Are you sure you want to permanently delete "${file.name}"?`)) return
   isLoading.value = true
   try {
-    const { error } = await supabase.storage
-      .from(bucketName)
-      .remove([file.name])
-
-    if (error) throw error
+    await $fetch('/api/media/delete', {
+      method: 'POST',
+      body: { filename: file.name }
+    })
 
     selectedFile.value = null
     await fetchFiles()
-  } catch (err: any) {
+  } catch (err) {
     console.error('Error deleting file:', err)
-    alert(err.message || 'Failed to delete file.')
+    alert('Failed to delete file. Please check your permissions and try again.')
   } finally {
     isLoading.value = false
   }
@@ -226,8 +253,18 @@ const filteredFiles = computed(() => {
       <!-- Modal/Library Header -->
       <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-2">
-          <svg class="w-5 h-5 text-[#1D96B8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          <svg
+            class="w-5 h-5 text-[#1D96B8]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
           </svg>
           <h2 class="text-sm font-bold text-zinc-800 uppercase tracking-wider">
             {{ inline ? 'Media Library' : 'Supabase Media Picker' }}: <span class="text-[#1D96B8]">{{ bucketName }}</span>
@@ -238,8 +275,18 @@ const filteredFiles = computed(() => {
           class="text-zinc-400 hover:text-zinc-700 transition-colors p-1 rounded-full hover:bg-zinc-200"
           @click="isOpen = false"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
@@ -248,14 +295,23 @@ const filteredFiles = computed(() => {
       <div class="flex-1 flex overflow-hidden min-h-0">
         <!-- Left Side: File Grid & Upload Area (2/3 width) -->
         <div class="flex-1 flex flex-col p-6 overflow-hidden min-w-0 border-r border-zinc-200">
-          
           <!-- Controls Panel -->
           <div class="flex flex-col sm:flex-row gap-3 items-center justify-between mb-4 shrink-0">
             <!-- Search bar -->
             <div class="relative w-full sm:max-w-xs">
               <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-zinc-400">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
                 </svg>
               </span>
               <input
@@ -263,24 +319,46 @@ const filteredFiles = computed(() => {
                 type="text"
                 placeholder="Search files..."
                 class="w-full pl-9 pr-4 py-1.5 border border-zinc-300 rounded-lg text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] focus:bg-white"
-              />
+              >
             </div>
 
             <!-- Refresh & Upload triggers -->
             <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
               <button
+                type="button"
                 class="p-2 border border-zinc-300 hover:bg-zinc-50 rounded-lg text-zinc-600 transition-colors cursor-pointer"
                 title="Refresh Files List"
-                @click="fetchFiles"
+                @click.prevent="fetchFiles"
               >
-                <svg class="w-4 h-4" :class="{'animate-spin': isLoading}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.27 15" />
+                <svg
+                  class="w-4 h-4"
+                  :class="{ 'animate-spin': isLoading }"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                  />
                 </svg>
               </button>
 
               <label class="px-4 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                  />
                 </svg>
                 Upload File
                 <input
@@ -288,7 +366,7 @@ const filteredFiles = computed(() => {
                   class="hidden"
                   accept="image/*,video/*"
                   @change="onFileSelected"
-                />
+                >
               </label>
             </div>
           </div>
@@ -299,7 +377,12 @@ const filteredFiles = computed(() => {
             class="bg-red-50 border-l-4 border-red-500 p-3 mb-4 rounded text-xs text-red-700 flex justify-between items-center shrink-0"
           >
             <span>{{ errorMessage }}</span>
-            <button class="text-red-500 font-bold hover:text-red-800" @click="errorMessage = null">✕</button>
+            <button
+              class="text-red-500 font-bold hover:text-red-800"
+              @click="errorMessage = null"
+            >
+              ✕
+            </button>
           </div>
 
           <!-- Uploading overlay progress -->
@@ -312,7 +395,10 @@ const filteredFiles = computed(() => {
               <span>{{ uploadProgress }}%</span>
             </div>
             <div class="w-full bg-zinc-200 h-2 rounded-full overflow-hidden">
-              <div class="bg-[#1D96B8] h-full transition-all duration-300" :style="`width: ${uploadProgress}%`" />
+              <div
+                class="bg-[#1D96B8] h-full transition-all duration-300"
+                :style="`width: ${uploadProgress}%`"
+              />
             </div>
           </div>
 
@@ -325,8 +411,15 @@ const filteredFiles = computed(() => {
             @drop.prevent="onDrop"
           >
             <!-- Loading Indicator Skeletons -->
-            <div v-if="isLoading && files.length === 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              <div v-for="n in 8" :key="n" class="aspect-square bg-zinc-100 rounded-lg animate-pulse" />
+            <div
+              v-if="isLoading && files.length === 0"
+              class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
+            >
+              <div
+                v-for="n in 8"
+                :key="n"
+                class="aspect-square bg-zinc-100 rounded-lg animate-pulse"
+              />
             </div>
 
             <!-- Empty Directory View -->
@@ -334,15 +427,32 @@ const filteredFiles = computed(() => {
               v-else-if="filteredFiles.length === 0"
               class="h-full flex flex-col items-center justify-center text-zinc-400 py-12"
             >
-              <svg class="w-12 h-12 mb-3 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              <svg
+                class="w-12 h-12 mb-3 text-zinc-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                />
               </svg>
-              <p class="text-xs font-semibold">Drag and drop file here, or select "Upload File"</p>
-              <p class="text-[10px] text-zinc-400 mt-1">Files will upload to Supabase public bucket Website_images</p>
+              <p class="text-xs font-semibold">
+                Drag and drop file here, or select "Upload File"
+              </p>
+              <p class="text-[10px] text-zinc-400 mt-1">
+                Files will upload to Supabase public bucket Website_images
+              </p>
             </div>
 
             <!-- Asset Grid List -->
-            <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div
+              v-else
+              class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
+            >
               <div
                 v-for="file in filteredFiles"
                 :key="file.name"
@@ -360,18 +470,49 @@ const filteredFiles = computed(() => {
                     class="w-full h-full object-cover transition-transform group-hover:scale-105"
                     alt="Preview"
                     loading="lazy"
-                  />
+                  >
                   <!-- Video icon thumbnail -->
-                  <div v-else-if="file.isVideo" class="flex flex-col items-center">
-                    <svg class="w-10 h-10 text-zinc-400 group-hover:text-[#1D96B8] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <div
+                    v-else-if="file.isVideo"
+                    class="flex flex-col items-center"
+                  >
+                    <svg
+                      class="w-10 h-10 text-zinc-400 group-hover:text-[#1D96B8] transition-colors"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                   </div>
                   <!-- Generic Document/Other File Placeholder -->
-                  <div v-else class="flex flex-col items-center">
-                    <svg class="w-10 h-10 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <div
+                    v-else
+                    class="flex flex-col items-center"
+                  >
+                    <svg
+                      class="w-10 h-10 text-zinc-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
                     </svg>
                     <span class="text-[9px] uppercase font-bold text-zinc-500 mt-1">{{ file.extension }}</span>
                   </div>
@@ -381,15 +522,26 @@ const filteredFiles = computed(() => {
                     class="absolute top-2 right-2 w-4 h-4 rounded-full flex items-center justify-center transition-opacity"
                     :class="selectedFile?.name === file.name ? 'bg-[#1D96B8] text-white opacity-100' : 'bg-black/30 text-white/70 opacity-0 group-hover:opacity-100'"
                   >
-                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    <svg
+                      class="w-3 h-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
                     </svg>
                   </div>
                 </div>
 
                 <!-- Footer label -->
                 <div class="px-2 py-1.5 bg-white border-t border-zinc-100 shrink-0">
-                  <p class="text-[10px] font-semibold text-zinc-700 truncate" :title="file.name">
+                  <p
+                    class="text-[10px] font-semibold text-zinc-700 truncate"
+                    :title="file.name"
+                  >
                     {{ file.name }}
                   </p>
                   <p class="text-[9px] text-zinc-400">
@@ -407,7 +559,10 @@ const filteredFiles = computed(() => {
             Asset Details
           </h3>
 
-          <div v-if="selectedFile" class="flex-1 flex flex-col justify-between">
+          <div
+            v-if="selectedFile"
+            class="flex-1 flex flex-col justify-between"
+          >
             <!-- Details fields -->
             <div class="space-y-5">
               <!-- Large Preview Box -->
@@ -417,16 +572,29 @@ const filteredFiles = computed(() => {
                   :src="selectedFile.publicUrl"
                   class="w-full h-full object-contain"
                   alt="Detail Preview"
-                />
+                >
                 <video
                   v-else-if="selectedFile.isVideo"
                   :src="selectedFile.publicUrl"
                   controls
                   class="w-full h-full object-contain"
                 />
-                <div v-else class="text-center">
-                  <svg class="w-12 h-12 text-zinc-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <div
+                  v-else
+                  class="text-center"
+                >
+                  <svg
+                    class="w-12 h-12 text-zinc-400 mx-auto"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
                   </svg>
                   <span class="text-xs uppercase font-bold text-zinc-500 mt-2 block">{{ selectedFile.extension }} File</span>
                 </div>
@@ -436,19 +604,27 @@ const filteredFiles = computed(() => {
               <div class="space-y-2 text-xs">
                 <div>
                   <label class="block text-zinc-400 font-bold text-[10px] uppercase">Filename</label>
-                  <p class="text-zinc-800 font-semibold break-all">{{ selectedFile.name }}</p>
+                  <p class="text-zinc-800 font-semibold break-all">
+                    {{ selectedFile.name }}
+                  </p>
                 </div>
                 <div>
                   <label class="block text-zinc-400 font-bold text-[10px] uppercase">Format / Type</label>
-                  <p class="text-zinc-800 capitalize">{{ selectedFile.metadata?.mimetype || selectedFile.extension || 'Unknown' }}</p>
+                  <p class="text-zinc-800 capitalize">
+                    {{ selectedFile.metadata?.mimetype || selectedFile.extension || 'Unknown' }}
+                  </p>
                 </div>
                 <div>
                   <label class="block text-zinc-400 font-bold text-[10px] uppercase">File Size</label>
-                  <p class="text-zinc-800">{{ formatBytes(selectedFile.metadata?.size) }}</p>
+                  <p class="text-zinc-800">
+                    {{ formatBytes(selectedFile.metadata?.size) }}
+                  </p>
                 </div>
                 <div>
                   <label class="block text-zinc-400 font-bold text-[10px] uppercase">Created At</label>
-                  <p class="text-zinc-800">{{ selectedFile.created_at ? new Date(selectedFile.created_at).toLocaleString() : 'N/A' }}</p>
+                  <p class="text-zinc-800">
+                    {{ selectedFile.created_at ? new Date(selectedFile.created_at).toLocaleString() : 'N/A' }}
+                  </p>
                 </div>
                 <div>
                   <label class="block text-zinc-400 font-bold text-[10px] uppercase">Public URL</label>
@@ -458,7 +634,7 @@ const filteredFiles = computed(() => {
                     :value="selectedFile.publicUrl"
                     class="w-full bg-zinc-200 border border-zinc-300 rounded px-2 py-1 text-[10px] font-mono select-all focus:outline-none"
                     @click="($event.target as HTMLInputElement).select()"
-                  />
+                  >
                 </div>
               </div>
             </div>
@@ -470,8 +646,18 @@ const filteredFiles = computed(() => {
                 class="w-full py-2 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded-lg shadow-sm flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                 @click="confirmSelection"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
                 Select Media
               </button>
@@ -480,8 +666,18 @@ const filteredFiles = computed(() => {
                 class="w-full py-2 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded-lg shadow-sm flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                 @click="copyUrlToClipboard"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5Z" />
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5Z"
+                  />
                 </svg>
                 Copy Public URL
               </button>
@@ -490,8 +686,18 @@ const filteredFiles = computed(() => {
                 class="w-full py-2 border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                 @click="deleteFile(selectedFile)"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
                 </svg>
                 Delete File
               </button>
@@ -499,11 +705,26 @@ const filteredFiles = computed(() => {
           </div>
 
           <!-- Empty details state selection hint -->
-          <div v-else class="flex-1 flex flex-col items-center justify-center text-zinc-400 py-12">
-            <svg class="w-8 h-8 mb-2 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <div
+            v-else
+            class="flex-1 flex flex-col items-center justify-center text-zinc-400 py-12"
+          >
+            <svg
+              class="w-8 h-8 mb-2 text-zinc-300"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
-            <p class="text-xs italic text-center">Select an asset from the library to see detailed properties.</p>
+            <p class="text-xs italic text-center">
+              Select an asset from the library to see detailed properties.
+            </p>
           </div>
         </div>
       </div>

@@ -12,7 +12,7 @@ const filters = computed(() => ['All', ...categories.value])
 
 const filtered = computed(() => {
   if (activeFilter.value === 'All') return caseStudies.value
-  return caseStudies.value.filter((study) => study.category === activeFilter.value)
+  return caseStudies.value.filter(study => study.category === activeFilter.value)
 })
 </script>
 

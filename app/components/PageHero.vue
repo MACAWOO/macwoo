@@ -105,6 +105,7 @@ withDefaults(defineProps<Props>(), {
       </p>
 
       <!-- Title -->
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <h1
         class="font-fredoka text-5xl md:text-7xl lg:text-[96px] font-medium text-white leading-tight lg:leading-[116px] mb-2 lg:max-w-[699px] text-center"
         v-html="titleHtml"
