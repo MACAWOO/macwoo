@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url'
 import { defineNuxtConfig } from 'nuxt/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -47,6 +48,9 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'cloudflare-pages',
+    alias: {
+      'unenv/runtime/polyfill/process': fileURLToPath(new URL('./app/compat/process.mjs', import.meta.url))
+    },
     prerender: {
       crawlLinks: true,
       routes: ['/admin', '/admin/login', '/robots.txt', '/sitemap.xml']
