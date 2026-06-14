@@ -26,3 +26,4 @@ logs
 !.env.example
 *.md
 !README.md
+.mcp.*

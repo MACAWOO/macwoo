@@ -24,6 +24,15 @@ const { caseStudies, addCaseStudy, updateCaseStudy, deleteCaseStudy, resetCaseSt
 const { settings, updateSettings, resetSettings } = usePageSettings()
 const { categories, addCategory, deleteCategory, resetCategories } = useCategories()
 
+const newCategory = ref('')
+function submitCategory() {
+  const value = newCategory.value.trim()
+  if (!value) return
+  addCategory(value)
+  logAction('add', 'Category', value)
+  newCategory.value = ''
+}
+
 useSeoMeta({
   title: 'Site Administration — Macawoo',
   description: 'Control center for updating Macawoo content.'
@@ -1222,10 +1231,11 @@ const filteredCareers = computed(() => {
               <!-- Add category inline form -->
               <form
                 class="flex gap-2 items-center bg-zinc-50 p-4 border border-zinc-200 rounded-lg"
-                @submit.prevent="const input = ($event.target as HTMLFormElement).elements.namedItem('categoryInput') as HTMLInputElement; addCategory(input.value); logAction('add', 'Category', input.value); input.value = ''"
+                @submit.prevent="submitCategory"
               >
                 <label class="text-xs font-bold text-zinc-700">Add New Category:</label>
                 <input
+                  v-model="newCategory"
                   name="categoryInput"
                   type="text"
                   placeholder="e.g. Branding & Identity"
