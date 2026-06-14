@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, reactive } from 'vue'
+
 const { settings } = usePageSettings()
 
 useSeoMeta({
@@ -8,6 +10,46 @@ useSeoMeta({
 
 const services = ['Branding & Design', 'Digital Marketing', 'Video Production', 'Others']
 const form = reactive({ name: '', service: '', email: '', phone: '', message: '' })
+
+const isSubmitting = ref(false)
+const isSubmitted = ref(false)
+const errorMsg = ref('')
+
+const handleSubmit = async () => {
+  isSubmitting.value = true
+  errorMsg.value = ''
+  try {
+    await $fetch('/api/contact', {
+      method: 'POST',
+      body: {
+        name: form.name,
+        service: form.service,
+        email: form.email,
+        phone: form.phone,
+        message: form.message
+      }
+    })
+    isSubmitted.value = true
+
+    // Reset form
+    form.name = ''
+    form.service = ''
+    form.email = ''
+    form.phone = ''
+    form.message = ''
+
+    // Clear success message after 5 seconds
+    setTimeout(() => {
+      isSubmitted.value = false
+    }, 5000)
+  } catch (err: unknown) {
+    console.error('Failed to submit form:', err)
+    const fetchError = err as { data?: { statusMessage?: string } }
+    errorMsg.value = fetchError.data?.statusMessage || 'Failed to send your request. Please try again or email us directly.'
+  } finally {
+    isSubmitting.value = false
+  }
+}
 </script>
 
 <template>
@@ -25,16 +67,52 @@ const form = reactive({ name: '', service: '', email: '', phone: '', message: ''
         <div class="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center justify-center">
           <!-- Form -->
           <div class="w-full lg:max-w-[600px]">
-            <form
-              class="space-y-5"
-              @submit.prevent
+            <div
+              v-if="isSubmitted"
+              class="flex flex-col items-center justify-center text-center p-8 bg-[#1D96B8]/20 rounded-[24px] border border-white/20 min-h-[350px] text-white"
             >
+              <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-[#1D96B8] mb-4 shadow-lg animate-bounce">
+                <svg
+                  class="w-8 h-8"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold mb-2">
+                Message Sent!
+              </h3>
+              <p class="text-white/80 max-w-sm font-semibold">
+                Thank you for reaching out. The Macawoo team will get back to you shortly.
+              </p>
+            </div>
+
+            <form
+              v-else
+              class="space-y-5"
+              @submit.prevent="handleSubmit"
+            >
+              <div
+                v-if="errorMsg"
+                class="p-4 bg-rose-950/45 border border-rose-500/35 text-rose-200 rounded-xl text-sm font-semibold leading-relaxed"
+              >
+                {{ errorMsg }}
+              </div>
+
               <div class="grid sm:grid-cols-2 gap-x-2.5 gap-y-5">
                 <div>
                   <label class="block text-xl text-black mb-2 pl-2">Full Name</label>
                   <input
                     v-model="form.name"
                     type="text"
+                    required
                     placeholder="John Doe"
                     class="w-full h-[45px] px-4 rounded-[11px] border border-black bg-transparent text-base text-brand-dark focus:outline-none focus:ring-2 focus:ring-black placeholder:text-brand-dark/40"
                   >
@@ -44,6 +122,7 @@ const form = reactive({ name: '', service: '', email: '', phone: '', message: ''
                   <div class="relative">
                     <select
                       v-model="form.service"
+                      required
                       class="w-full h-[45px] px-4 pr-10 rounded-[11px] border border-black bg-transparent text-base focus:outline-none focus:ring-2 focus:ring-black appearance-none"
                       :class="form.service ? 'text-brand-dark' : 'text-brand-dark/40'"
                     >
@@ -84,6 +163,7 @@ const form = reactive({ name: '', service: '', email: '', phone: '', message: ''
                   <input
                     v-model="form.email"
                     type="email"
+                    required
                     placeholder="john@gmail.com"
                     class="w-full h-[45px] px-4 rounded-[11px] border border-black bg-transparent text-base text-brand-dark focus:outline-none focus:ring-2 focus:ring-black placeholder:text-brand-dark/40"
                   >
@@ -93,6 +173,7 @@ const form = reactive({ name: '', service: '', email: '', phone: '', message: ''
                   <input
                     v-model="form.phone"
                     type="tel"
+                    required
                     placeholder="+91 00000 00000"
                     class="w-full h-[45px] px-4 rounded-[11px] border border-black bg-transparent text-base text-brand-dark focus:outline-none focus:ring-2 focus:ring-black placeholder:text-brand-dark/40"
                   >
@@ -103,6 +184,7 @@ const form = reactive({ name: '', service: '', email: '', phone: '', message: ''
                 <label class="block text-xl text-black mb-2 pl-2">Message</label>
                 <textarea
                   v-model="form.message"
+                  required
                   rows="4"
                   placeholder="Tell us about your project, goals, and any specific requirements. We'll get back to you shortly."
                   class="w-full h-[114px] px-4 py-3 rounded-[11px] border border-black bg-transparent text-base text-brand-dark focus:outline-none focus:ring-2 focus:ring-black placeholder:text-brand-dark/40 resize-none"
@@ -111,22 +193,26 @@ const form = reactive({ name: '', service: '', email: '', phone: '', message: ''
 
               <button
                 type="submit"
-                class="w-full h-[43px] bg-white text-[#201F1F] text-xl font-bold rounded-full hover:bg-zinc-100 transition-colors flex items-center justify-center gap-3"
+                :disabled="isSubmitting"
+                class="w-full h-[43px] bg-white text-[#201F1F] text-xl font-bold rounded-full hover:bg-zinc-100 transition-colors flex items-center justify-center gap-3 disabled:opacity-75 disabled:pointer-events-none cursor-pointer"
               >
-                Get Started
-                <svg
-                  class="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2.5"
-                    d="M7 17L17 7M17 7H8M17 7v9"
-                  />
-                </svg>
+                <span v-if="isSubmitting">Submitting...</span>
+                <template v-else>
+                  Get Started
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2.5"
+                      d="M7 17L17 7M17 7H8M17 7v9"
+                    />
+                  </svg>
+                </template>
               </button>
             </form>
           </div>

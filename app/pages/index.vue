@@ -188,6 +188,7 @@ const form = reactive({ name: '', service: '', email: '', phone: '', message: ''
 
 const isSubmitting = ref(false)
 const isSubmitted = ref(false)
+const errorMsg = ref('')
 
 const getWordStyle = (index: number) => {
   if (isMobile.value) {
@@ -262,22 +263,38 @@ const handleWhatWeDoScroll = () => {
 
 const handleSubmit = async () => {
   isSubmitting.value = true
-  // Simulate API submission
-  await new Promise(resolve => setTimeout(resolve, 1200))
-  isSubmitting.value = false
-  isSubmitted.value = true
+  errorMsg.value = ''
+  try {
+    await $fetch('/api/contact', {
+      method: 'POST',
+      body: {
+        name: form.name,
+        service: form.service,
+        email: form.email,
+        phone: form.phone,
+        message: form.message
+      }
+    })
+    isSubmitted.value = true
 
-  // Reset form
-  form.name = ''
-  form.service = ''
-  form.email = ''
-  form.phone = ''
-  form.message = ''
+    // Reset form
+    form.name = ''
+    form.service = ''
+    form.email = ''
+    form.phone = ''
+    form.message = ''
 
-  // Clear success message after 5 seconds
-  setTimeout(() => {
-    isSubmitted.value = false
-  }, 5000)
+    // Clear success message after 5 seconds
+    setTimeout(() => {
+      isSubmitted.value = false
+    }, 5000)
+  } catch (err: unknown) {
+    console.error('Failed to submit form:', err)
+    const fetchError = err as { data?: { statusMessage?: string } }
+    errorMsg.value = fetchError.data?.statusMessage || 'Failed to send your request. Please try again or email us directly.'
+  } finally {
+    isSubmitting.value = false
+  }
 }
 
 onMounted(() => {
@@ -746,6 +763,13 @@ onUnmounted(() => {
               class="space-y-6"
               @submit.prevent="handleSubmit"
             >
+              <div
+                v-if="errorMsg"
+                class="p-4 bg-rose-950/45 border border-rose-500/35 text-rose-200 rounded-xl text-sm font-semibold leading-relaxed"
+              >
+                {{ errorMsg }}
+              </div>
+
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Full Name -->
                 <div>
