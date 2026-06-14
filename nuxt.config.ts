@@ -51,3 +51,5 @@ export default defineNuxtConfig({
     }
   }
 })
+console.log('BUILD URL:', process.env.SUPABASE_URL)
+console.log('BUILD KEY:', process.env.SUPABASE_KEY?.slice(0, 10))
