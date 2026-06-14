@@ -58,9 +58,6 @@ useSeoMeta({
                 style="font-family: 'Bricolage Grotesque', sans-serif;"
               >What we believe</span>
               <!-- Yellow badge speech bubble -->
-              <div class="w-12 h-12 bg-brand-yellow-500 rounded-full rounded-bl-none flex items-center justify-center text-brand-dark text-xl font-bold font-fredoka">
-                m
-              </div>
             </div>
 
             <!-- Heading -->

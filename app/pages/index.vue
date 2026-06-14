@@ -453,7 +453,7 @@ onUnmounted(() => {
           <!-- Header (Centered) -->
           <div class="text-center shrink-0">
             <h2
-              class="text-[#1D96B8] text-3xl md:text-[48px] font-bold font-fredoka leading-tight"
+              class="text-[#1D96B8] text-3xl md:text-[48px] font-medium font-fredoka leading-tight"
             >
               What We Do
             </h2>
@@ -560,17 +560,14 @@ onUnmounted(() => {
               </div>
             </NuxtLink>
           </div>
-
-          <!-- Client Logos Carousel (Centered bottom) -->
-          <div
-            class="mt-8 md:mt-12 w-full transition-all duration-700 shrink-0"
-            :class="[
-              isMobile || whatWeDoProgress >= 0.66 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
-            ]"
-          >
-            <ClientLogos />
-          </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Client Logos Carousel (Positioned outside sticky container to prevent overlap) -->
+    <section class="py-10 md:py-14 bg-white border-b border-zinc-100">
+      <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8">
+        <ClientLogos />
       </div>
     </section>
 
@@ -587,7 +584,7 @@ onUnmounted(() => {
           <!-- Header -->
           <div class="mb-6 md:mb-16">
             <h2
-              class="text-[#1D96B8] text-3xl md:text-[48px] font-bold font-fredoka leading-tight"
+              class="text-[#1D96B8] text-3xl md:text-[48px] font-medium font-fredoka leading-tight"
             >
               Our Approach
             </h2>
@@ -721,7 +718,7 @@ onUnmounted(() => {
             <!-- Text Content -->
             <div class="relative z-20">
               <h2
-                class="text-white text-3xl md:text-4xl lg:text-[42px] font-bold leading-[1.2] tracking-tight"
+                class="text-white text-3xl md:text-4xl lg:text-[42px] font-medium leading-[1.2] tracking-tight"
                 style="font-family: 'Bricolage Grotesque', sans-serif;"
               >
                 Convert your ideas into<br>successful business
