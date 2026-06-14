@@ -1,7 +1,11 @@
-import { defineEventHandler, getCookie, deleteCookie, sendRedirect } from 'h3'
+import { defineEventHandler, getCookie, deleteCookie, sendRedirect, getRequestHeader } from 'h3'
 
 export default defineEventHandler(async (event) => {
   const path = event.path
+
+  // Skip during build-time prerendering
+  const isPrerender = getRequestHeader(event, 'x-nitro-prerender')
+  if (isPrerender) return
 
   // Target any request to /admin (excluding login and static files/assets)
   const isAdminRoute = /^\/admin(\/|$)/i.test(path)
