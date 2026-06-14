@@ -18,7 +18,8 @@ export default defineEventHandler(async (event) => {
       return sendRedirect(event, '/admin/login', 302)
     }
 
-    const { supabaseUrl, supabaseKey } = getSupabaseConfig(event)
+    const supabaseUrl = process.env.SUPABASE_URL || 'https://zzbgqivhggtmrtnizcgm.supabase.co'
+    const supabaseKey = process.env.SUPABASE_KEY || 'sb_publishable_KZ7_sePr63HCfe1YCmCcAQ_UztMvcqL'
 
     try {
       const response = await fetch(`${supabaseUrl}/auth/v1/user`, {
