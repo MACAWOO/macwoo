@@ -1,7 +1,9 @@
 <script setup lang="ts">
 useSeoMeta({
   title: 'Video Production — Macawoo',
-  description: 'From concept to final cut, we produce video content that commands attention and drives meaningful engagement.'
+  description: 'From concept to final cut, we produce video content that commands attention and drives meaningful engagement.',
+  ogTitle: 'Video Production — Macawoo',
+  ogDescription: 'From concept to final cut, we produce video content that commands attention and drives meaningful engagement.'
 })
 
 const prevTo = '/services/digital-marketing'

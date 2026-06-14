@@ -4,7 +4,9 @@ const { settings } = usePageSettings()
 
 useSeoMeta({
   title: 'Blog — Macawoo',
-  description: 'Ideas, insights & stories that drive brands. The Macawoo journal on branding, marketing, and creative strategy.'
+  description: 'Ideas, insights & stories that drive brands. The Macawoo journal on branding, marketing, and creative strategy.',
+  ogTitle: 'Blog — Macawoo',
+  ogDescription: 'Ideas, insights & stories that drive brands. The Macawoo journal on branding, marketing, and creative strategy.'
 })
 
 const POSTS_PER_PAGE = 6

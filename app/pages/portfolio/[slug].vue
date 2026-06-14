@@ -11,7 +11,9 @@ if (!project.value) {
 
 useSeoMeta({
   title: () => project.value ? `${project.value.title} — Macawoo Portfolio` : 'Macawoo Portfolio',
-  description: () => project.value ? (project.value.tagline ?? project.value.subtitle) : ''
+  description: () => project.value ? (project.value.tagline ?? project.value.subtitle) : '',
+  ogTitle: () => project.value ? `${project.value.title} — Macawoo Portfolio` : 'Macawoo Portfolio',
+  ogDescription: () => project.value ? (project.value.tagline ?? project.value.subtitle) : ''
 })
 
 const galleryIndex = ref(0)

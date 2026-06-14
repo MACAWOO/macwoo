@@ -4,7 +4,9 @@ const { categories } = useCategories()
 
 useSeoMeta({
   title: 'Case Studies — Macawoo',
-  description: 'Not just work. Proven impact. Detailed case studies demonstrating our results-driven approach for ambitious founders.'
+  description: 'Not just work. Proven impact. Detailed case studies demonstrating our results-driven approach for ambitious founders.',
+  ogTitle: 'Case Studies — Macawoo',
+  ogDescription: 'Not just work. Proven impact. Detailed case studies demonstrating our results-driven approach for ambitious founders.'
 })
 
 const activeFilter = ref<string>('All')

@@ -11,7 +11,11 @@ if (!post.value) {
 
 useSeoMeta({
   title: () => post.value ? `${post.value.title} — Macawoo Blog` : 'Macawoo Blog',
-  description: () => post.value ? post.value.excerpt : ''
+  description: () => post.value ? post.value.excerpt : '',
+  ogTitle: () => post.value ? `${post.value.title} — Macawoo Blog` : 'Macawoo Blog',
+  ogDescription: () => post.value ? post.value.excerpt : '',
+  ogType: 'article',
+  ogImage: () => post.value?.image || '/og-image.png'
 })
 
 const recommended = computed(() => posts.value.filter(p => p.slug !== slug).slice(0, 3))

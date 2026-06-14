@@ -4,7 +4,9 @@ const { categories } = useCategories()
 
 useSeoMeta({
   title: 'Portfolio — Macawoo',
-  description: 'Work that speaks. Results that matter. A curated showcase of our finest projects.'
+  description: 'Work that speaks. Results that matter. A curated showcase of our finest projects.',
+  ogTitle: 'Portfolio — Macawoo',
+  ogDescription: 'Work that speaks. Results that matter. A curated showcase of our finest projects.'
 })
 
 const activeFilter = ref<string>('All')

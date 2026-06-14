@@ -4,7 +4,9 @@ const { settings } = usePageSettings()
 
 useSeoMeta({
   title: 'Careers — Macawoo',
-  description: 'Build your future with Macawoo. We are a collection of visionaries, builders, and storytellers. Join us in crafting digital experiences that demand attention and drive transformation.'
+  description: 'Build your future with Macawoo. We are a collection of visionaries, builders, and storytellers. Join us in crafting digital experiences that demand attention and drive transformation.',
+  ogTitle: 'Careers — Macawoo',
+  ogDescription: 'Build your future with Macawoo. We are a collection of visionaries, builders, and storytellers. Join us in crafting digital experiences that demand attention and drive transformation.'
 })
 
 const isModalOpen = ref(false)

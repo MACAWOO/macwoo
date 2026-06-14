@@ -5,7 +5,9 @@ const { settings } = usePageSettings()
 
 useSeoMeta({
   title: 'Contact — Macawoo',
-  description: 'Ready to elevate your brand? Drop us a line and let\'s start crafting a narrative that commands attention and drives results.'
+  description: 'Ready to elevate your brand? Drop us a line and let\'s start crafting a narrative that commands attention and drives results.',
+  ogTitle: 'Contact — Macawoo',
+  ogDescription: 'Ready to elevate your brand? Drop us a line and let\'s start crafting a narrative that commands attention and drives results.'
 })
 
 const services = ['Branding & Design', 'Digital Marketing', 'Video Production', 'Others']

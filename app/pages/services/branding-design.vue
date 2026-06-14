@@ -1,7 +1,9 @@
 <script setup lang="ts">
 useSeoMeta({
   title: 'Branding & Design — Macawoo',
-  description: 'We Don\'t Just Design. We Build Brands. Define your brand positioning, messaging, and direction.'
+  description: 'We Don\'t Just Design. We Build Brands. Define your brand positioning, messaging, and direction.',
+  ogTitle: 'Branding & Design — Macawoo',
+  ogDescription: 'We Don\'t Just Design. We Build Brands. Define your brand positioning, messaging, and direction.'
 })
 
 const prevTo = '/services/video-production'

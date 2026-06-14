@@ -1,7 +1,9 @@
 <script setup lang="ts">
 useSeoMeta({
   title: 'Digital Marketing — Macawoo',
-  description: 'Data-driven campaigns that reach the right audience, tell the right story, and deliver measurable results.'
+  description: 'Data-driven campaigns that reach the right audience, tell the right story, and deliver measurable results.',
+  ogTitle: 'Digital Marketing — Macawoo',
+  ogDescription: 'Data-driven campaigns that reach the right audience, tell the right story, and deliver measurable results.'
 })
 
 const prevTo = '/services/branding-design'

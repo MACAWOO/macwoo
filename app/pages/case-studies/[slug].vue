@@ -11,7 +11,9 @@ if (!study.value) {
 
 useSeoMeta({
   title: () => study.value ? `${study.value.title} — Macawoo Case Study` : 'Macawoo Case Study',
-  description: () => study.value ? (study.value.tagline ?? study.value.challenge.slice(0, 160)) : ''
+  description: () => study.value ? (study.value.tagline ?? study.value.challenge.slice(0, 160)) : '',
+  ogTitle: () => study.value ? `${study.value.title} — Macawoo Case Study` : 'Macawoo Case Study',
+  ogDescription: () => study.value ? (study.value.tagline ?? study.value.challenge.slice(0, 160)) : ''
 })
 
 const challengeParas = computed(() =>
