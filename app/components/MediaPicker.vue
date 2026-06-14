@@ -69,7 +69,7 @@ const fetchFiles = async () => {
     if (error) throw error
 
     if (data) {
-      files.value = data.map((file) => {
+      files.value = data.map((file: any) => {
         const { data: urlData } = supabase.storage
           .from(bucketName)
           .getPublicUrl(file.name)
@@ -109,7 +109,7 @@ watch(isOpen, (newVal) => {
 })
 
 // Format byte sizes to readable strings
-const formatBytes = (bytes: number, decimals = 2) => {
+const formatBytes = (bytes: any, decimals = 2) => {
   if (!bytes) return '0 Bytes'
   const k = 1024
   const dm = decimals < 0 ? 0 : decimals

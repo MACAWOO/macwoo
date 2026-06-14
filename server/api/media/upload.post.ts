@@ -8,8 +8,8 @@ export default defineEventHandler(async (event) => {
   }
 
   // Retrieve Supabase config
-  const supabaseUrl = process.env.SUPABASE_URL || 'https://zzbgqivhggtmrtnizcgm.supabase.co'
-  const supabaseKey = process.env.SUPABASE_KEY || 'sb_publishable_KZ7_sePr63HCfe1YCmCcAQ_UztMvcqL'
+  const supabaseUrl = process.env.SUPABASE_URL || 'https://vewmzejakdfsgsyxdlpa.supabase.co'
+  const supabaseKey = process.env.SUPABASE_KEY || 'sb_publishable_SjN1foafYhhbb3k-DI82Aw_xsjStWt_'
 
   // Validate the auth token using the Supabase API
   try {

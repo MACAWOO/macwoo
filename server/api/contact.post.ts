@@ -1,4 +1,5 @@
 import { defineEventHandler, readBody, createError } from 'h3'
+import { createClient } from '@supabase/supabase-js'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
@@ -12,6 +13,29 @@ export default defineEventHandler(async (event) => {
       statusCode: 400,
       statusMessage: 'Please fill in all required fields (Name, Email, and Message).'
     })
+  }
+
+  // Insert submission into Supabase contact_submissions table
+  const supabaseUrl = process.env.SUPABASE_URL || 'https://vewmzejakdfsgsyxdlpa.supabase.co'
+  const supabaseKey = process.env.SUPABASE_KEY || 'sb_publishable_SjN1foafYhhbb3k-DI82Aw_xsjStWt_'
+  const supabase = createClient(supabaseUrl, supabaseKey)
+
+  try {
+    const { error: dbError } = await supabase
+      .from('contact_submissions')
+      .insert({
+        name,
+        email,
+        phone: phone || null,
+        service: service || 'General Inquiry',
+        message,
+        status: 'new'
+      })
+    if (dbError) {
+      console.error('Failed to insert contact submission to Supabase:', dbError)
+    }
+  } catch (dbErr) {
+    console.error('Error inserting contact submission to Supabase:', dbErr)
   }
 
   // Get Resend API Key from runtime config / env

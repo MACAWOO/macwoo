@@ -1,5 +1,8 @@
 <script setup lang="ts">
-const { settings } = usePageSettings()
+const { settings, fetchPromise: settingsPromise } = usePageSettings()
+if (settingsPromise) {
+  await settingsPromise
+}
 
 useSeoMeta({
   title: 'About Us — Macawoo',

@@ -1,6 +1,13 @@
 <script setup lang="ts">
-const { projects } = usePortfolio()
-const { categories } = useCategories()
+const { projects, fetchPromise: portfolioPromise } = usePortfolio()
+if (portfolioPromise) {
+  await portfolioPromise
+}
+
+const { categories, fetchPromise: categoriesPromise } = useCategories()
+if (categoriesPromise) {
+  await categoriesPromise
+}
 
 useSeoMeta({
   title: 'Portfolio — Macawoo',

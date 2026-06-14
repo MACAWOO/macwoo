@@ -7,5 +7,5 @@ compatibility_flags = [ "nodejs_compat" ]
 [vars]
 # Public environment variables can be set here.
 # For production secrets (like SUPABASE_KEY and RESEND_API_KEY), configure them in your Cloudflare Pages dashboard.
-SUPABASE_URL = "https://zzbgqivhggtmrtnizcgm.supabase.co"
+SUPABASE_URL = "https://vewmzejakdfsgsyxdlpa.supabase.co"
 CONTACT_RECIPIENT_EMAIL = "macawooofficial@gmail.com"

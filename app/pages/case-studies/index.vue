@@ -1,6 +1,13 @@
 <script setup lang="ts">
-const { caseStudies } = useCaseStudies()
-const { categories } = useCategories()
+const { caseStudies, fetchPromise: caseStudiesPromise } = useCaseStudies()
+if (caseStudiesPromise) {
+  await caseStudiesPromise
+}
+
+const { categories, fetchPromise: categoriesPromise } = useCategories()
+if (categoriesPromise) {
+  await categoriesPromise
+}
 
 useSeoMeta({
   title: 'Case Studies — Macawoo',

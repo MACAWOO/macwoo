@@ -8,7 +8,15 @@ useSeoMeta({
   ogDescription: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.'
 })
 
-const { settings } = usePageSettings()
+const { settings, fetchPromise: settingsPromise } = usePageSettings()
+if (settingsPromise) {
+  await settingsPromise
+}
+
+const { fetchPromise: portfolioPromise } = usePortfolio()
+if (portfolioPromise) {
+  await portfolioPromise
+}
 
 const containerRef = ref<HTMLElement | null>(null)
 const textRevealRef = ref<HTMLElement | null>(null)

@@ -1,5 +1,8 @@
 <script setup lang="ts">
-const { projects } = usePortfolio()
+const { projects, fetchPromise } = usePortfolio()
+if (fetchPromise) {
+  await fetchPromise
+}
 
 const route = useRoute()
 const slug = route.params.slug as string

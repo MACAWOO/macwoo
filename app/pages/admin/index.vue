@@ -388,12 +388,12 @@ const toggleSort = (model: ModelType, key: string) => {
 }
 
 // CRUD Save Handlers
-const handleSave = (actionType: 'save' | 'save_and_add' | 'save_and_continue') => {
+const handleSave = async (actionType: 'save' | 'save_and_add' | 'save_and_continue') => {
   const isCreate = currentId.value === null
   let loggedName = ''
 
   if (currentModel.value === 'page-settings') {
-    updateSettings(settingsForm.value)
+    await updateSettings(settingsForm.value)
     logAction('change', 'Page Settings', 'Updated page backgrounds and assets')
     alert('Page settings updated successfully.')
     navigateTo('dashboard')
@@ -403,10 +403,10 @@ const handleSave = (actionType: 'save' | 'save_and_add' | 'save_and_continue') =
   if (currentModel.value === 'blog') {
     loggedName = blogForm.value.title
     if (isCreate) {
-      addPost(blogForm.value as BlogPost)
+      await addPost(blogForm.value as BlogPost)
       logAction('add', 'Blog post', loggedName)
     } else {
-      updatePost(currentId.value as string, blogForm.value as BlogPost)
+      await updatePost(currentId.value as string, blogForm.value as BlogPost)
       logAction('change', 'Blog post', loggedName)
     }
   } else if (currentModel.value === 'portfolio') {
@@ -420,10 +420,10 @@ const handleSave = (actionType: 'save' | 'save_and_add' | 'save_and_continue') =
     }
 
     if (isCreate) {
-      addProject(processedProject)
+      await addProject(processedProject)
       logAction('add', 'Portfolio project', loggedName)
     } else {
-      updateProject(currentId.value as string, processedProject)
+      await updateProject(currentId.value as string, processedProject)
       logAction('change', 'Portfolio project', loggedName)
     }
   } else if (currentModel.value === 'case-study') {
@@ -439,19 +439,19 @@ const handleSave = (actionType: 'save' | 'save_and_add' | 'save_and_continue') =
     }
 
     if (isCreate) {
-      addCaseStudy(processedStudy)
+      await addCaseStudy(processedStudy)
       logAction('add', 'Case study', loggedName)
     } else {
-      updateCaseStudy(currentId.value as string, processedStudy)
+      await updateCaseStudy(currentId.value as string, processedStudy)
       logAction('change', 'Case study', loggedName)
     }
   } else if (currentModel.value === 'career') {
     loggedName = careerForm.value.title
     if (isCreate) {
-      addJob({ ...careerForm.value })
+      await addJob({ ...careerForm.value })
       logAction('add', 'Open role', loggedName)
     } else {
-      updateJob(currentId.value as string, { ...careerForm.value })
+      await updateJob(currentId.value as string, { ...careerForm.value })
       logAction('change', 'Open role', loggedName)
     }
   }
@@ -472,22 +472,22 @@ const handleSave = (actionType: 'save' | 'save_and_add' | 'save_and_continue') =
 }
 
 // Delete current item from Change Form
-const deleteCurrentItem = () => {
+const deleteCurrentItem = async () => {
   if (!currentId.value) return
   if (confirm('Are you sure you want to delete this item?')) {
     let loggedName = ''
     if (currentModel.value === 'blog') {
       loggedName = blogForm.value.title
-      deletePost(currentId.value as string)
+      await deletePost(currentId.value as string)
     } else if (currentModel.value === 'portfolio') {
       loggedName = portfolioForm.value.title
-      deleteProject(currentId.value as string)
+      await deleteProject(currentId.value as string)
     } else if (currentModel.value === 'case-study') {
       loggedName = caseStudyForm.value.title
-      deleteCaseStudy(currentId.value as string)
+      await deleteCaseStudy(currentId.value as string)
     } else if (currentModel.value === 'career') {
       loggedName = careerForm.value.title
-      deleteJob(currentId.value as string)
+      await deleteJob(currentId.value as string)
     }
     logAction('delete', currentModel.value, loggedName)
     navigateTo('list', currentModel.value)
@@ -495,7 +495,7 @@ const deleteCurrentItem = () => {
 }
 
 // Bulk actions executor
-const executeBulkAction = () => {
+const executeBulkAction = async () => {
   if (selectedBulkAction.value === 'delete') {
     const idsToDelete = Object.keys(selectedIds.value).filter(id => selectedIds.value[id])
     if (idsToDelete.length === 0) {
@@ -503,33 +503,33 @@ const executeBulkAction = () => {
       return
     }
     if (confirm(`Are you sure you want to delete the ${idsToDelete.length} selected item(s)?`)) {
-      idsToDelete.forEach((id) => {
+      await Promise.all(idsToDelete.map(async (id) => {
         if (currentModel.value === 'blog') {
           const item = blogs.value.find(b => b.slug === id)
           if (item) {
-            deletePost(id)
+            await deletePost(id)
             logAction('delete', 'Blog post', item.title)
           }
         } else if (currentModel.value === 'portfolio') {
           const item = portfolio.value.find(p => p.slug === id)
           if (item) {
-            deleteProject(id)
+            await deleteProject(id)
             logAction('delete', 'Portfolio project', item.title)
           }
         } else if (currentModel.value === 'case-study') {
           const item = caseStudies.value.find(c => c.slug === id)
           if (item) {
-            deleteCaseStudy(id)
+            await deleteCaseStudy(id)
             logAction('delete', 'Case study', item.title)
           }
         } else if (currentModel.value === 'career') {
           const item = careers.value.find(c => c.id === id)
           if (item) {
-            deleteJob(id)
+            await deleteJob(id)
             logAction('delete', 'Open role', item.title)
           }
         }
-      })
+      }))
       selectedIds.value = {}
       allSelected.value = false
       selectedBulkAction.value = ''

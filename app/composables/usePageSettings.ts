@@ -1,3 +1,6 @@
+import { useSupabase } from './useSupabase'
+import type { Database } from '~/types/supabase'
+
 export interface PageSettings {
   indexHeroImage: string
   indexHeroVideo: string
@@ -30,38 +33,108 @@ const defaultSettings: PageSettings = {
   contactHeroVideo: '/Background_Videos/Contact.mp4'
 }
 
+type DbPageSettings = Database['public']['Tables']['page_settings']['Row']
+
+function mapDbToSettings(db: DbPageSettings): PageSettings {
+  return {
+    indexHeroImage: db.index_hero_image || '/Images/hero.png',
+    indexHeroVideo: db.index_hero_video || '',
+    aboutHeroImage: db.about_hero_image || '/Images/Branding.jpeg',
+    aboutHeroVideo: db.about_hero_video || '/Background_Videos/About.mp4',
+    blogHeroImage: db.blog_hero_image || '/Images/Branding.jpeg',
+    blogHeroVideo: db.blog_hero_video || '/Background_Videos/Blog.mp4',
+    servicesBrandingImage: db.services_branding_image || '/Images/Branding.jpeg',
+    servicesMarketingImage: db.services_marketing_image || '/Images/Digital_Marketing.jpeg',
+    servicesVideoImage: db.services_video_image || '/Images/Video_Production.jpeg',
+    careersHeroImage: db.careers_hero_image || '/Images/Designing.jpeg',
+    careersHeroVideo: db.careers_hero_video || '/Background_Videos/Careers.mp4',
+    contactHeroImage: db.contact_hero_image || '/Images/Marketing.jpeg',
+    contactHeroVideo: db.contact_hero_video || '/Background_Videos/Contact.mp4'
+  }
+}
+
+function mapSettingsToDb(settings: PageSettings): Omit<Database['public']['Tables']['page_settings']['Insert'], 'id' | 'updated_at'> {
+  return {
+    index_hero_image: settings.indexHeroImage,
+    index_hero_video: settings.indexHeroVideo,
+    about_hero_image: settings.aboutHeroImage,
+    about_hero_video: settings.aboutHeroVideo,
+    blog_hero_image: settings.blogHeroImage,
+    blog_hero_video: settings.blogHeroVideo,
+    services_branding_image: settings.servicesBrandingImage,
+    services_marketing_image: settings.servicesMarketingImage,
+    services_video_image: settings.servicesVideoImage,
+    careers_hero_image: settings.careersHeroImage,
+    careers_hero_video: settings.careersHeroVideo,
+    contact_hero_image: settings.contactHeroImage,
+    contact_hero_video: settings.contactHeroVideo
+  }
+}
+
 export function usePageSettings() {
+  const supabase = useSupabase()
   const settings = useState<PageSettings>('page_settings', () => ({ ...defaultSettings }))
 
-  onMounted(() => {
-    const stored = localStorage.getItem('macwoo_page_settings')
-    if (stored) {
-      try {
-        settings.value = { ...defaultSettings, ...JSON.parse(stored) }
-      } catch (e) {
-        console.error('Error parsing page settings from localStorage:', e)
+  const fetchSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('page_settings')
+        .select('*')
+        .limit(1)
+        .maybeSingle()
+
+      if (error) throw error
+      if (data) {
+        settings.value = mapDbToSettings(data)
       }
+    } catch (e) {
+      console.error('Error fetching page settings from Supabase:', e)
     }
-  })
-
-  if (import.meta.client) {
-    watch(settings, (newSettings) => {
-      localStorage.setItem('macwoo_page_settings', JSON.stringify(newSettings))
-    }, { deep: true })
   }
 
-  const updateSettings = (updated: Partial<PageSettings>) => {
+  // Trigger fetch on server or if clean default
+  let fetchPromise: Promise<void> | null = null
+  if (import.meta.server || settings.value.indexHeroImage === defaultSettings.indexHeroImage) {
+    fetchPromise = fetchSettings()
+  }
+
+  const updateSettings = async (updated: Partial<PageSettings>) => {
     settings.value = { ...settings.value, ...updated }
+    try {
+      const { data: current } = await supabase
+        .from('page_settings')
+        .select('id')
+        .limit(1)
+        .maybeSingle()
+
+      const payload = mapSettingsToDb(settings.value)
+      if (current?.id) {
+        const { error } = await supabase
+          .from('page_settings')
+          .update(payload)
+          .eq('id', current.id)
+        if (error) throw error
+      } else {
+        const { error } = await supabase
+          .from('page_settings')
+          .insert(payload)
+        if (error) throw error
+      }
+    } catch (e) {
+      console.error('Failed to save page settings to Supabase:', e)
+    }
   }
 
-  const resetSettings = () => {
+  const resetSettings = async () => {
     settings.value = { ...defaultSettings }
-    localStorage.removeItem('macwoo_page_settings')
+    await updateSettings(defaultSettings)
   }
 
   return {
     settings,
     updateSettings,
-    resetSettings
+    resetSettings,
+    fetchSettings,
+    fetchPromise
   }
 }

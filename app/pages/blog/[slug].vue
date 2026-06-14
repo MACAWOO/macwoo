@@ -1,5 +1,8 @@
 <script setup lang="ts">
-const { posts } = useBlogs()
+const { posts, fetchPromise } = useBlogs()
+if (fetchPromise) {
+  await fetchPromise
+}
 
 const route = useRoute()
 const slug = route.params.slug as string

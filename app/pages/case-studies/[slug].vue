@@ -1,5 +1,8 @@
 <script setup lang="ts">
-const { caseStudies } = useCaseStudies()
+const { caseStudies, fetchPromise } = useCaseStudies()
+if (fetchPromise) {
+  await fetchPromise
+}
 
 const route = useRoute()
 const slug = route.params.slug as string

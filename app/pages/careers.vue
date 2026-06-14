@@ -1,6 +1,13 @@
 <script setup lang="ts">
-const { jobs } = useCareers()
-const { settings } = usePageSettings()
+const { jobs, fetchPromise: careersPromise } = useCareers()
+if (careersPromise) {
+  await careersPromise
+}
+
+const { settings, fetchPromise: settingsPromise } = usePageSettings()
+if (settingsPromise) {
+  await settingsPromise
+}
 
 useSeoMeta({
   title: 'Careers — Macawoo',
