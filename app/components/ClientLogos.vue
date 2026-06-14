@@ -1,12 +1,12 @@
 <script setup lang="ts">
 const logos = [
-  { src: '/Images/Client_Logo/le crown brown-01 1@2x.png', alt: 'Le Crown Hotel' },
-  { src: '/Images/Client_Logo/COLOR 2 1@2x.png', alt: 'Take My Family' },
-  { src: '/Images/Client_Logo/IMG_3097 1@2x.png', alt: 'TAB' },
-  { src: '/Images/Client_Logo/Twins Abroad Logo - Reel Cover Logo Overlay b&w 1@2x.png', alt: 'Twins Abroad' },
-  { src: '/Images/Client_Logo/Pink Label logo 1@2x.png', alt: 'Pinklabel' },
-  { src: '/Images/Client_Logo/Asset 1@500x 1@2x.png', alt: 'Piok English' },
-  { src: '/Images/Client_Logo/Asset 1@500x 2@2x.png', alt: 'Go German' }
+  { src: '/Images/Client_Logo/le_crown_brown-01_1@2x.png', alt: 'Le Crown Hotel' },
+  { src: '/Images/Client_Logo/COLOR_2_1@2x.png', alt: 'Take My Family' },
+  { src: '/Images/Client_Logo/IMG_3097_1@2x.png', alt: 'TAB' },
+  { src: '/Images/Client_Logo/Twins_Abroad_Logo_1@2x.png', alt: 'Twins Abroad' },
+  { src: '/Images/Client_Logo/Pink_Label_logo_1@2x.png', alt: 'Pinklabel' },
+  { src: '/Images/Client_Logo/Asset_1@500x_1@2x.png', alt: 'Piok English' },
+  { src: '/Images/Client_Logo/Asset_1@500x_2@2x.png', alt: 'Go German' }
 ]
 </script>
 

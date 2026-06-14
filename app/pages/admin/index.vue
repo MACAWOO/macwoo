@@ -104,13 +104,13 @@ const logAction = (action: 'add' | 'change' | 'delete', modelName: string, itemN
 const templateImages = [
   { label: 'Branding & Design Cover', value: '/Images/Branding.jpeg' },
   { label: 'Designing Hero', value: '/Images/Designing.jpeg' },
-  { label: 'Digital Marketing Cover', value: '/Images/Digital Marketing.jpeg' },
+  { label: 'Digital Marketing Cover', value: '/Images/Digital_Marketing.jpeg' },
   { label: 'Marketing Cover', value: '/Images/Marketing.jpeg' },
-  { label: 'Video Production Cover', value: '/Images/Video Production.jpeg' },
+  { label: 'Video Production Cover', value: '/Images/Video_Production.jpeg' },
   { label: 'Lecrown Project', value: '/Images/Lecrown.png' },
   { label: 'Pinklabel Project', value: '/Images/Pinklabel.jpg' },
   { label: 'TAB Project', value: '/Images/TAB.png' },
-  { label: 'Take My Family Project', value: '/Images/Take my family.png' },
+  { label: 'Take My Family Project', value: '/Images/Take_my_family.png' },
   { label: 'Hero Graphic', value: '/Images/hero.png' }
 ]
 
@@ -1820,7 +1820,7 @@ const filteredCareers = computed(() => {
                       <input
                         v-model="settingsForm.indexHeroVideo"
                         type="text"
-                        placeholder="e.g. /Background Videos/Hero.mp4 (leave empty to show background image)"
+                        placeholder="e.g. /Background_Videos/Hero.mp4 (leave empty to show background image)"
                         class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
                       >
                       <button
@@ -1894,7 +1894,7 @@ const filteredCareers = computed(() => {
                         v-model="settingsForm.aboutHeroVideo"
                         type="text"
                         required
-                        placeholder="e.g. /Background Videos/About.mp4"
+                        placeholder="e.g. /Background_Videos/About.mp4"
                         class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
                       >
                       <button
@@ -1965,7 +1965,7 @@ const filteredCareers = computed(() => {
                         v-model="settingsForm.blogHeroVideo"
                         type="text"
                         required
-                        placeholder="e.g. /Background Videos/Blog.mp4"
+                        placeholder="e.g. /Background_Videos/Blog.mp4"
                         class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
                       >
                       <button
@@ -2036,7 +2036,7 @@ const filteredCareers = computed(() => {
                         v-model="settingsForm.servicesMarketingImage"
                         type="text"
                         required
-                        placeholder="e.g. /Images/Digital Marketing.jpeg"
+                        placeholder="e.g. /Images/Digital_Marketing.jpeg"
                         class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
                       >
                       <button
@@ -2080,7 +2080,7 @@ const filteredCareers = computed(() => {
                         v-model="settingsForm.servicesVideoImage"
                         type="text"
                         required
-                        placeholder="e.g. /Images/Video Production.jpeg"
+                        placeholder="e.g. /Images/Video_Production.jpeg"
                         class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
                       >
                       <button
@@ -2173,7 +2173,7 @@ const filteredCareers = computed(() => {
                         v-model="settingsForm.careersHeroVideo"
                         type="text"
                         required
-                        placeholder="e.g. /Background Videos/Careers.mp4"
+                        placeholder="e.g. /Background_Videos/Careers.mp4"
                         class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
                       >
                       <button
@@ -2239,7 +2239,7 @@ const filteredCareers = computed(() => {
                         v-model="settingsForm.contactHeroVideo"
                         type="text"
                         required
-                        placeholder="e.g. /Background Videos/Contact.mp4"
+                        placeholder="e.g. /Background_Videos/Contact.mp4"
                         class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
                       >
                       <button

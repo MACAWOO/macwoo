@@ -29,20 +29,20 @@ onMounted(() => {
 })
 
 const subServices = [
-  { icon: '/Icons/Film%20Strip@4x.png', title: 'Content Marketing', description: 'Create valuable content that attracts, educates, and converts your target audience across multiple digital channels.' },
-  { icon: '/Icons/Chart%20Spline@4x.png', title: 'Performance Marketing', description: 'Run data-driven advertising campaigns across Google, Meta, LinkedIn, and other platforms to maximize ROI.' },
-  { icon: '/Icons/File%20Search@4x.png', title: 'Organic Marketing', description: 'Improve your website\'s visibility on search engines and attract high-intent organic traffic that drives long-term growth.' },
+  { icon: '/Icons/Film_Strip@4x.png', title: 'Content Marketing', description: 'Create valuable content that attracts, educates, and converts your target audience across multiple digital channels.' },
+  { icon: '/Icons/Chart_Spline@4x.png', title: 'Performance Marketing', description: 'Run data-driven advertising campaigns across Google, Meta, LinkedIn, and other platforms to maximize ROI.' },
+  { icon: '/Icons/File_Search@4x.png', title: 'Organic Marketing', description: 'Improve your website\'s visibility on search engines and attract high-intent organic traffic that drives long-term growth.' },
   { icon: '/Icons/Megaphone@4x.png', title: 'Social Media Marketing', description: 'Build brand awareness, engage your audience, and create meaningful connections through strategic content and campaigns across leading social media platforms.' }
 ]
 
 const logos = [
-  { src: '/Images/Client_Logo/le crown brown-01 1@2x.png', alt: 'Le Crown', h: 'h-[39px]' },
-  { src: '/Images/Client_Logo/COLOR 2 1@2x.png', alt: 'Take My Family', h: 'h-[42px]' },
-  { src: '/Images/Client_Logo/IMG_3097 1@2x.png', alt: 'TAB', h: 'h-[38px]' },
-  { src: '/Images/Client_Logo/Twins Abroad Logo - Reel Cover Logo Overlay b&w 1@2x.png', alt: 'Twins Abroad', h: 'h-[50px]' },
-  { src: '/Images/Client_Logo/Pink Label logo 1@2x.png', alt: 'Pinklabel', h: 'h-[45px]' },
-  { src: '/Images/Client_Logo/Asset 1@500x 1@2x.png', alt: 'Piok English', h: 'h-[52px]' },
-  { src: '/Images/Client_Logo/Asset 1@500x 2@2x.png', alt: 'Go German', h: 'h-[54px]' }
+  { src: '/Images/Client_Logo/le_crown_brown-01_1@2x.png', alt: 'Le Crown', h: 'h-[39px]' },
+  { src: '/Images/Client_Logo/COLOR_2_1@2x.png', alt: 'Take My Family', h: 'h-[42px]' },
+  { src: '/Images/Client_Logo/IMG_3097_1@2x.png', alt: 'TAB', h: 'h-[38px]' },
+  { src: '/Images/Client_Logo/Twins_Abroad_Logo_1@2x.png', alt: 'Twins Abroad', h: 'h-[50px]' },
+  { src: '/Images/Client_Logo/Pink_Label_logo_1@2x.png', alt: 'Pinklabel', h: 'h-[45px]' },
+  { src: '/Images/Client_Logo/Asset_1@500x_1@2x.png', alt: 'Piok English', h: 'h-[52px]' },
+  { src: '/Images/Client_Logo/Asset_1@500x_2@2x.png', alt: 'Go German', h: 'h-[54px]' }
 ]
 </script>
 
@@ -55,7 +55,7 @@ const logos = [
       <!-- Background image + dark overlay -->
       <div class="absolute inset-0">
         <NuxtImg
-          src="/Images/Digital%20Marketing.jpeg"
+          src="/Images/Digital_Marketing.jpeg"
           alt=""
           preload
           format="webp"

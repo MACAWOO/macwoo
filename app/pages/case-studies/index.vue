@@ -20,7 +20,7 @@ const filtered = computed(() => {
   <div>
     <PageHero
       title-html="Not Just Work.<br><em class='not-italic text-brand-yellow-500'>Proven Impact.</em>"
-      video="/Background%20Videos/Case%20Study.mp4"
+      video="/Background_Videos/Case_Study.mp4"
       image="/Images/Marketing.jpeg"
       description="Dive deep into how we transform bold visions into measurable realities for ambitious founders and marketing directors."
       class="custom-hero-ratio"

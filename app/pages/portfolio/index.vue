@@ -28,7 +28,7 @@ const pairs = computed(() => {
   <div>
     <PageHero
       title-html="Work That Speaks.<br><em class='not-italic text-brand-yellow-500'>Results That Matter.</em>"
-      video="/Background%20Videos/Portfolio.mp4"
+      video="/Background_Videos/Portfolio.mp4"
       image="/Images/Marketing.jpeg"
       description="A curated selection of our finest projects, demonstrating our commitment to visionary design and strategic execution."
       class="custom-hero-ratio"

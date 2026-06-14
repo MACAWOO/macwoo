@@ -36,7 +36,7 @@ onMounted(() => {
 
 const subServices = [
   { icon: '/Icons/Lightbulb@4x.png', title: 'Brand Strategy', description: 'Define your brand positioning, messaging, and direction to build a strong foundation for growth.' },
-  { icon: '/Icons/Pencil%20Ruler@4x.png', title: 'Brand Identity', description: 'Create memorable visual identities that strengthen recognition, trust, and brand consistency.' },
+  { icon: '/Icons/Pencil_Ruler@4x.png', title: 'Brand Identity', description: 'Create memorable visual identities that strengthen recognition, trust, and brand consistency.' },
   { icon: '/Icons/Package@4x.png', title: 'Packaging Design', description: 'Design impactful packaging that captures attention and enhances customer experience.' },
   { icon: '/Icons/Figma@4x.png', title: 'UI/UX Design', description: 'Craft intuitive digital experiences that improve usability, engagement, and customer satisfaction.' },
   { icon: '/Icons/Palette@4x.png', title: 'Corporate Design', description: 'Develop professional brand assets that ensure clear and consistent business communication.' },
@@ -51,13 +51,13 @@ const steps = [
 ]
 
 const logos = [
-  { src: '/Images/Client_Logo/le crown brown-01 1@2x.png', alt: 'Le Crown', h: 'h-[39px]' },
-  { src: '/Images/Client_Logo/COLOR 2 1@2x.png', alt: 'Take My Family', h: 'h-[42px]' },
-  { src: '/Images/Client_Logo/IMG_3097 1@2x.png', alt: 'TAB', h: 'h-[38px]' },
-  { src: '/Images/Client_Logo/Twins Abroad Logo - Reel Cover Logo Overlay b&w 1@2x.png', alt: 'Twins Abroad', h: 'h-[50px]' },
-  { src: '/Images/Client_Logo/Pink Label logo 1@2x.png', alt: 'Pinklabel', h: 'h-[45px]' },
-  { src: '/Images/Client_Logo/Asset 1@500x 1@2x.png', alt: 'Piok English', h: 'h-[52px]' },
-  { src: '/Images/Client_Logo/Asset 1@500x 2@2x.png', alt: 'Go German', h: 'h-[54px]' }
+  { src: '/Images/Client_Logo/le_crown_brown-01_1@2x.png', alt: 'Le Crown', h: 'h-[39px]' },
+  { src: '/Images/Client_Logo/COLOR_2_1@2x.png', alt: 'Take My Family', h: 'h-[42px]' },
+  { src: '/Images/Client_Logo/IMG_3097_1@2x.png', alt: 'TAB', h: 'h-[38px]' },
+  { src: '/Images/Client_Logo/Twins_Abroad_Logo_1@2x.png', alt: 'Twins Abroad', h: 'h-[50px]' },
+  { src: '/Images/Client_Logo/Pink_Label_logo_1@2x.png', alt: 'Pinklabel', h: 'h-[45px]' },
+  { src: '/Images/Client_Logo/Asset_1@500x_1@2x.png', alt: 'Piok English', h: 'h-[52px]' },
+  { src: '/Images/Client_Logo/Asset_1@500x_2@2x.png', alt: 'Go German', h: 'h-[54px]' }
 ]
 </script>
 

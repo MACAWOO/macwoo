@@ -30,19 +30,19 @@ onMounted(() => {
 
 const subServices = [
   { icon: '/Icons/Film@4x.png', title: 'Core Video Services', description: 'Brand Films, Commercial Ads, Social Reels, and Corporate Explainers crafted with cinematic precision.' },
-  { icon: '/Icons/Video%20Camera@4x.png', title: 'Specialized Content', description: 'Real Estate walkthroughs, Travel diaries, and compelling Testimonial shoots.' },
-  { icon: '/Icons/Film%20Slate@4x.png', title: 'Advanced Production', description: 'FPV Drone piloting, complex VFX editing, and high-end Post-production.' },
+  { icon: '/Icons/Video_Camera@4x.png', title: 'Specialized Content', description: 'Real Estate walkthroughs, Travel diaries, and compelling Testimonial shoots.' },
+  { icon: '/Icons/Film_Slate@4x.png', title: 'Advanced Production', description: 'FPV Drone piloting, complex VFX editing, and high-end Post-production.' },
   { icon: '/Icons/Video@4x.png', title: 'Motion & Animation', description: 'Enhance videos with engaging motion graphics, 2D/3D animations, and dynamic visual effects that bring stories to life.' }
 ]
 
 const logos = [
-  { src: '/Images/Client_Logo/le crown brown-01 1@2x.png', alt: 'Le Crown', h: 'h-[39px]' },
-  { src: '/Images/Client_Logo/COLOR 2 1@2x.png', alt: 'Take My Family', h: 'h-[42px]' },
-  { src: '/Images/Client_Logo/IMG_3097 1@2x.png', alt: 'TAB', h: 'h-[38px]' },
-  { src: '/Images/Client_Logo/Twins Abroad Logo - Reel Cover Logo Overlay b&w 1@2x.png', alt: 'Twins Abroad', h: 'h-[50px]' },
-  { src: '/Images/Client_Logo/Pink Label logo 1@2x.png', alt: 'Pinklabel', h: 'h-[45px]' },
-  { src: '/Images/Client_Logo/Asset 1@500x 1@2x.png', alt: 'Piok English', h: 'h-[52px]' },
-  { src: '/Images/Client_Logo/Asset 1@500x 2@2x.png', alt: 'Go German', h: 'h-[54px]' }
+  { src: '/Images/Client_Logo/le_crown_brown-01_1@2x.png', alt: 'Le Crown', h: 'h-[39px]' },
+  { src: '/Images/Client_Logo/COLOR_2_1@2x.png', alt: 'Take My Family', h: 'h-[42px]' },
+  { src: '/Images/Client_Logo/IMG_3097_1@2x.png', alt: 'TAB', h: 'h-[38px]' },
+  { src: '/Images/Client_Logo/Twins_Abroad_Logo_1@2x.png', alt: 'Twins Abroad', h: 'h-[50px]' },
+  { src: '/Images/Client_Logo/Pink_Label_logo_1@2x.png', alt: 'Pinklabel', h: 'h-[45px]' },
+  { src: '/Images/Client_Logo/Asset_1@500x_1@2x.png', alt: 'Piok English', h: 'h-[52px]' },
+  { src: '/Images/Client_Logo/Asset_1@500x_2@2x.png', alt: 'Go German', h: 'h-[54px]' }
 ]
 </script>
 
@@ -55,7 +55,7 @@ const logos = [
       <!-- Background image + dark overlay -->
       <div class="absolute inset-0">
         <NuxtImg
-          src="/Images/Video%20Production.jpeg"
+          src="/Images/Video_Production.jpeg"
           alt=""
           preload
           format="webp"
@@ -198,10 +198,10 @@ const logos = [
           <video
             class="w-full h-full object-cover"
             controls
-            poster="/Images/Video%20Production.jpeg"
+            poster="/Images/Video_Production.jpeg"
           >
             <source
-              src="/Background%20Videos/Portfolio.mp4"
+              src="/Background_Videos/Portfolio.mp4"
               type="video/mp4"
             >
           </video>

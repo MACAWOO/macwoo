@@ -18,16 +18,16 @@ const defaultSettings: PageSettings = {
   indexHeroImage: '/Images/hero.png',
   indexHeroVideo: '',
   aboutHeroImage: '/Images/Branding.jpeg',
-  aboutHeroVideo: '/Background Videos/About.mp4',
+  aboutHeroVideo: '/Background_Videos/About.mp4',
   blogHeroImage: '/Images/Branding.jpeg',
-  blogHeroVideo: '/Background Videos/Blog.mp4',
+  blogHeroVideo: '/Background_Videos/Blog.mp4',
   servicesBrandingImage: '/Images/Branding.jpeg',
-  servicesMarketingImage: '/Images/Digital Marketing.jpeg',
-  servicesVideoImage: '/Images/Video Production.jpeg',
+  servicesMarketingImage: '/Images/Digital_Marketing.jpeg',
+  servicesVideoImage: '/Images/Video_Production.jpeg',
   careersHeroImage: '/Images/Designing.jpeg',
-  careersHeroVideo: '/Background Videos/Careers.mp4',
+  careersHeroVideo: '/Background_Videos/Careers.mp4',
   contactHeroImage: '/Images/Marketing.jpeg',
-  contactHeroVideo: '/Background Videos/Contact.mp4'
+  contactHeroVideo: '/Background_Videos/Contact.mp4'
 }
 
 export function usePageSettings() {

@@ -64,7 +64,7 @@ export const posts: BlogPost[] = [
     excerpt: 'Algorithms change, platforms evolve — but the fundamentals of effective social media strategy remain constant.',
     date: '2026-01-12',
     readTime: '7 Min Read',
-    image: '/Images/Digital Marketing.jpeg',
+    image: '/Images/Digital_Marketing.jpeg',
     body: [
       {
         heading: 'Start With Your Audience, Not the Platform',
@@ -86,7 +86,7 @@ export const posts: BlogPost[] = [
     excerpt: 'From concept to final cut — everything you need to know about creating video content that elevates your brand.',
     date: '2025-12-29',
     readTime: '10 Min Read',
-    image: '/Images/Video Production.jpeg',
+    image: '/Images/Video_Production.jpeg',
     body: [
       {
         heading: 'Pre-Production Is Where the Magic Happens',
