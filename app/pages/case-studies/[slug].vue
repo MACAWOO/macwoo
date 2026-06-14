@@ -60,11 +60,13 @@ const approachParas = computed(() =>
         <span class="font-extrabold text-brand-dark text-sm">Back</span>
       </NuxtLink>
 
-      <img
+      <NuxtImg
         :src="study.heroImage"
         :alt="study.title"
+        preload
+        format="webp"
         class="w-full h-[360px] md:h-[560px] lg:h-[640px] object-cover"
-      >
+      />
     </div>
 
     <!-- ── Teal Info Section ── -->
@@ -179,7 +181,7 @@ const approachParas = computed(() =>
 
       <!-- Title -->
       <h1
-        class="font-fredoka text-[56px] md:text-[64px] text-brand-yellow-500 leading-tight mb-3"
+        class="font-fredoka font-medium text-[56px] md:text-[64px] text-brand-yellow-500 leading-tight mb-3"
         style="font-variation-settings: 'wdth' 100"
       >
         {{ study.title }}
@@ -200,7 +202,7 @@ const approachParas = computed(() =>
         <!-- Challenge -->
         <div class="flex flex-col gap-4">
           <h2
-            class="font-fredoka text-[40px] md:text-[48px] text-[#1D96B8] leading-tight"
+            class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#1D96B8] leading-tight"
             style="font-variation-settings: 'wdth' 100"
           >
             The Challenge
@@ -219,7 +221,7 @@ const approachParas = computed(() =>
         <!-- Approach -->
         <div class="flex flex-col gap-4">
           <h2
-            class="font-fredoka text-[40px] md:text-[48px] text-[#1D96B8] leading-tight"
+            class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#1D96B8] leading-tight"
             style="font-variation-settings: 'wdth' 100"
           >
             Our Approach
@@ -238,7 +240,7 @@ const approachParas = computed(() =>
         <!-- Solution -->
         <div class="flex flex-col gap-4">
           <h2
-            class="font-fredoka text-[40px] md:text-[48px] text-[#1D96B8] leading-tight"
+            class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#1D96B8] leading-tight"
             style="font-variation-settings: 'wdth' 100"
           >
             The Solution
@@ -262,7 +264,7 @@ const approachParas = computed(() =>
         <!-- Heading + summary -->
         <div class="flex flex-col gap-4">
           <h2
-            class="font-fredoka text-[40px] md:text-[48px] text-[#1D96B8] leading-tight"
+            class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#1D96B8] leading-tight"
             style="font-variation-settings: 'wdth' 100"
           >
             Results
@@ -297,7 +299,7 @@ const approachParas = computed(() =>
     <div class="bg-white px-6 py-20 flex flex-col items-center text-center gap-8">
       <div class="flex flex-col gap-3">
         <h2
-          class="font-fredoka text-[48px] md:text-[64px] text-[#1D96B8] leading-tight"
+          class="font-fredoka font-medium text-[48px] md:text-[64px] text-[#1D96B8] leading-tight"
           style="font-variation-settings: 'wdth' 100"
         >
           Want Results Like This?

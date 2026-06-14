@@ -42,11 +42,13 @@ useSeoMeta({
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
           <!-- Left column: Visual rounded box -->
           <div class="rounded-[2.5rem] overflow-hidden w-full h-[320px] md:h-[450px]">
-            <img
+            <NuxtImg
               src="/Images/what_we_believe.png"
               alt="What We Believe"
+              loading="lazy"
+              format="webp"
               class="w-full h-full object-cover"
-            >
+            />
           </div>
 
           <!-- Right column -->
@@ -62,7 +64,7 @@ useSeoMeta({
 
             <!-- Heading -->
             <h2
-              class="text-brand-yellow-500 text-3xl md:text-4xl lg:text-[46px] font-bold leading-tight"
+              class="text-brand-yellow-500 text-3xl md:text-4xl lg:text-[46px] font-medium leading-tight"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
               "Brands should be felt,<br>not just seen."
@@ -85,7 +87,7 @@ useSeoMeta({
       <div class="max-w-[1266px] mx-auto px-6">
         <!-- Title -->
         <h2
-          class="text-[#1D96B8] text-3xl md:text-4xl lg:text-[48px] font-bold mb-12"
+          class="text-[#1D96B8] text-3xl md:text-4xl lg:text-[48px] font-medium mb-12"
           style="font-family: 'Fredoka', sans-serif;"
         >
           How We Work
@@ -109,7 +111,7 @@ useSeoMeta({
                   class="w-6 h-6"
                 />
               </div>
-              <h3 class="font-bold text-xl md:text-2xl mb-3">
+              <h3 class="font-medium text-xl md:text-2xl mb-3">
                 Strategy
               </h3>
               <p class="text-white/90 text-sm md:text-base leading-relaxed">
@@ -128,7 +130,7 @@ useSeoMeta({
                   class="w-6 h-6"
                 />
               </div>
-              <h3 class="font-bold text-xl md:text-2xl mb-3">
+              <h3 class="font-medium text-xl md:text-2xl mb-3">
                 Creativity
               </h3>
               <p class="text-white/90 text-sm md:text-base leading-relaxed">
@@ -147,7 +149,7 @@ useSeoMeta({
                   class="w-6 h-6"
                 />
               </div>
-              <h3 class="font-bold text-xl md:text-2xl mb-3">
+              <h3 class="font-medium text-xl md:text-2xl mb-3">
                 Growth
               </h3>
               <p class="text-white/90 text-sm md:text-base leading-relaxed">
@@ -181,7 +183,7 @@ useSeoMeta({
     <section class="bg-brand-yellow-500 py-20 md:py-28 text-center flex flex-col items-center justify-center">
       <div class="max-w-4xl mx-auto px-6">
         <h2
-          class="text-[#1D96B8] text-3xl md:text-5xl lg:text-[56px] font-bold leading-tight mb-6"
+          class="text-[#1D96B8] text-3xl md:text-5xl lg:text-[56px] font-medium leading-tight mb-6"
           style="font-family: 'Bricolage Grotesque', sans-serif;"
         >
           To create brands that people don't just notice—but remember.

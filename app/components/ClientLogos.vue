@@ -19,26 +19,30 @@ const logos = [
     <div class="flex w-max gap-16 md:gap-20 animate-marquee whitespace-nowrap">
       <!-- First set of logos -->
       <div class="flex items-center gap-16 md:gap-20 shrink-0">
-        <img
+        <NuxtImg
           v-for="(logo, idx) in logos"
           :key="`first-${idx}`"
           :src="logo.src"
           :alt="logo.alt"
+          loading="lazy"
+          format="webp"
           class="h-9 md:h-11 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
-        >
+        />
       </div>
       <!-- Duplicate set for seamless looping -->
       <div
         class="flex items-center gap-16 md:gap-20 shrink-0"
         aria-hidden="true"
       >
-        <img
+        <NuxtImg
           v-for="(logo, idx) in logos"
           :key="`second-${idx}`"
           :src="logo.src"
           :alt="logo.alt"
+          loading="lazy"
+          format="webp"
           class="h-9 md:h-11 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
-        >
+        />
       </div>
     </div>
   </div>

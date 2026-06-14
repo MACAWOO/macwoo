@@ -23,7 +23,7 @@ const isOpen = defineModel<boolean>({ default: false })
         ✕
       </button>
 
-      <h2 class="text-3xl font-bold text-brand-teal-500 text-center mb-8">
+      <h2 class="text-3xl font-medium text-brand-teal-500 text-center mb-8">
         Join Our Team
       </h2>
 

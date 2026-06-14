@@ -86,7 +86,7 @@ const handleSubmit = async () => {
                   />
                 </svg>
               </div>
-              <h3 class="text-2xl font-bold mb-2">
+              <h3 class="text-2xl font-medium mb-2">
                 Message Sent!
               </h3>
               <p class="text-white/80 max-w-sm font-semibold">

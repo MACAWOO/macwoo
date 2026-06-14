@@ -399,12 +399,14 @@ onUnmounted(() => {
                   ref="logoPlaceholderRef"
                   class="relative h-[140px] w-[140px] shrink-0"
                 >
-                  <img
+                  <NuxtImg
                     src="/Images/Logo.png"
                     alt="Macawoo logo"
+                    preload
+                    format="webp"
                     class="absolute left-0 top-0 w-[140px] h-[140px] object-contain"
                     :style="logoStyle"
-                  >
+                  />
                 </div>
 
                 <!-- Tagline below logo (fades in after logo finishes moving) -->
@@ -475,11 +477,13 @@ onUnmounted(() => {
                 isMobile || whatWeDoProgress >= 0 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               ]"
             >
-              <img
+              <NuxtImg
                 :src="settings.servicesBrandingImage"
                 alt="Branding & Design"
+                loading="lazy"
+                format="webp"
                 class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              >
+              />
               <div
                 class="absolute inset-x-0 bottom-0 rounded-b-[10px]"
                 style="top: 39.84%; background: linear-gradient(360deg, #000000 0%, rgba(0,0,0,0) 100%);"
@@ -506,11 +510,13 @@ onUnmounted(() => {
                 isMobile || whatWeDoProgress >= 0.33 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
               ]"
             >
-              <img
+              <NuxtImg
                 :src="settings.servicesMarketingImage"
                 alt="Digital Marketing"
+                loading="lazy"
+                format="webp"
                 class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              >
+              />
               <div
                 class="absolute inset-x-0 bottom-0 rounded-b-[10px]"
                 style="top: 39.84%; background: linear-gradient(360deg, #000000 0%, rgba(0,0,0,0) 100%);"
@@ -537,11 +543,13 @@ onUnmounted(() => {
                 isMobile || whatWeDoProgress >= 0.66 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
               ]"
             >
-              <img
+              <NuxtImg
                 :src="settings.servicesVideoImage"
                 alt="Video Production"
+                loading="lazy"
+                format="webp"
                 class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              >
+              />
               <div
                 class="absolute inset-x-0 bottom-0 rounded-b-[10px]"
                 style="top: 39.84%; background: linear-gradient(360deg, #000000 0%, rgba(0,0,0,0) 100%);"
@@ -614,7 +622,7 @@ onUnmounted(() => {
                 </div>
                 <div class="pl-4 md:pl-8">
                   <h3
-                    class="text-xl md:text-[28px] font-bold text-zinc-950 leading-none"
+                    class="text-xl md:text-[28px] font-medium text-zinc-950 leading-none"
                     style="font-family: 'Fredoka', sans-serif;"
                   >
                     Think
@@ -647,7 +655,7 @@ onUnmounted(() => {
                 </div>
                 <div class="pl-4 md:pl-8">
                   <h3
-                    class="text-xl md:text-[28px] font-bold text-zinc-950 leading-none"
+                    class="text-xl md:text-[28px] font-medium text-zinc-950 leading-none"
                     style="font-family: 'Fredoka', sans-serif;"
                   >
                     Create
@@ -680,7 +688,7 @@ onUnmounted(() => {
                 </div>
                 <div class="pl-4 md:pl-8">
                   <h3
-                    class="text-xl md:text-[28px] font-bold text-zinc-950 leading-none"
+                    class="text-xl md:text-[28px] font-medium text-zinc-950 leading-none"
                     style="font-family: 'Fredoka', sans-serif;"
                   >
                     Scale
@@ -747,7 +755,7 @@ onUnmounted(() => {
                   />
                 </svg>
               </div>
-              <h3 class="text-2xl font-bold text-white mb-2">
+              <h3 class="text-2xl font-medium text-white mb-2">
                 Message Sent!
               </h3>
               <p class="text-white/80 max-w-sm">

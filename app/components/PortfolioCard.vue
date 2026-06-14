@@ -18,14 +18,16 @@ withDefaults(defineProps<Props>(), {
     :class="size === 'large' ? 'md:flex-[1.44]' : 'md:flex-1'"
   >
     <div class="overflow-hidden rounded-[34px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.25)]">
-      <img
+      <NuxtImg
         :src="project.image"
         :alt="project.title"
+        loading="lazy"
+        format="webp"
         class="w-full h-[380px] md:h-[550px] object-cover group-hover:scale-105 transition-transform duration-500"
-      >
+      />
     </div>
     <div class="flex flex-col gap-2">
-      <h3 class="font-bold text-white text-2xl md:text-[32px] leading-tight">
+      <h3 class="font-medium text-white text-2xl md:text-[32px] leading-tight">
         {{ project.title }}
       </h3>
       <span class="self-start border border-white text-white text-base md:text-[20px] font-normal leading-[28px] px-3 py-2 rounded-[56px]">

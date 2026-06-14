@@ -15,11 +15,13 @@ defineProps<Props>()
   >
     <!-- Image -->
     <div class="h-[280px] md:h-[380px] overflow-hidden">
-      <img
+      <NuxtImg
         :src="study.image"
         :alt="study.title"
+        loading="lazy"
+        format="webp"
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-      >
+      />
     </div>
 
     <!-- Card bottom -->
@@ -67,7 +69,7 @@ defineProps<Props>()
 
       <!-- Title + subtitle -->
       <div class="flex flex-col gap-0.5">
-        <h3 class="font-bold text-brand-dark text-2xl md:text-[32px] leading-tight">
+        <h3 class="font-medium text-brand-dark text-2xl md:text-[32px] leading-tight">
           {{ study.title }}
         </h3>
         <p

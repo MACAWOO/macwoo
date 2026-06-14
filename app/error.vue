@@ -34,7 +34,7 @@ function goHome() {
 
       <!-- Error message -->
       <div class="flex-1 flex flex-col justify-center max-w-2xl pt-16">
-        <h1 class="text-5xl md:text-7xl font-bold text-brand-teal-500 leading-tight mb-6">
+        <h1 class="text-5xl md:text-7xl font-medium text-brand-teal-500 leading-tight mb-6">
           OOPS,<br>Something went<br>wrong :(
         </h1>
         <p class="text-zinc-600 text-sm mb-10">

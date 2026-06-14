@@ -25,11 +25,13 @@ function formatDate(dateStr: string) {
   <div v-if="post">
     <!-- Hero image -->
     <div class="relative w-full h-[500px] md:h-[698px] overflow-hidden">
-      <img
+      <NuxtImg
         :src="post.image"
         :alt="post.title"
+        preload
+        format="webp"
         class="w-full h-full object-cover"
-      >
+      />
       <div class="absolute inset-0 bg-black/20" />
       <NuxtLink
         to="/blog"
@@ -129,11 +131,13 @@ function formatDate(dateStr: string) {
             class="group block rounded-[34px] overflow-hidden"
           >
             <div class="h-[337px] overflow-hidden rounded-t-[34px] bg-zinc-200">
-              <img
+              <NuxtImg
                 :src="rec.image"
                 :alt="rec.title"
+                loading="lazy"
+                format="webp"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              >
+              />
             </div>
             <div class="bg-white rounded-b-[34px] px-[21px] pt-[14px] pb-[18px] flex flex-col gap-[10px]">
               <div class="flex gap-2 flex-wrap">

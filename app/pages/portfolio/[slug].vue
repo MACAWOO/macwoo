@@ -59,11 +59,13 @@ const paragraphs = computed(() =>
       </NuxtLink>
 
       <!-- hero image -->
-      <img
+      <NuxtImg
         :src="project.heroImage"
         :alt="project.title"
+        preload
+        format="webp"
         class="w-full h-[360px] md:h-[560px] lg:h-[640px] object-cover"
-      >
+      />
     </div>
 
     <!-- ── Teal Info Section ── -->
@@ -181,7 +183,7 @@ const paragraphs = computed(() =>
 
       <!-- title -->
       <h1
-        class="font-fredoka text-[56px] md:text-[64px] text-brand-yellow-500 leading-tight mb-3"
+        class="font-fredoka font-medium text-[56px] md:text-[64px] text-brand-yellow-500 leading-tight mb-3"
         style="font-variation-settings: 'wdth' 100"
       >
         {{ project.title }}
@@ -199,7 +201,7 @@ const paragraphs = computed(() =>
     <!-- ── Story Section ── -->
     <div class="bg-white px-6 md:px-[120px] py-16">
       <h2
-        class="font-fredoka text-[40px] md:text-[48px] text-[#1D96B8] mb-5 leading-tight"
+        class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#1D96B8] mb-5 leading-tight"
         style="font-variation-settings: 'wdth' 100"
       >
         The Story Behind the Project
@@ -221,19 +223,20 @@ const paragraphs = computed(() =>
       class="bg-brand-yellow-500 px-6 md:px-[120px] py-16"
     >
       <h2
-        class="font-fredoka text-[40px] md:text-[48px] text-[#1D96B8] mb-5 leading-tight"
+        class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#1D96B8] mb-5 leading-tight"
         style="font-variation-settings: 'wdth' 100"
       >
         Design Highlights
       </h2>
 
       <div class="relative rounded-[28px] overflow-hidden">
-        <img
+        <NuxtImg
           :src="project.galleryImages[galleryIndex]"
           :alt="`${project.title} design highlight ${galleryIndex + 1}`"
+          format="webp"
           class="w-full object-cover rounded-[28px]"
           style="min-height: 280px; max-height: 619px;"
-        >
+        />
 
         <!-- prev / next buttons -->
         <div

@@ -6,11 +6,13 @@
   <section class="relative py-20 overflow-hidden bg-[#E8F600]">
     <!-- Background Texture -->
     <div class="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none">
-      <img
+      <NuxtImg
         src="/Images/upscale_image_quality_2K_202606031120.jpeg"
         alt=""
+        loading="lazy"
+        format="webp"
         class="w-full h-full object-cover"
-      >
+      />
     </div>
 
     <div class="relative z-10 max-w-[1201px] mx-auto px-6 md:px-8">
@@ -51,7 +53,7 @@
           </div>
           <!-- Title -->
           <h3
-            class="text-[#E8F600] text-[22px] md:text-[24px] font-bold leading-[1.2] mb-6"
+            class="text-[#E8F600] text-[22px] md:text-[24px] font-medium leading-[1.2] mb-6"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
           >
             Creative +<br>performance<br>driven
@@ -101,7 +103,7 @@
           </div>
           <!-- Title -->
           <h3
-            class="text-[#E8F600] text-[22px] md:text-[24px] font-bold leading-[1.2] mb-6"
+            class="text-[#E8F600] text-[22px] md:text-[24px] font-medium leading-[1.2] mb-6"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
           >
             End-to-end<br>solutions<br>&nbsp;
@@ -136,7 +138,7 @@
           </div>
           <!-- Title -->
           <h3
-            class="text-[#E8F600] text-[22px] md:text-[24px] font-bold leading-[1.2] mb-6"
+            class="text-[#E8F600] text-[22px] md:text-[24px] font-medium leading-[1.2] mb-6"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
           >
             Built for modern<br>brands<br>&nbsp;
@@ -183,7 +185,7 @@
           </div>
           <!-- Title -->
           <h3
-            class="text-[#E8F600] text-[22px] md:text-[24px] font-bold leading-[1.2] mb-6"
+            class="text-[#E8F600] text-[22px] md:text-[24px] font-medium leading-[1.2] mb-6"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
           >
             Strategy-first<br>approach<br>&nbsp;

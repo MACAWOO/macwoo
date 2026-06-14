@@ -42,7 +42,7 @@ const isModalOpen = ref(false)
         <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
           <!-- Left side Content (2/3 width on desktop) -->
           <div class="lg:w-7/12 flex flex-col items-start">
-            <h2 class="text-3xl md:text-[46px] font-bold text-brand-yellow-500 mb-6 leading-tight font-sans uppercase tracking-wide">
+            <h2 class="text-3xl md:text-[46px] font-medium text-brand-yellow-500 mb-6 leading-tight font-sans uppercase tracking-wide">
               We Engineer<br>Digital Excellence.
             </h2>
             <p class="text-white text-base md:text-lg leading-relaxed mb-10 max-w-xl font-sans font-normal">
@@ -58,7 +58,7 @@ const isModalOpen = ref(false)
                       class="w-6 h-6 text-brand-dark"
                     />
                   </div>
-                  <h3 class="font-bold text-brand-dark text-sm mb-1 uppercase tracking-wider">
+                  <h3 class="font-medium text-brand-dark text-sm mb-1 uppercase tracking-wider">
                     Accelerated Growth
                   </h3>
                   <p class="text-brand-dark/80 text-xs leading-relaxed font-medium">
@@ -74,7 +74,7 @@ const isModalOpen = ref(false)
                       class="w-6 h-6 text-brand-dark"
                     />
                   </div>
-                  <h3 class="font-bold text-brand-dark text-sm mb-1 uppercase tracking-wider">
+                  <h3 class="font-medium text-brand-dark text-sm mb-1 uppercase tracking-wider">
                     Visionary Team
                   </h3>
                   <p class="text-brand-dark/80 text-xs leading-relaxed font-medium">
@@ -99,7 +99,7 @@ const isModalOpen = ref(false)
       class="py-20 bg-[#1D96B8] text-white"
     >
       <div class="max-w-7xl mx-auto px-6">
-        <h2 class="text-3xl md:text-[46px] font-bold text-brand-yellow-500 mb-2 uppercase tracking-wide">
+        <h2 class="text-3xl md:text-[46px] font-medium text-brand-yellow-500 mb-2 uppercase tracking-wide">
           Open Roles
         </h2>
         <p class="text-white/80 text-sm mb-12">
@@ -118,7 +118,7 @@ const isModalOpen = ref(false)
               <p class="text-white/70 text-xs font-semibold uppercase tracking-wider mb-2">
                 {{ job.department }} · {{ job.location }}
               </p>
-              <h3 class="text-2xl md:text-3xl lg:text-[36px] font-bold text-brand-yellow-500 uppercase tracking-wide group-hover:text-white transition-colors duration-200">
+              <h3 class="text-2xl md:text-3xl lg:text-[36px] font-medium text-brand-yellow-500 uppercase tracking-wide group-hover:text-white transition-colors duration-200">
                 {{ job.title }}
               </h3>
             </div>

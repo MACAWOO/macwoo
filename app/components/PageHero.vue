@@ -28,9 +28,13 @@ withDefaults(defineProps<Props>(), {
   align: 'center',
   showGrid: false,
   imageClass: '',
-  contentStyle: () => ({}),
-  imageStyle: () => ({})
+  contentStyle: () => ({})
 })
+
+const videoLoaded = ref(false)
+const handleVideoPlayable = () => {
+  videoLoaded.value = true
+}
 </script>
 
 <template>
@@ -47,9 +51,12 @@ withDefaults(defineProps<Props>(), {
       muted
       loop
       playsinline
+      preload="auto"
       :poster="image"
-      class="absolute inset-0 w-full h-full object-cover"
+      class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+      :class="[videoLoaded ? 'opacity-100' : 'opacity-0']"
       :style="imageStyle"
+      @loadeddata="handleVideoPlayable"
     >
       <source
         :src="video"
@@ -61,14 +68,16 @@ withDefaults(defineProps<Props>(), {
     <GlassGrid v-if="showGrid" />
 
     <!-- Static image background -->
-    <img
+    <NuxtImg
       v-else-if="image"
       :src="image"
       alt=""
       class="absolute inset-0 w-full h-full object-cover opacity-30"
       :class="imageClass"
       :style="imageStyle"
-    >
+      preload
+      format="webp"
+    />
 
     <!-- Left Arrow -->
     <NuxtLink

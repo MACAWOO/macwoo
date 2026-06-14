@@ -69,11 +69,13 @@ const logos = [
     <section class="relative h-[300px] md:h-[386px] overflow-hidden">
       <!-- Background image + dark overlay -->
       <div class="absolute inset-0">
-        <img
+        <NuxtImg
           src="/Images/Branding.jpeg"
           alt=""
+          preload
+          format="webp"
           class="w-full h-full object-cover"
-        >
+        />
         <div class="absolute inset-0 bg-black/40" />
       </div>
 
@@ -140,16 +142,18 @@ const logos = [
               class="w-[60px] md:w-[78px] shrink-0 flex items-start justify-center pt-8 md:pt-9"
               style="background: linear-gradient(180deg, #F4ED18 0%, #1D96B8 100%); border-radius: 10px 0 0 10px;"
             >
-              <img
+              <NuxtImg
                 :src="s.icon"
                 :alt="s.title"
+                loading="lazy"
+                format="webp"
                 class="w-[34px] h-[34px] md:w-[40px] md:h-[40px] object-contain"
-              >
+              />
             </div>
             <!-- Content -->
             <div class="flex-1 flex flex-col justify-center px-5 md:px-9 py-6 md:py-0">
               <h3
-                class="text-[#1D96B8] text-[24px] md:text-[32px] font-bold leading-[38px] mb-3 md:mb-[19px]"
+                class="text-[#1D96B8] text-[24px] md:text-[32px] font-medium leading-[38px] mb-3 md:mb-[19px]"
                 style="font-family: 'Bricolage Grotesque', sans-serif;"
               >
                 {{ s.title }}
@@ -181,13 +185,15 @@ const logos = [
           v-for="set in 3"
           :key="set"
         >
-          <img
+          <NuxtImg
             v-for="logo in logos"
             :key="`${set}-${logo.alt}`"
             :src="logo.src"
             :alt="logo.alt"
+            loading="lazy"
+            format="webp"
             :class="[logo.h, 'w-auto shrink-0 object-contain mx-[30px] md:mx-[51px]']"
-          >
+          />
         </template>
       </div>
     </section>
@@ -224,7 +230,7 @@ const logos = [
             </p>
             <!-- Title -->
             <h3
-              class="text-white text-[20px] md:text-[24px] leading-[36px] font-semibold mt-[8.7px]"
+              class="text-white text-[20px] md:text-[24px] leading-[36px] font-medium mt-[8.7px]"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
               {{ step.title }}

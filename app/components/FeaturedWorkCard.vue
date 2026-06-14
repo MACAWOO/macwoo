@@ -19,18 +19,19 @@ defineProps<Props>()
       class="overflow-hidden rounded-[16px] w-full"
       :class="isLarge ? 'aspect-[680/662]' : 'aspect-[470/550]'"
     >
-      <img
+      <NuxtImg
         :src="project.image_url"
         :alt="project.title"
         loading="lazy"
+        format="webp"
         class="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
-      >
+      />
     </div>
 
     <!-- Title + category pill -->
     <div class="mt-3">
       <h3
-        class="text-white text-[20px] md:text-[22px] font-bold leading-tight mb-2"
+        class="text-white text-[20px] md:text-[22px] font-medium leading-tight mb-2"
         style="font-family: 'Bricolage Grotesque', sans-serif;"
       >
         {{ project.title }}
