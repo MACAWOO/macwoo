@@ -23,7 +23,8 @@ export function useCareers() {
           department: d.department,
           location: d.location,
           type: d.type,
-          experience: d.experience
+          experience: d.experience,
+          applyUrl: d.apply_url || ''
         }))
       }
     } catch (e) {
@@ -44,6 +45,7 @@ export function useCareers() {
       location: job.location,
       type: job.type,
       experience: job.experience,
+      apply_url: job.applyUrl || '',
       is_active: true,
       sort_order: jobs.value.length + 1
     }
@@ -62,7 +64,8 @@ export function useCareers() {
           department: data.department,
           location: data.location,
           type: data.type,
-          experience: data.experience
+          experience: data.experience,
+          applyUrl: data.apply_url || ''
         })
       }
     } catch (e) {
@@ -76,7 +79,8 @@ export function useCareers() {
       department: updated.department,
       location: updated.location,
       type: updated.type,
-      experience: updated.experience
+      experience: updated.experience,
+      apply_url: updated.applyUrl || ''
     }
 
     try {
@@ -118,6 +122,7 @@ export function useCareers() {
         location: j.location,
         type: j.type,
         experience: j.experience,
+        apply_url: j.applyUrl || '',
         is_active: true,
         sort_order: i + 1
       }))
@@ -134,7 +139,8 @@ export function useCareers() {
           department: d.department,
           location: d.location,
           type: d.type,
-          experience: d.experience
+          experience: d.experience,
+          applyUrl: d.apply_url || ''
         }))
       }
     } catch (e) {

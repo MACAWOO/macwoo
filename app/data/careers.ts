@@ -5,6 +5,7 @@ export interface JobListing {
   location: string
   type: string
   experience: string
+  applyUrl: string
 }
 
 export const jobs: JobListing[] = [
@@ -14,7 +15,8 @@ export const jobs: JobListing[] = [
     department: 'Design',
     location: 'Kochi',
     type: 'Full-Time',
-    experience: '7+ Years Experience'
+    experience: '7+ Years Experience',
+    applyUrl: ''
   },
   {
     id: '2',
@@ -22,7 +24,8 @@ export const jobs: JobListing[] = [
     department: 'Design',
     location: 'Kochi',
     type: 'Full-Time',
-    experience: '7+ Years Experience'
+    experience: '7+ Years Experience',
+    applyUrl: ''
   },
   {
     id: '3',
@@ -30,6 +33,8 @@ export const jobs: JobListing[] = [
     department: 'Design',
     location: 'Kochi',
     type: 'Full-Time',
-    experience: '7+ Years Experience'
+    experience: '7+ Years Experience',
+    applyUrl: ''
   }
 ]
+

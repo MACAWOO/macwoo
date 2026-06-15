@@ -17,6 +17,14 @@ useSeoMeta({
 })
 
 const isModalOpen = ref(false)
+
+const handleJobClick = (job: typeof jobs.value[number]) => {
+  if (job.applyUrl) {
+    window.open(job.applyUrl, '_blank', 'noopener,noreferrer')
+  } else {
+    isModalOpen.value = true
+  }
+}
 </script>
 
 <template>
@@ -120,7 +128,7 @@ const isModalOpen = ref(false)
             v-for="job in jobs"
             :key="job.id"
             class="border-b border-brand-yellow-500 py-8 flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer group transition-colors duration-200"
-            @click="isModalOpen = true"
+            @click="handleJobClick(job)"
           >
             <!-- Left Side: Dept/Loc + Job Title -->
             <div class="flex-1">

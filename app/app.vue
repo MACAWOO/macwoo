@@ -83,11 +83,19 @@ const footerColor = computed(() => {
   return undefined
 })
 const isAdmin = computed(() => route.path.startsWith('/admin'))
+
+// Hide navbar on detail/inner pages (blog, portfolio, case-studies slug pages)
+const isInnerPage = computed(() => {
+  const segments = route.path.replace(/\/$/, '').split('/').filter(Boolean)
+  // Inner pages have exactly 2 segments, e.g. /blog/some-slug, /portfolio/some-slug, /case-studies/some-slug
+  const innerSections = ['blog', 'portfolio', 'case-studies']
+  return segments.length >= 2 && innerSections.includes(segments[0])
+})
 </script>
 
 <template>
   <UApp>
-    <AppHeader v-if="route.path !== '/careers' && !isAdmin" />
+    <AppHeader v-if="route.path !== '/careers' && !isAdmin && !isInnerPage" />
     <main>
       <NuxtPage />
     </main>

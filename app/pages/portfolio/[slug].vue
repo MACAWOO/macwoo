@@ -42,9 +42,10 @@ const paragraphs = computed(() =>
       />
 
       <!-- back button -->
-      <NuxtLink
-        to="/portfolio"
-        class="absolute top-8 left-6 md:left-[120px] z-20 bg-white inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity"
+      <button
+        type="button"
+        class="absolute top-8 left-6 md:left-[120px] z-20 bg-white inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity cursor-pointer"
+        @click="$router.back()"
       >
         <svg
           class="w-4 h-4 text-brand-dark"
@@ -61,7 +62,7 @@ const paragraphs = computed(() =>
           />
         </svg>
         <span class="font-extrabold text-brand-dark text-sm">Back</span>
-      </NuxtLink>
+      </button>
 
       <!-- hero image -->
       <NuxtImg

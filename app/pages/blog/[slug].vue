@@ -40,9 +40,10 @@ function formatDate(dateStr: string) {
         class="w-full h-full object-cover"
       />
       <div class="absolute inset-0 bg-black/20" />
-      <NuxtLink
-        to="/blog"
-        class="absolute top-[90px] left-[120px] bg-white flex items-center gap-[3px] px-5 py-[10px] rounded-full font-extrabold text-[16px] text-[#201f1f] leading-[28px] hover:bg-zinc-100 transition-colors z-10"
+      <button
+        type="button"
+        class="absolute top-[90px] left-[120px] bg-white flex items-center gap-[3px] px-5 py-[10px] rounded-full font-extrabold text-[16px] text-[#201f1f] leading-[28px] hover:bg-zinc-100 transition-colors z-10 cursor-pointer"
+        @click="$router.back()"
       >
         <svg
           class="w-[14px] h-[14px] shrink-0 -rotate-45"
@@ -58,7 +59,7 @@ function formatDate(dateStr: string) {
           />
         </svg>
         Back
-      </NuxtLink>
+      </button>
     </div>
 
     <!-- Article header on teal -->

@@ -204,7 +204,8 @@ const careerForm = ref({
   department: 'Design',
   location: 'Kochi',
   type: 'Full-Time',
-  experience: '4+ Years Experience'
+  experience: '4+ Years Experience',
+  applyUrl: ''
 })
 
 // Media Picker integration states
@@ -323,7 +324,8 @@ const openAddForm = (model: ModelType) => {
       department: 'Design',
       location: 'Kochi',
       type: 'Full-Time',
-      experience: ''
+      experience: '',
+      applyUrl: ''
     }
   }
 }
@@ -2908,6 +2910,19 @@ const filteredCareers = computed(() => {
                       placeholder="e.g. 3+ Years Experience"
                       class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
                     >
+                  </div>
+                </div>
+                <!-- Row: Apply URL -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Apply URL (LinkedIn etc.):</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <input
+                      v-model="careerForm.applyUrl"
+                      type="url"
+                      placeholder="e.g. https://linkedin.com/jobs/view/123456"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    >
+                    <p class="text-[10px] text-zinc-400">External job posting link — visitors clicking this role will be redirected here.</p>
                   </div>
                 </div>
               </template>
