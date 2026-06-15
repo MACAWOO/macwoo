@@ -10,10 +10,50 @@ if (settingsPromise) {
 }
 
 useSeoMeta({
-  title: 'Blog — Macawoo',
+  title: 'Macawoo Blog — Insights on Branding, Design & Marketing',
   description: 'Ideas, insights & stories that drive brands. The Macawoo journal on branding, marketing, and creative strategy.',
-  ogTitle: 'Blog — Macawoo',
+  ogTitle: 'Macawoo Blog — Insights on Branding, Design & Marketing',
   ogDescription: 'Ideas, insights & stories that drive brands. The Macawoo journal on branding, marketing, and creative strategy.'
+})
+
+const siteUrl = 'https://www.macawoo.in'
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'CollectionPage',
+            '@id': `${siteUrl}/blog#webpage`,
+            'url': `${siteUrl}/blog`,
+            'name': 'Macawoo Blog — Insights on Branding, Design & Marketing',
+            'description': 'Ideas, insights & stories that drive brands. The Macawoo journal on branding, marketing, and creative strategy.',
+            'isPartOf': { '@id': `${siteUrl}/#website` }
+          },
+          {
+            '@type': 'BreadcrumbList',
+            '@id': `${siteUrl}/blog#breadcrumb`,
+            'itemListElement': [
+              {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Home',
+                'item': siteUrl
+              },
+              {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': 'Blog',
+                'item': `${siteUrl}/blog`
+              }
+            ]
+          }
+        ]
+      })
+    }
+  ]
 })
 
 const POSTS_PER_PAGE = 6

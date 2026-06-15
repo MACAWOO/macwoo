@@ -1,5 +1,6 @@
 <script setup>
 const route = useRoute()
+const siteUrl = 'https://www.macawoo.in'
 
 useHead({
   meta: [
@@ -15,6 +16,13 @@ useHead({
     {
       rel: 'stylesheet',
       href: 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Fredoka:wght@400;500;600&display=swap'
+    },
+    {
+      rel: 'canonical',
+      href: computed(() => {
+        const cleanPath = route.path === '/' ? '' : route.path.replace(/\/$/, '')
+        return `${siteUrl}${cleanPath}`
+      })
     }
   ],
   htmlAttrs: {
@@ -33,14 +41,21 @@ useHead({
 useSeoMeta({
   ogType: 'website',
   ogSiteName: 'Macawoo',
-  ogImage: '/og-image.png',
+  ogImage: `${siteUrl}/og-image.png`,
+  ogImageWidth: 1200,
+  ogImageHeight: 630,
+  ogImageType: 'image/png',
+  ogLocale: 'en_US',
+  ogUrl: computed(() => {
+    const cleanPath = route.path === '/' ? '' : route.path.replace(/\/$/, '')
+    return `${siteUrl}${cleanPath}`
+  }),
   twitterCard: 'summary_large_image',
-  twitterImage: '/og-image.png'
+  twitterImage: `${siteUrl}/og-image.png`
 })
 
 // Organization + WebSite structured data (JSON-LD). Injected manually because the
 // bundled nuxt-schema-org module is disabled (broken UnheadSchemaOrg import).
-const siteUrl = 'https://www.macawoo.in'
 useHead({
   script: [
     {
@@ -55,7 +70,12 @@ useHead({
             'url': siteUrl,
             'logo': `${siteUrl}/icon-512.png`,
             'email': 'macawooofficial@gmail.com',
-            'description': 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.'
+            'description': 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
+            'sameAs': [
+              'https://www.linkedin.com/company/macawoo',
+              'https://twitter.com/macawoo',
+              'https://www.instagram.com/macawooofficial'
+            ]
           },
           {
             '@type': 'WebSite',

@@ -12,11 +12,73 @@ if (!project.value) {
   throw createError({ statusCode: 404, statusMessage: 'Project not found', fatal: true })
 }
 
+const siteUrl = 'https://www.macawoo.in'
+const absoluteImageUrl = computed(() => {
+  const img = project.value?.image
+  if (!img) return `${siteUrl}/og-image.png`
+  if (img.startsWith('http://') || img.startsWith('https://')) return img
+  return `${siteUrl}${img.startsWith('/') ? '' : '/'}${img}`
+})
+
 useSeoMeta({
   title: () => project.value ? `${project.value.title} — Macawoo Portfolio` : 'Macawoo Portfolio',
   description: () => project.value ? (project.value.tagline ?? project.value.subtitle) : '',
   ogTitle: () => project.value ? `${project.value.title} — Macawoo Portfolio` : 'Macawoo Portfolio',
-  ogDescription: () => project.value ? (project.value.tagline ?? project.value.subtitle) : ''
+  ogDescription: () => project.value ? (project.value.tagline ?? project.value.subtitle) : '',
+  ogImage: absoluteImageUrl,
+  twitterCard: 'summary_large_image',
+  twitterImage: absoluteImageUrl
+})
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: computed(() => {
+        if (!project.value) return ''
+        return JSON.stringify({
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'CreativeWork',
+              '@id': `${siteUrl}/portfolio/${slug}#creativework`,
+              'url': `${siteUrl}/portfolio/${slug}`,
+              'name': project.value.title,
+              'headline': project.value.subtitle,
+              'description': project.value.tagline || project.value.subtitle,
+              'image': absoluteImageUrl.value,
+              'creator': { '@id': `${siteUrl}/#organization` },
+              'publisher': { '@id': `${siteUrl}/#organization` }
+            },
+            {
+              '@type': 'BreadcrumbList',
+              '@id': `${siteUrl}/portfolio/${slug}#breadcrumb`,
+              'itemListElement': [
+                {
+                  '@type': 'ListItem',
+                  'position': 1,
+                  'name': 'Home',
+                  'item': siteUrl
+                },
+                {
+                  '@type': 'ListItem',
+                  'position': 2,
+                  'name': 'Portfolio',
+                  'item': `${siteUrl}/portfolio`
+                },
+                {
+                  '@type': 'ListItem',
+                  'position': 3,
+                  'name': project.value.title,
+                  'item': `${siteUrl}/portfolio/${slug}`
+                }
+              ]
+            }
+          ]
+        })
+      })
+    }
+  ]
 })
 
 const galleryIndex = ref(0)

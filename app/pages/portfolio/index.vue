@@ -10,10 +10,50 @@ if (categoriesPromise) {
 }
 
 useSeoMeta({
-  title: 'Portfolio — Macawoo',
+  title: 'Macawoo Portfolio — Selected Branding & Design Work',
   description: 'Work that speaks. Results that matter. A curated showcase of our finest projects.',
-  ogTitle: 'Portfolio — Macawoo',
+  ogTitle: 'Macawoo Portfolio — Selected Branding & Design Work',
   ogDescription: 'Work that speaks. Results that matter. A curated showcase of our finest projects.'
+})
+
+const siteUrl = 'https://www.macawoo.in'
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'CollectionPage',
+            '@id': `${siteUrl}/portfolio#webpage`,
+            'url': `${siteUrl}/portfolio`,
+            'name': 'Macawoo Portfolio — Selected Branding & Design Work',
+            'description': 'Work that speaks. Results that matter. A curated showcase of our finest projects.',
+            'isPartOf': { '@id': `${siteUrl}/#website` }
+          },
+          {
+            '@type': 'BreadcrumbList',
+            '@id': `${siteUrl}/portfolio#breadcrumb`,
+            'itemListElement': [
+              {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Home',
+                'item': siteUrl
+              },
+              {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': 'Portfolio',
+                'item': `${siteUrl}/portfolio`
+              }
+            ]
+          }
+        ]
+      })
+    }
+  ]
 })
 
 const activeFilter = ref<string>('All')

@@ -1,9 +1,57 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Branding & Design — Macawoo',
+  title: 'Branding & Design Services — Macawoo Agency Kochi',
   description: 'We Don\'t Just Design. We Build Brands. Define your brand positioning, messaging, and direction.',
-  ogTitle: 'Branding & Design — Macawoo',
+  ogTitle: 'Branding & Design Services — Macawoo Agency Kochi',
   ogDescription: 'We Don\'t Just Design. We Build Brands. Define your brand positioning, messaging, and direction.'
+})
+
+const siteUrl = 'https://www.macawoo.in'
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'WebPage',
+            '@id': `${siteUrl}/services/branding-design#webpage`,
+            'url': `${siteUrl}/services/branding-design`,
+            'name': 'Branding & Design Services — Macawoo Agency Kochi',
+            'description': 'We Don\'t Just Design. We Build Brands. Define your brand positioning, messaging, and direction.',
+            'isPartOf': { '@id': `${siteUrl}/#website` }
+          },
+          {
+            '@type': 'Service',
+            '@id': `${siteUrl}/services/branding-design#service`,
+            'name': 'Branding & Design Services',
+            'provider': { '@id': `${siteUrl}/#organization` },
+            'description': 'We Don\'t Just Design. We Build Brands. Define your brand positioning, messaging, and direction.',
+            'serviceType': 'Branding, Brand Strategy, Corporate Identity, Logo Design'
+          },
+          {
+            '@type': 'BreadcrumbList',
+            '@id': `${siteUrl}/services/branding-design#breadcrumb`,
+            'itemListElement': [
+              {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Home',
+                'item': siteUrl
+              },
+              {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': 'Branding & Design',
+                'item': `${siteUrl}/services/branding-design`
+              }
+            ]
+          }
+        ]
+      })
+    }
+  ]
 })
 
 const prevTo = '/services/video-production'
@@ -73,7 +121,7 @@ const logos = [
       <div class="absolute inset-0">
         <NuxtImg
           src="/Images/Branding.jpeg"
-          alt=""
+          alt="Macawoo Branding and Design Services Banner"
           preload
           format="webp"
           class="w-full h-full object-cover"

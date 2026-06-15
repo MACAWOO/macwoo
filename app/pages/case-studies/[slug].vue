@@ -12,11 +12,73 @@ if (!study.value) {
   throw createError({ statusCode: 404, statusMessage: 'Case study not found', fatal: true })
 }
 
+const siteUrl = 'https://www.macawoo.in'
+const absoluteImageUrl = computed(() => {
+  const img = study.value?.image
+  if (!img) return `${siteUrl}/og-image.png`
+  if (img.startsWith('http://') || img.startsWith('https://')) return img
+  return `${siteUrl}${img.startsWith('/') ? '' : '/'}${img}`
+})
+
 useSeoMeta({
   title: () => study.value ? `${study.value.title} — Macawoo Case Study` : 'Macawoo Case Study',
   description: () => study.value ? (study.value.tagline ?? study.value.challenge.slice(0, 160)) : '',
   ogTitle: () => study.value ? `${study.value.title} — Macawoo Case Study` : 'Macawoo Case Study',
-  ogDescription: () => study.value ? (study.value.tagline ?? study.value.challenge.slice(0, 160)) : ''
+  ogDescription: () => study.value ? (study.value.tagline ?? study.value.challenge.slice(0, 160)) : '',
+  ogImage: absoluteImageUrl,
+  twitterCard: 'summary_large_image',
+  twitterImage: absoluteImageUrl
+})
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: computed(() => {
+        if (!study.value) return ''
+        return JSON.stringify({
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'CreativeWork',
+              '@id': `${siteUrl}/case-studies/${slug}#creativework`,
+              'url': `${siteUrl}/case-studies/${slug}`,
+              'name': study.value.title,
+              'headline': study.value.tagline,
+              'description': study.value.tagline || study.value.challenge.slice(0, 160),
+              'image': absoluteImageUrl.value,
+              'creator': { '@id': `${siteUrl}/#organization` },
+              'publisher': { '@id': `${siteUrl}/#organization` }
+            },
+            {
+              '@type': 'BreadcrumbList',
+              '@id': `${siteUrl}/case-studies/${slug}#breadcrumb`,
+              'itemListElement': [
+                {
+                  '@type': 'ListItem',
+                  'position': 1,
+                  'name': 'Home',
+                  'item': siteUrl
+                },
+                {
+                  '@type': 'ListItem',
+                  'position': 2,
+                  'name': 'Case Studies',
+                  'item': `${siteUrl}/case-studies`
+                },
+                {
+                  '@type': 'ListItem',
+                  'position': 3,
+                  'name': study.value.title,
+                  'item': `${siteUrl}/case-studies/${slug}`
+                }
+              ]
+            }
+          ]
+        })
+      })
+    }
+  ]
 })
 
 const challengeParas = computed(() =>

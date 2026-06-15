@@ -10,10 +10,50 @@ if (categoriesPromise) {
 }
 
 useSeoMeta({
-  title: 'Case Studies — Macawoo',
+  title: 'Macawoo Case Studies — Brand Transformation Results',
   description: 'Not just work. Proven impact. Detailed case studies demonstrating our results-driven approach for ambitious founders.',
-  ogTitle: 'Case Studies — Macawoo',
+  ogTitle: 'Macawoo Case Studies — Brand Transformation Results',
   ogDescription: 'Not just work. Proven impact. Detailed case studies demonstrating our results-driven approach for ambitious founders.'
+})
+
+const siteUrl = 'https://www.macawoo.in'
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'CollectionPage',
+            '@id': `${siteUrl}/case-studies#webpage`,
+            'url': `${siteUrl}/case-studies`,
+            'name': 'Macawoo Case Studies — Brand Transformation Results',
+            'description': 'Not just work. Proven impact. Detailed case studies demonstrating our results-driven approach for ambitious founders.',
+            'isPartOf': { '@id': `${siteUrl}/#website` }
+          },
+          {
+            '@type': 'BreadcrumbList',
+            '@id': `${siteUrl}/case-studies#breadcrumb`,
+            'itemListElement': [
+              {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Home',
+                'item': siteUrl
+              },
+              {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': 'Case Studies',
+                'item': `${siteUrl}/case-studies`
+              }
+            ]
+          }
+        ]
+      })
+    }
+  ]
 })
 
 const activeFilter = ref<string>('All')

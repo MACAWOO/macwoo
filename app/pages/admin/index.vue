@@ -35,7 +35,8 @@ function submitCategory() {
 
 useSeoMeta({
   title: 'Site Administration — Macawoo',
-  description: 'Control center for updating Macawoo content.'
+  description: 'Control center for updating Macawoo content.',
+  robots: 'noindex, nofollow'
 })
 
 // Navigation & SPA view states
@@ -2950,7 +2951,9 @@ const filteredCareers = computed(() => {
                       placeholder="e.g. https://linkedin.com/jobs/view/123456"
                       class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
                     >
-                    <p class="text-[10px] text-zinc-400">External job posting link — visitors clicking this role will be redirected here.</p>
+                    <p class="text-[10px] text-zinc-400">
+                      External job posting link — visitors clicking this role will be redirected here.
+                    </p>
                   </div>
                 </div>
               </template>

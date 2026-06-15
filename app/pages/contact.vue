@@ -4,10 +4,28 @@ import { ref, reactive } from 'vue'
 const { settings } = usePageSettings()
 
 useSeoMeta({
-  title: 'Contact — Macawoo',
+  title: 'Contact Macawoo — Creative & Strategy Agency Kochi',
   description: 'Ready to elevate your brand? Drop us a line and let\'s start crafting a narrative that commands attention and drives results.',
-  ogTitle: 'Contact — Macawoo',
+  ogTitle: 'Contact Macawoo — Creative & Strategy Agency Kochi',
   ogDescription: 'Ready to elevate your brand? Drop us a line and let\'s start crafting a narrative that commands attention and drives results.'
+})
+
+const siteUrl = 'https://www.macawoo.in'
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ContactPage',
+        '@id': `${siteUrl}/contact#webpage`,
+        'url': `${siteUrl}/contact`,
+        'name': 'Contact Macawoo — Creative & Strategy Agency Kochi',
+        'description': 'Ready to elevate your brand? Drop us a line and let\'s start crafting a narrative that commands attention and drives results.',
+        'isPartOf': { '@id': `${siteUrl}/#website` }
+      })
+    }
+  ]
 })
 
 const services = ['Branding & Design', 'Digital Marketing', 'Video Production', 'Others']

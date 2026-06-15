@@ -5,10 +5,28 @@ if (settingsPromise) {
 }
 
 useSeoMeta({
-  title: 'About Us — Macawoo',
+  title: 'About Macawoo — Creative Strategy & Branding Agency',
   description: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
-  ogTitle: 'About Us — Macawoo',
+  ogTitle: 'About Macawoo — Creative Strategy & Branding Agency',
   ogDescription: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.'
+})
+
+const siteUrl = 'https://www.macawoo.in'
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'AboutPage',
+        '@id': `${siteUrl}/about#webpage`,
+        'url': `${siteUrl}/about`,
+        'name': 'About Macawoo — Creative Strategy & Branding Agency',
+        'description': 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
+        'isPartOf': { '@id': `${siteUrl}/#website` }
+      })
+    }
+  ]
 })
 </script>
 
@@ -204,7 +222,9 @@ useSeoMeta({
           class="inline-flex items-center gap-2 px-8 py-4 bg-[#1D96B8] text-white font-bold rounded-full text-sm hover:bg-[#1D96B8]/90 transition-colors"
           style="font-family: 'Bricolage Grotesque', sans-serif;"
         >
-          Start Your Project ×
+          Start Your Project <UpRightArrow
+            class="w-[14px] h-[14px] shrink-0 transition-transform duration-300 ease-out group-hover/cta:translate-x-[2px] group-hover/cta:-translate-y-[2px]"
+          />
         </NuxtLink>
       </div>
     </section>

@@ -2,9 +2,9 @@
 // import { projects } from '~/data/portfolio'
 
 useSeoMeta({
-  title: 'Macawoo — Feel The Woo',
+  title: 'Macawoo — Creative & Strategy Branding Agency in Kochi',
   description: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
-  ogTitle: 'Macawoo — Feel The Woo',
+  ogTitle: 'Macawoo — Creative & Strategy Branding Agency in Kochi',
   ogDescription: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.'
 })
 
@@ -503,12 +503,12 @@ onUnmounted(() => {
                 class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
               />
               <div class="absolute inset-0 flex items-center justify-center">
-                <p
+                <h3
                   class="text-white text-[24px] md:text-[32px] font-normal leading-tight text-center transition-transform duration-500 ease-out translate-y-[96px] md:translate-y-[133px] group-hover:translate-y-0"
                   style="font-family: 'Bricolage Grotesque', sans-serif;"
                 >
                   <span class="font-bold">Branding</span><br>&amp; Design
-                </p>
+                </h3>
               </div>
             </NuxtLink>
 
@@ -536,12 +536,12 @@ onUnmounted(() => {
                 class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
               />
               <div class="absolute inset-0 flex items-center justify-center">
-                <p
+                <h3
                   class="text-white text-[24px] md:text-[32px] font-normal leading-tight text-center transition-transform duration-500 ease-out translate-y-[96px] md:translate-y-[133px] group-hover:translate-y-0"
                   style="font-family: 'Bricolage Grotesque', sans-serif;"
                 >
                   <span class="font-bold">Digital</span><br>Marketing
-                </p>
+                </h3>
               </div>
             </NuxtLink>
 
@@ -569,12 +569,12 @@ onUnmounted(() => {
                 class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
               />
               <div class="absolute inset-0 flex items-center justify-center">
-                <p
+                <h3
                   class="text-white text-[24px] md:text-[32px] font-normal leading-tight text-center transition-transform duration-500 ease-out translate-y-[96px] md:translate-y-[133px] group-hover:translate-y-0"
                   style="font-family: 'Bricolage Grotesque', sans-serif;"
                 >
                   <span class="font-bold">Video</span><br>Production
-                </p>
+                </h3>
               </div>
             </NuxtLink>
           </div>

@@ -1,9 +1,57 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Digital Marketing — Macawoo',
+  title: 'Digital Marketing & Growth Campaigns — Macawoo Kochi',
   description: 'Data-driven campaigns that reach the right audience, tell the right story, and deliver measurable results.',
-  ogTitle: 'Digital Marketing — Macawoo',
+  ogTitle: 'Digital Marketing & Growth Campaigns — Macawoo Kochi',
   ogDescription: 'Data-driven campaigns that reach the right audience, tell the right story, and deliver measurable results.'
+})
+
+const siteUrl = 'https://www.macawoo.in'
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'WebPage',
+            '@id': `${siteUrl}/services/digital-marketing#webpage`,
+            'url': `${siteUrl}/services/digital-marketing`,
+            'name': 'Digital Marketing & Growth Campaigns — Macawoo Kochi',
+            'description': 'Data-driven campaigns that reach the right audience, tell the right story, and deliver measurable results.',
+            'isPartOf': { '@id': `${siteUrl}/#website` }
+          },
+          {
+            '@type': 'Service',
+            '@id': `${siteUrl}/services/digital-marketing#service`,
+            'name': 'Digital Marketing Services',
+            'provider': { '@id': `${siteUrl}/#organization` },
+            'description': 'Data-driven campaigns that reach the right audience, tell the right story, and deliver measurable results.',
+            'serviceType': 'Digital Marketing, Performance Marketing, SEO, Social Media Marketing'
+          },
+          {
+            '@type': 'BreadcrumbList',
+            '@id': `${siteUrl}/services/digital-marketing#breadcrumb`,
+            'itemListElement': [
+              {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Home',
+                'item': siteUrl
+              },
+              {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': 'Digital Marketing',
+                'item': `${siteUrl}/services/digital-marketing`
+              }
+            ]
+          }
+        ]
+      })
+    }
+  ]
 })
 
 const prevTo = '/services/branding-design'
@@ -58,7 +106,7 @@ const logos = [
       <div class="absolute inset-0">
         <NuxtImg
           src="/Images/Digital_Marketing.jpeg"
-          alt=""
+          alt="Macawoo Digital Marketing Services Banner"
           preload
           format="webp"
           class="w-full h-full object-cover"

@@ -1,9 +1,57 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Video Production — Macawoo',
+  title: 'Video Production & Narrative Storytelling — Macawoo',
   description: 'From concept to final cut, we produce video content that commands attention and drives meaningful engagement.',
-  ogTitle: 'Video Production — Macawoo',
+  ogTitle: 'Video Production & Narrative Storytelling — Macawoo',
   ogDescription: 'From concept to final cut, we produce video content that commands attention and drives meaningful engagement.'
+})
+
+const siteUrl = 'https://www.macawoo.in'
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'WebPage',
+            '@id': `${siteUrl}/services/video-production#webpage`,
+            'url': `${siteUrl}/services/video-production`,
+            'name': 'Video Production & Narrative Storytelling — Macawoo',
+            'description': 'From concept to final cut, we produce video content that commands attention and drives meaningful engagement.',
+            'isPartOf': { '@id': `${siteUrl}/#website` }
+          },
+          {
+            '@type': 'Service',
+            '@id': `${siteUrl}/services/video-production#service`,
+            'name': 'Video Production Services',
+            'provider': { '@id': `${siteUrl}/#organization` },
+            'description': 'From concept to final cut, we produce video content that commands attention and drives meaningful engagement.',
+            'serviceType': 'Video Production, Directing, Motion Graphics, Corporate Videos, Post-Production'
+          },
+          {
+            '@type': 'BreadcrumbList',
+            '@id': `${siteUrl}/services/video-production#breadcrumb`,
+            'itemListElement': [
+              {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Home',
+                'item': siteUrl
+              },
+              {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': 'Video Production',
+                'item': `${siteUrl}/services/video-production`
+              }
+            ]
+          }
+        ]
+      })
+    }
+  ]
 })
 
 const prevTo = '/services/digital-marketing'
@@ -58,7 +106,7 @@ const logos = [
       <div class="absolute inset-0">
         <NuxtImg
           src="/Images/Video_Production.jpeg"
-          alt=""
+          alt="Macawoo Video Production Services Banner"
           preload
           format="webp"
           class="w-full h-full object-cover"

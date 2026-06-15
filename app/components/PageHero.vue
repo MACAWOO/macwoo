@@ -8,6 +8,7 @@ interface Cta {
 interface Props {
   video?: string
   image?: string
+  alt?: string
   eyebrow?: string
   titleHtml: string
   description?: string
@@ -71,7 +72,7 @@ const handleVideoPlayable = () => {
     <NuxtImg
       v-else-if="image"
       :src="image"
-      alt=""
+      :alt="alt || titleHtml?.replace(/<[^>]*>/g, '') || 'Macawoo hero background'"
       class="absolute inset-0 w-full h-full object-cover opacity-30"
       :class="imageClass"
       :style="imageStyle"

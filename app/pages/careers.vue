@@ -10,10 +10,28 @@ if (settingsPromise) {
 }
 
 useSeoMeta({
-  title: 'Careers — Macawoo',
+  title: 'Careers at Macawoo — Join Our Creative & Strategy Team',
   description: 'Build your future with Macawoo. We are a collection of visionaries, builders, and storytellers. Join us in crafting digital experiences that demand attention and drive transformation.',
-  ogTitle: 'Careers — Macawoo',
+  ogTitle: 'Careers at Macawoo — Join Our Creative & Strategy Team',
   ogDescription: 'Build your future with Macawoo. We are a collection of visionaries, builders, and storytellers. Join us in crafting digital experiences that demand attention and drive transformation.'
+})
+
+const siteUrl = 'https://www.macawoo.in'
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'AboutPage',
+        '@id': `${siteUrl}/careers#webpage`,
+        'url': `${siteUrl}/careers`,
+        'name': 'Careers at Macawoo — Join Our Creative & Strategy Team',
+        'description': 'Build your future with Macawoo. Join us in crafting digital experiences that demand attention and drive transformation.',
+        'isPartOf': { '@id': `${siteUrl}/#website` }
+      })
+    }
+  ]
 })
 
 const isModalOpen = ref(false)

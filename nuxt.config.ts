@@ -116,6 +116,9 @@ export default defineNuxtConfig({
   },
 
   sitemap: {
-    exclude: ['/admin/**']
+    exclude: ['/admin/**'],
+    sources: [
+      '/api/sitemap-urls'
+    ]
   }
 })

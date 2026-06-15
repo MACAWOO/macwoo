@@ -12,13 +12,84 @@ if (!post.value) {
   throw createError({ statusCode: 404, statusMessage: 'Post not found', fatal: true })
 }
 
+const siteUrl = 'https://www.macawoo.in'
+const absoluteImageUrl = computed(() => {
+  const img = post.value?.image
+  if (!img) return `${siteUrl}/og-image.png`
+  if (img.startsWith('http://') || img.startsWith('https://')) return img
+  return `${siteUrl}${img.startsWith('/') ? '' : '/'}${img}`
+})
+
 useSeoMeta({
   title: () => post.value ? `${post.value.title} — Macawoo Blog` : 'Macawoo Blog',
   description: () => post.value ? post.value.excerpt : '',
   ogTitle: () => post.value ? `${post.value.title} — Macawoo Blog` : 'Macawoo Blog',
   ogDescription: () => post.value ? post.value.excerpt : '',
   ogType: 'article',
-  ogImage: () => post.value?.image || '/og-image.png'
+  ogImage: absoluteImageUrl,
+  twitterCard: 'summary_large_image',
+  twitterImage: absoluteImageUrl
+})
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: computed(() => {
+        if (!post.value) return ''
+        return JSON.stringify({
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'BlogPosting',
+              '@id': `${siteUrl}/blog/${slug}#blogposting`,
+              'url': `${siteUrl}/blog/${slug}`,
+              'headline': post.value.title,
+              'description': post.value.excerpt,
+              'datePublished': post.value.date ? new Date(post.value.date).toISOString() : undefined,
+              'image': absoluteImageUrl.value,
+              'author': {
+                '@type': 'Organization',
+                'name': 'Macawoo',
+                'url': siteUrl
+              },
+              'publisher': { '@id': `${siteUrl}/#organization` },
+              'isPartOf': {
+                '@type': 'WebPage',
+                '@id': `${siteUrl}/blog/${slug}#webpage`,
+                'url': `${siteUrl}/blog/${slug}`,
+                'name': `${post.value.title} — Macawoo Blog`
+              }
+            },
+            {
+              '@type': 'BreadcrumbList',
+              '@id': `${siteUrl}/blog/${slug}#breadcrumb`,
+              'itemListElement': [
+                {
+                  '@type': 'ListItem',
+                  'position': 1,
+                  'name': 'Home',
+                  'item': siteUrl
+                },
+                {
+                  '@type': 'ListItem',
+                  'position': 2,
+                  'name': 'Blog',
+                  'item': `${siteUrl}/blog`
+                },
+                {
+                  '@type': 'ListItem',
+                  'position': 3,
+                  'name': post.value.title,
+                  'item': `${siteUrl}/blog/${slug}`
+                }
+              ]
+            }
+          ]
+        })
+      })
+    }
+  ]
 })
 
 const recommended = computed(() => posts.value.filter(p => p.slug !== slug).slice(0, 3))
