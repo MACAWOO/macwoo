@@ -28,6 +28,73 @@ useHead({
     }
   ]
 })
+
+const whoWeAreRef = ref<HTMLElement | null>(null)
+const revealProgress = ref(0)
+const isMobile = ref(false)
+
+const revealText = 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.'
+const words = revealText.split(' ')
+
+const checkMobile = () => {
+  if (typeof window !== 'undefined') {
+    isMobile.value = window.innerWidth < 768
+  }
+}
+
+const handleScroll = () => {
+  if (!whoWeAreRef.value || isMobile.value) return
+  const rect = whoWeAreRef.value.getBoundingClientRect()
+  const windowHeight = window.innerHeight
+
+  const entryPoint = windowHeight * 0.85
+  const exitPoint = windowHeight * 0.35
+
+  const totalDistance = entryPoint - exitPoint
+  const currentDistance = entryPoint - rect.top
+
+  const progress = Math.max(0, Math.min(1, currentDistance / totalDistance))
+  revealProgress.value = progress
+}
+
+const getWordStyle = (index: number) => {
+  if (isMobile.value) {
+    return {
+      opacity: 1,
+      transition: 'none'
+    }
+  }
+  const totalWords = words.length
+  const start = (index / totalWords) * 0.8
+  const end = start + 0.2
+
+  let opacity = 0.25
+  if (revealProgress.value >= end) {
+    opacity = 1.0
+  } else if (revealProgress.value <= start) {
+    opacity = 0.25
+  } else {
+    const factor = (revealProgress.value - start) / (end - start)
+    opacity = 0.25 + factor * 0.75
+  }
+
+  return {
+    opacity,
+    transition: 'opacity 0.25s ease-out'
+  }
+}
+
+onMounted(() => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
+  window.addEventListener('scroll', handleScroll)
+  handleScroll()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>
 
 <template>
@@ -42,7 +109,7 @@ useHead({
     />
 
     <!-- Who We Are Section -->
-    <section class="bg-[#F8F9FA] py-16 md:py-24 text-center">
+    <section class="bg-[#F7EC12] py-16 md:py-24 text-center">
       <div class="max-w-[1266px] mx-auto px-6">
         <p
           class="text-[#0596B8] text-xs font-semibold uppercase tracking-[0.18em] mb-6"
@@ -51,10 +118,18 @@ useHead({
           Who We Are
         </p>
         <p
+          ref="whoWeAreRef"
           class="text-brand-dark text-2xl md:text-3xl lg:text-[40px] font-semibold leading-[1.3] max-w-5xl mx-auto"
           style="font-family: 'Bricolage Grotesque', sans-serif;"
         >
-          We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.
+          <span
+            v-for="(word, index) in words"
+            :key="index"
+            class="inline-block mr-[0.23em]"
+            :style="getWordStyle(index)"
+          >
+            {{ word }}
+          </span>
         </p>
       </div>
     </section>

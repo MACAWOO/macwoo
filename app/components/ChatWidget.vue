@@ -6,7 +6,7 @@ const messagesContainer = ref<HTMLElement | null>(null)
 
 interface ChatOption {
   id: number | string
-  icon: string
+  icon?: string
   question: string
   action?: string
   response?: string[]
@@ -27,7 +27,6 @@ interface ChatMessage {
 const faqOptions: ChatOption[] = [
   {
     id: 1,
-    icon: '🎨',
     question: 'What services do you offer?',
     response: [
       'Macawoo offers:',
@@ -39,7 +38,6 @@ const faqOptions: ChatOption[] = [
   },
   {
     id: 2,
-    icon: '💰',
     question: 'Get a Project Quote',
     response: [
       'We\'d be happy to understand your requirements and provide a custom quotation for your project.'
@@ -47,7 +45,6 @@ const faqOptions: ChatOption[] = [
   },
   {
     id: 3,
-    icon: '🎥',
     question: 'Do you provide Video Production Services?',
     response: [
       'Yes. We provide:',
@@ -60,7 +57,6 @@ const faqOptions: ChatOption[] = [
   },
   {
     id: 4,
-    icon: '📊',
     question: 'Do you manage Social Media Marketing?',
     response: [
       'Yes. We offer:',
@@ -73,7 +69,6 @@ const faqOptions: ChatOption[] = [
   },
   {
     id: 5,
-    icon: '🎨',
     question: 'Do you provide Branding Services?',
     response: [
       'Yes. We provide:',
@@ -86,7 +81,6 @@ const faqOptions: ChatOption[] = [
   },
   {
     id: 6,
-    icon: '🌐',
     question: 'Do you create Websites?',
     response: [
       'Yes. We design and develop:',
@@ -99,7 +93,6 @@ const faqOptions: ChatOption[] = [
   },
   {
     id: 7,
-    icon: '📞',
     question: 'Talk to Our Team',
     action: 'whatsapp'
   }
@@ -154,25 +147,33 @@ async function handleOptionClick(option: ChatOption, messageIndex: number) {
   }
 
   // 1. Add user message bubble
+  // 1. Add user message bubble
   messages.value.push({
     id: `user-${Date.now()}`,
-    text: `${option.icon} ${option.question}`,
+    text: option.question,
     from: 'user'
   })
 
   await scrollToBottom()
 
-  // Delay response slightly for natural feel (400ms)
-  setTimeout(async () => {
-    if (option.action === 'whatsapp') {
-      // Direct WhatsApp action
+  if (option.action === 'whatsapp') {
+    // Open WhatsApp synchronously to prevent popup blocker
+    openWhatsApp()
+    // Still add bot feedback bubble with natural delay
+    setTimeout(async () => {
       messages.value.push({
         id: `bot-wa-${Date.now()}`,
         text: 'Connecting you with our team on WhatsApp...',
         from: 'bot'
       })
-      openWhatsApp()
-    } else if (option.action === 'more_questions') {
+      await scrollToBottom()
+    }, 400)
+    return
+  }
+
+  // Delay response slightly for natural feel (400ms)
+  setTimeout(async () => {
+    if (option.action === 'more_questions') {
       // Display other questions
       messages.value.push({
         id: `bot-more-${Date.now()}`,
@@ -199,13 +200,11 @@ async function handleOptionClick(option: ChatOption, messageIndex: number) {
         options: [
           {
             id: 'more_questions',
-            icon: '❓',
             question: 'More Questions',
             action: 'more_questions'
           },
           {
             id: 7,
-            icon: '📞',
             question: 'Talk to Our Team',
             action: 'whatsapp'
           }
@@ -291,70 +290,88 @@ watch(isOpen, async (val) => {
         <!-- Messages area -->
         <div
           ref="messagesContainer"
-          class="bg-white mx-2 my-2 h-[290px] rounded-[12px] overflow-y-auto p-2.5 flex flex-col gap-2.5 shadow-inner scrollbar-hide"
+          class="bg-white mx-2 my-2 h-[380px] rounded-[12px] overflow-y-auto p-2.5 flex flex-col gap-2.5 shadow-inner scrollbar-hide"
         >
           <div class="flex flex-col gap-2.5">
-            <div
+            <template
               v-for="(msg, i) in messages"
               :key="msg.id"
-              :class="msg.from === 'user' ? 'flex justify-end' : 'flex justify-start'"
             >
-              <div class="flex flex-col max-w-[85%]">
-                <div
-                  class="px-3 py-1.5 text-[11px] font-semibold"
-                  :class="msg.from === 'bot' ? 'bot-bubble text-zinc-900 shadow-sm' : 'user-bubble shadow-sm'"
-                >
+              <div :class="msg.from === 'user' ? 'flex justify-end' : 'flex justify-start'">
+                <div class="flex flex-col max-w-[85%]">
                   <div
-                    v-if="msg.text"
-                    class="whitespace-pre-line leading-relaxed"
-                  >
-                    {{ msg.text }}
-                  </div>
-                  <div
-                    v-else-if="msg.list"
-                    class="flex flex-col gap-0.5 leading-relaxed"
+                    class="px-3 py-1.5 text-[11px] font-semibold"
+                    :class="msg.from === 'bot' ? 'bot-bubble text-zinc-900 shadow-sm' : 'user-bubble shadow-sm'"
                   >
                     <div
-                      v-for="(line, idx) in msg.list"
-                      :key="idx"
+                      v-if="msg.text"
+                      class="whitespace-pre-line leading-relaxed"
                     >
-                      {{ line }}
+                      {{ msg.text }}
                     </div>
-                  </div>
-
-                  <!-- Optional CTA inside bot bubble -->
-                  <button
-                    v-if="msg.from === 'bot' && msg.hasCTA"
-                    class="mt-2 w-full bg-[#0596B8] hover:bg-[#157d9b] text-white py-1.5 px-2.5 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all duration-200 cursor-pointer shadow-sm"
-                    @click="openWhatsApp(getWhatsAppMessageForCTA(msg))"
-                  >
-                    <svg
-                      class="w-3.5 h-3.5 fill-white"
-                      viewBox="0 0 24 24"
+                    <div
+                      v-else-if="msg.list"
+                      class="flex flex-col gap-0.5 leading-relaxed"
                     >
-                      <path d="M12.031 0C5.39 0 0 5.402 0 12.044c0 2.125.556 4.197 1.61 6.011L.03 24l6.14-1.613c1.77.965 3.754 1.474 5.86 1.478 6.643 0 12.043-5.402 12.043-12.044 0-3.22-1.252-6.243-3.52-8.514C18.283 1.252 15.26 0 12.03 0zm5.735 17.034c-.237.669-1.38 1.28-1.9 1.343-.49.057-1.127.085-3.328-.826-2.812-1.164-4.626-4.01-4.767-4.2-1.428-1.87-2.39-3.83-2.39-5.9 0-2.072 1.085-3.086 1.488-3.5.31-.32.793-.43.12-.43h.76c.203 0 .467.078.694.618.25.597.85 2.076.924 2.227.07.15.12.327.02.528-.1.2-.15.32-.3.497-.15.18-.32.404-.455.54-.15.15-.31.31-.132.61.18.3.792 1.306 1.7 2.115.938.835 1.734 1.095 2.062 1.25.328.15.518.13.71-.098.192-.228.825-.96.963-1.29.138-.33.275-.27.462-.2.188.07 1.192.562 1.396.666.204.103.34.152.39.237.05.085.05.498-.187 1.167z" />
-                    </svg>
-                    Talk to Our Team
-                  </button>
-                </div>
+                      <div
+                        v-for="(line, idx) in msg.list"
+                        :key="idx"
+                      >
+                        {{ line }}
+                      </div>
+                    </div>
 
-                <!-- FAQ buttons list appended inside option messages -->
-                <div
-                  v-if="msg.from === 'bot' && msg.showOptions"
-                  class="mt-2 flex flex-col gap-1.5 w-full"
-                >
+                    <!-- Optional CTA inside bot bubble -->
+                    <button
+                      v-if="msg.from === 'bot' && msg.hasCTA"
+                      class="mt-2 w-full bg-[#0596B8] hover:bg-[#157d9b] text-white py-1.5 px-2.5 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all duration-200 cursor-pointer shadow-sm"
+                      @click="openWhatsApp(getWhatsAppMessageForCTA(msg))"
+                    >
+                      <svg
+                        class="w-3.5 h-3.5 fill-white shrink-0"
+                        viewBox="0 0 98 98"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M77.523 69.1934C76.3421 72.5361 71.6478 75.3016 67.9042 76.1103C65.3415 76.6544 61.9997 77.0848 50.7395 72.4186C38.0926 67.1789 20.531 48.5148 20.531 36.0944C20.531 29.7715 24.1766 22.4089 30.5515 22.4089C33.6189 22.4089 34.2951 22.4687 35.3045 24.89C36.4854 27.7427 39.3666 34.771 39.7096 35.4915C41.1257 38.4471 38.269 40.1773 36.1963 42.7506C35.5348 43.525 34.7851 44.3625 35.623 45.8035C36.456 47.2152 39.3372 51.9109 43.5708 55.6801C49.0392 60.5521 53.4737 62.1076 55.0613 62.7693C56.2422 63.2594 57.6534 63.1453 58.5158 62.2238C59.6085 61.0425 60.9658 59.0827 62.3476 57.1515C63.3227 55.7693 64.5624 55.5967 65.8609 56.0868C66.738 56.3907 77.8855 61.5677 78.3559 62.396C78.7038 62.9989 78.7039 65.8505 77.523 69.1934ZM49.0098 0H48.9853C21.9716 0 0 21.9782 0 49C0 59.7146 3.45453 69.6552 9.32963 77.7181L3.22422 95.9256L22.0549 89.9083C29.8018 95.0353 39.0481 98 49.0098 98C76.0235 98 98 76.0218 98 49C98 21.9782 76.0235 0 49.0098 0Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      Talk to Our Team
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- FAQ buttons list on the right side -->
+              <div
+                v-if="msg.from === 'bot' && msg.showOptions"
+                class="flex justify-end w-full"
+              >
+                <div class="flex flex-col gap-1.5 w-[85%] items-end">
                   <button
                     v-for="opt in (msg.options || faqOptions)"
                     :key="opt.id"
-                    class="w-full text-left px-2.5 py-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-[#F7EC12]/10 hover:border-[#F7EC12] active:scale-[0.98] transition-all duration-200 text-[10px] font-semibold text-zinc-800 flex items-center gap-1.5 shadow-sm cursor-pointer"
+                    class="w-full text-left px-3 py-1.5 rounded-[12px_12px_3px_12px] bg-[#0596B8] text-white hover:bg-[#157d9b] active:scale-[0.98] transition-all duration-200 text-[11px] font-semibold flex items-center gap-1.5 shadow-sm cursor-pointer"
                     @click="handleOptionClick(opt, i)"
                   >
-                    <span class="text-xs shrink-0">{{ opt.icon }}</span>
+                    <svg
+                      class="w-3 h-3 shrink-0 opacity-80"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="15 10 20 15 15 20" />
+                      <path d="M4 4v7a4 4 0 0 0 4 4h12" />
+                    </svg>
                     <span class="leading-tight">{{ opt.question }}</span>
                   </button>
                 </div>
               </div>
-            </div>
+            </template>
           </div>
         </div>
       </div>
