@@ -125,7 +125,7 @@ useHead({
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
             <!-- Strategy Card -->
             <div
-              class="bg-[#0596B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start"
+              class="bg-[#0596B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_30px_rgba(5,150,184,0.35)]"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
               <div class="w-12 h-12 rounded-full border border-white/30 bg-[#0596B8] flex items-center justify-center text-white mb-6 relative z-10">
@@ -144,7 +144,7 @@ useHead({
 
             <!-- Creativity Card -->
             <div
-              class="bg-[#0596B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start"
+              class="bg-[#0596B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_30px_rgba(5,150,184,0.35)]"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
               <div class="w-12 h-12 rounded-full border border-white/30 bg-[#0596B8] flex items-center justify-center text-white mb-6 relative z-10">
@@ -163,7 +163,7 @@ useHead({
 
             <!-- Growth Card -->
             <div
-              class="bg-[#0596B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start"
+              class="bg-[#0596B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_30px_rgba(5,150,184,0.35)]"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
               <div class="w-12 h-12 rounded-full border border-white/30 bg-[#0596B8] flex items-center justify-center text-white mb-6 relative z-10">

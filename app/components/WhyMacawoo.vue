@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <section class="relative py-20 overflow-hidden bg-[#F4ED18]">
+  <section class="relative py-20 overflow-hidden bg-[#F7EC12]">
     <!-- Background Texture -->
     <div class="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none">
       <NuxtImg
@@ -27,9 +27,9 @@
       <!-- Cards Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Card 1 -->
-        <div class="bg-[#0596B8] rounded-[16px] p-8 flex flex-col h-full">
+        <div class="bg-[#0596B8] rounded-[16px] p-8 flex flex-col h-full transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_30px_rgba(5,150,184,0.35)]">
           <!-- Icon -->
-          <div class="w-[52px] h-[52px] rounded-full bg-[#F4ED18] flex items-center justify-center mb-8 shrink-0">
+          <div class="w-[52px] h-[52px] rounded-full bg-[#F7EC12] flex items-center justify-center mb-8 shrink-0">
             <svg
               width="24"
               height="24"
@@ -53,7 +53,7 @@
           </div>
           <!-- Title -->
           <h3
-            class="text-[#F4ED18] text-[22px] md:text-[24px] font-medium leading-[1.2] mb-6"
+            class="text-[#F7EC12] text-[22px] md:text-[24px] font-medium leading-[1.2] mb-6"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
           >
             Creative +<br>performance<br>driven
@@ -70,9 +70,9 @@
         </div>
 
         <!-- Card 2 -->
-        <div class="bg-[#0596B8] rounded-[16px] p-8 flex flex-col h-full">
+        <div class="bg-[#0596B8] rounded-[16px] p-8 flex flex-col h-full transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_30px_rgba(5,150,184,0.35)]">
           <!-- Icon -->
-          <div class="w-[52px] h-[52px] rounded-full bg-[#F4ED18] flex items-center justify-center mb-8 shrink-0">
+          <div class="w-[52px] h-[52px] rounded-full bg-[#F7EC12] flex items-center justify-center mb-8 shrink-0">
             <svg
               width="26"
               height="26"
@@ -103,7 +103,7 @@
           </div>
           <!-- Title -->
           <h3
-            class="text-[#F4ED18] text-[22px] md:text-[24px] font-medium leading-[1.2] mb-6"
+            class="text-[#F7EC12] text-[22px] md:text-[24px] font-medium leading-[1.2] mb-6"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
           >
             End-to-end<br>solutions<br>&nbsp;
@@ -120,9 +120,9 @@
         </div>
 
         <!-- Card 3 -->
-        <div class="bg-[#0596B8] rounded-[16px] p-8 flex flex-col h-full">
+        <div class="bg-[#0596B8] rounded-[16px] p-8 flex flex-col h-full transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_30px_rgba(5,150,184,0.35)]">
           <!-- Icon -->
-          <div class="w-[52px] h-[52px] rounded-full bg-[#F4ED18] flex items-center justify-center mb-8 shrink-0">
+          <div class="w-[52px] h-[52px] rounded-full bg-[#F7EC12] flex items-center justify-center mb-8 shrink-0">
             <svg
               width="26"
               height="26"
@@ -135,7 +135,7 @@
           </div>
           <!-- Title -->
           <h3
-            class="text-[#F4ED18] text-[22px] md:text-[24px] font-medium leading-[1.2] mb-6"
+            class="text-[#F7EC12] text-[22px] md:text-[24px] font-medium leading-[1.2] mb-6"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
           >
             Built for modern<br>brands<br>&nbsp;
@@ -152,9 +152,9 @@
         </div>
 
         <!-- Card 4 -->
-        <div class="bg-[#0596B8] rounded-[16px] p-8 flex flex-col h-full">
+        <div class="bg-[#0596B8] rounded-[16px] p-8 flex flex-col h-full transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_30px_rgba(5,150,184,0.35)]">
           <!-- Icon -->
-          <div class="w-[52px] h-[52px] rounded-full bg-[#F4ED18] flex items-center justify-center mb-8 shrink-0 relative">
+          <div class="w-[52px] h-[52px] rounded-full bg-[#F7EC12] flex items-center justify-center mb-8 shrink-0 relative">
             <svg
               width="26"
               height="26"
@@ -172,7 +172,7 @@
           </div>
           <!-- Title -->
           <h3
-            class="text-[#F4ED18] text-[22px] md:text-[24px] font-medium leading-[1.2] mb-6"
+            class="text-[#F7EC12] text-[22px] md:text-[24px] font-medium leading-[1.2] mb-6"
             style="font-family: 'Bricolage Grotesque', sans-serif;"
           >
             Strategy-first<br>approach<br>&nbsp;

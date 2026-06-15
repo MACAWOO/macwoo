@@ -267,7 +267,7 @@ const logos = [
           <div
             v-for="(step, idx) in steps"
             :key="step.number"
-            class="bg-[#0596B8] rounded-[8px] p-6 flex flex-col"
+            class="bg-[#0596B8] rounded-[8px] p-6 flex flex-col methodology-card"
             :class="idx > 0 ? 'reveal-card' : ''"
             :style="[idx > 0 ? { transitionDelay: ((idx - 1) * 150) + 'ms' } : {}, { border: '1px solid rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(2px)', minHeight: '218px' }]"
           >
@@ -347,5 +347,15 @@ const logos = [
 
 .animate-marquee:hover {
   animation-play-state: paused;
+}
+
+.methodology-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.8s ease;
+}
+
+.methodology-card:hover {
+  transform: translateY(-8px) !important;
+  box-shadow: 0 20px 30px rgba(5, 150, 184, 0.35);
+  transition-delay: 0s !important;
 }
 </style>

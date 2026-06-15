@@ -91,9 +91,9 @@ function formatDate(dateStr: string) {
             v-for="post in paginatedPosts"
             :key="post.slug"
             :to="`/blog/${post.slug}`"
-            class="group block rounded-[34px] overflow-hidden"
+            class="group flex flex-col h-full rounded-[34px] overflow-hidden"
           >
-            <div class="h-[337px] overflow-hidden rounded-t-[34px] bg-zinc-200">
+            <div class="h-[337px] overflow-hidden rounded-t-[34px] bg-zinc-200 shrink-0">
               <NuxtImg
                 :src="post.image"
                 :alt="post.title"
@@ -102,14 +102,14 @@ function formatDate(dateStr: string) {
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <div class="bg-white rounded-b-[34px] px-[21px] pt-[14px] pb-[18px] flex flex-col gap-[10px]">
+            <div class="bg-white rounded-b-[34px] px-[21px] pt-[14px] pb-[18px] flex-1 flex flex-col gap-[10px]">
               <div class="flex gap-2 flex-wrap">
-                <span class="border border-[#201f1f] rounded-full px-[9px] py-[3px] text-[16px] text-[#201f1f] leading-[28px] whitespace-nowrap">
+                <span class="border border-[#201f1f] rounded-full px-2.5 py-1 text-[14px] text-[#201f1f] leading-none whitespace-nowrap">
                   {{ formatDate(post.date) }}
                 </span>
-                <span class="border border-[#201f1f] rounded-full px-[9px] py-[3px] text-[16px] text-[#201f1f] leading-[28px] flex items-center gap-[5px] whitespace-nowrap">
+                <span class="border border-[#201f1f] rounded-full px-2.5 py-1 text-[14px] text-[#201f1f] leading-none flex items-center gap-1.5 whitespace-nowrap">
                   <svg
-                    class="w-[18px] h-[18px] shrink-0"
+                    class="w-[15px] h-[15px] shrink-0"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -129,7 +129,10 @@ function formatDate(dateStr: string) {
                   {{ post.readTime }}
                 </span>
               </div>
-              <h3 class="text-[32px] font-normal text-[#201f1f] leading-tight">
+              <h3
+                class="text-[22px] md:text-[24px] font-medium text-[#201f1f] leading-tight mt-10"
+                style="font-family: 'Bricolage Grotesque', sans-serif;"
+              >
                 {{ post.title }}
               </h3>
             </div>

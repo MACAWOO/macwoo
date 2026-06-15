@@ -397,9 +397,9 @@ onUnmounted(() => {
                   class="flex items-center gap-2 transition-opacity duration-300"
                   :style="{ opacity: labelOpacity }"
                 >
-                  <span class="w-2 h-2 rounded-full bg-[#F4ED18] inline-block shrink-0" />
+                  <span class="w-2 h-2 rounded-full bg-[#F7EC12] inline-block shrink-0" />
                   <span
-                    class="text-[#F4ED18] text-xs font-semibold uppercase tracking-[0.18em]"
+                    class="text-[#F7EC12] text-xs font-semibold uppercase tracking-[0.18em]"
                     style="font-family: 'Bricolage Grotesque', sans-serif;"
                   >About Us</span>
                 </div>
@@ -421,7 +421,7 @@ onUnmounted(() => {
 
                 <!-- Tagline below logo (fades in after logo finishes moving) -->
                 <p
-                  class="text-[#F4ED18] text-sm leading-relaxed max-w-[260px] transition-opacity duration-300"
+                  class="text-[#F7EC12] text-sm leading-relaxed max-w-[260px] transition-opacity duration-300"
                   :style="{ opacity: taglineOpacity }"
                   style="font-family: 'Bricolage Grotesque', sans-serif;"
                 >
@@ -615,7 +615,7 @@ onUnmounted(() => {
           <div class="relative w-full max-w-4xl mx-auto pl-16 md:pl-28 py-4">
             <!-- Stretching Yellow Pill background -->
             <div
-              class="absolute left-4 md:left-6 top-0 w-16 md:w-24 bg-gradient-to-b from-[#FCFFC1] to-[#F4ED18] rounded-t-full rounded-b-full transition-all duration-75 ease-out z-0"
+              class="absolute left-4 md:left-6 top-0 w-16 md:w-24 bg-gradient-to-b from-[#FCFFC1] to-[#F7EC12] rounded-t-full rounded-b-full transition-all duration-75 ease-out z-0"
               :style="{ height: isMobile ? '100%' : (approachProgress === 0 ? '80px' : `calc(80px + (100% - 80px) * ${approachProgress})`) }"
             />
 

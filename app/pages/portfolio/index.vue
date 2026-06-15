@@ -4,11 +4,6 @@ if (portfolioPromise) {
   await portfolioPromise
 }
 
-const { categories, fetchPromise: categoriesPromise } = useCategories()
-if (categoriesPromise) {
-  await categoriesPromise
-}
-
 useSeoMeta({
   title: 'Macawoo Portfolio — Selected Branding & Design Work',
   description: 'Work that speaks. Results that matter. A curated showcase of our finest projects.',
@@ -56,13 +51,7 @@ useHead({
   ]
 })
 
-const activeFilter = ref<string>('All')
-const filters = computed(() => ['All', ...categories.value])
-
-const filtered = computed(() => {
-  if (activeFilter.value === 'All') return projects.value
-  return projects.value.filter(p => p.category === activeFilter.value)
-})
+const filtered = computed(() => projects.value)
 
 const pairs = computed(() => {
   const result = []
@@ -85,23 +74,8 @@ const pairs = computed(() => {
     />
 
     <div class="bg-[#0596B8]">
-      <!-- Filters -->
-      <div class="max-w-[1200px] mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-8 sm:pb-10 flex flex-wrap gap-2 sm:gap-3 justify-center">
-        <button
-          v-for="filter in filters"
-          :key="filter"
-          class="px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full text-sm sm:text-base font-medium transition-colors whitespace-nowrap"
-          :class="activeFilter === filter
-            ? 'bg-brand-yellow-500 text-brand-dark'
-            : 'border border-brand-yellow-500 text-brand-yellow-500 hover:bg-brand-yellow-500/10'"
-          @click="activeFilter = filter"
-        >
-          {{ filter }}
-        </button>
-      </div>
-
       <!-- Portfolio grid -->
-      <div class="max-w-[1200px] mx-auto px-6 pb-16">
+      <div class="max-w-[1200px] mx-auto px-6 pt-10 sm:pt-16 pb-16">
         <div
           v-if="filtered.length"
           class="flex flex-col gap-10"

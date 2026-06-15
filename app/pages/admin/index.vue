@@ -212,10 +212,10 @@ const careerForm = ref({
 // Media Picker integration states
 const isMediaPickerOpen = ref(false)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const activeFieldRef = ref<{ obj: any, key: string } | null>(null)
+const activeFieldRef = ref<{ obj: any, key: string | number } | null>(null)
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const openMediaPicker = (obj: any, key: string) => {
+const openMediaPicker = (obj: any, key: string | number) => {
   activeFieldRef.value = { obj, key }
   isMediaPickerOpen.value = true
 }
@@ -748,7 +748,7 @@ const filteredCareers = computed(() => {
     <header class="bg-[#141111] text-white px-5 py-3.5 flex items-center justify-between border-b-4 border-[#0596B8] shrink-0">
       <div class="flex items-center gap-4">
         <h1 class="text-lg font-fredoka font-semibold tracking-wider text-white">
-          MACAWOO <span class="text-[#F4ED18]">ADMINISTRATION</span>
+          MACAWOO <span class="text-[#F7EC12]">ADMINISTRATION</span>
         </h1>
       </div>
       <div class="flex items-center gap-4 text-xs text-zinc-300">

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import LeftArrow from '~/components/LeftArrow.vue'
+
 const { posts, fetchPromise } = useBlogs()
 if (fetchPromise) {
   await fetchPromise
@@ -116,19 +118,9 @@ function formatDate(dateStr: string) {
         class="absolute top-[90px] left-[120px] bg-white flex items-center gap-[3px] px-5 py-[10px] rounded-full font-extrabold text-[16px] text-[#201f1f] leading-[28px] hover:bg-zinc-100 transition-colors z-10 cursor-pointer"
         @click="$router.back()"
       >
-        <svg
-          class="w-[14px] h-[14px] shrink-0 -rotate-45"
-          viewBox="0 0 14 14"
-          fill="none"
-        >
-          <path
-            d="M2 12L12 2M12 2H4M12 2V10"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
+        <LeftArrow 
+        class="w-[12px] h-[12px] shrink-0 transition-transform duration-300 ease-out group-hover/cta:translate-x-[2px] group-hover/cta:-translate-y-[2px]"
+        />
         Back
       </button>
     </div>
