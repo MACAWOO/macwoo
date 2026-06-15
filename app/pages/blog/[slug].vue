@@ -118,8 +118,8 @@ function formatDate(dateStr: string) {
         class="absolute top-[90px] left-[120px] bg-white flex items-center gap-[3px] px-5 py-[10px] rounded-full font-extrabold text-[16px] text-[#201f1f] leading-[28px] hover:bg-zinc-100 transition-colors z-10 cursor-pointer"
         @click="$router.back()"
       >
-        <LeftArrow 
-        class="w-[12px] h-[12px] shrink-0 transition-transform duration-300 ease-out group-hover/cta:translate-x-[2px] group-hover/cta:-translate-y-[2px]"
+        <LeftArrow
+          class="w-[12px] h-[12px] shrink-0 transition-transform duration-300 ease-out group-hover/cta:translate-x-[2px] group-hover/cta:-translate-y-[2px]"
         />
         Back
       </button>

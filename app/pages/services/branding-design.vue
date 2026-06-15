@@ -301,7 +301,7 @@ const logos = [
          BUILD YOUR BRAND CTA
          ═══════════════════════════════════════════ -->
     <section class="py-16 md:py-20 bg-white text-center">
-      <div class="max-w-[524px] mx-auto px-6">
+      <div class="max-w-[700px] mx-auto px-6">
         <h2
           class="text-[#0596B8] text-[40px] md:text-[64px] leading-[1.2] font-medium mb-0"
           style="font-family: 'Fredoka', sans-serif;"

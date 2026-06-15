@@ -132,7 +132,7 @@ const logos = [
           class="text-white text-[14px] md:text-[18px] font-normal leading-[28px] max-w-[910px]"
           style="font-family: 'Bricolage Grotesque', sans-serif;"
         >
-          Growth Isn't Luck. It's Strategy.
+          Growth Isn't Luck.<br> It's Strategy.
         </p>
       </div>
 
@@ -237,7 +237,7 @@ const logos = [
          BUILD YOUR BRAND CTA
          ═══════════════════════════════════════════ -->
     <section class="py-16 md:py-20 bg-white text-center">
-      <div class="max-w-[524px] mx-auto px-6">
+      <div class="max-w-[700px] mx-auto px-6">
         <h2
           class="text-black text-[40px] md:text-[64px] leading-[1.2] font-medium mb-0"
           style="font-family: 'Fredoka', sans-serif;"
