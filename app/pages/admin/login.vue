@@ -43,7 +43,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="relative min-h-screen flex items-center justify-center px-4 py-10 font-sans antialiased bg-[#1D96B8]">
+  <div class="relative min-h-screen flex items-center justify-center px-4 py-10 font-sans antialiased bg-[#0596B8]">
     <div class="relative w-full max-w-sm z-10">
       <!-- Logo lockup (speech-bubble + blue inner circle motif) -->
       <div class="flex flex-col items-center mb-8 select-none">
@@ -57,14 +57,14 @@ const handleSubmit = async () => {
               cx="50"
               cy="50"
               r="40"
-              fill="#EDE000"
+              fill="#F7EC12"
             />
             <polygon
               points="65,82 82,65 88,88"
-              fill="#EDE000"
+              fill="#F7EC12"
             />
           </svg>
-          <div class="w-[34px] h-[34px] bg-[#1D96B8] rounded-full absolute z-0 transition-transform duration-500 group-hover/logo:scale-95" />
+          <div class="w-[34px] h-[34px] bg-[#0596B8] rounded-full absolute z-0 transition-transform duration-500 group-hover/logo:scale-95" />
           <img
             src="/Images/Logo.png"
             alt="Macawoo"
@@ -81,7 +81,7 @@ const handleSubmit = async () => {
 
       <!-- Yellow Login Card -->
       <form
-        class="relative rounded-[24px] p-8 space-y-6 bg-[#EDE000] border border-[#e2d500] shadow-[0_24px_50px_-12px_rgba(0,0,0,0.25)]"
+        class="relative rounded-[24px] p-8 space-y-6 bg-[#F7EC12] border border-[#EAD611] shadow-[0_24px_50px_-12px_rgba(0,0,0,0.25)]"
         @submit.prevent="handleSubmit"
       >
         <transition
@@ -116,7 +116,7 @@ const handleSubmit = async () => {
             Email
           </label>
           <div class="relative group/input">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400 transition-colors duration-300 group-focus-within/input:text-[#1D96B8]">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400 transition-colors duration-300 group-focus-within/input:text-[#0596B8]">
               <svg
                 class="w-4 h-4"
                 fill="none"
@@ -137,7 +137,7 @@ const handleSubmit = async () => {
               required
               autocomplete="username"
               placeholder="you@macawoo.com"
-              class="w-full pl-11 pr-4 py-3 rounded-xl text-sm text-zinc-900 bg-white border border-zinc-200/80 placeholder:text-zinc-400 focus:outline-none focus:border-[#1D96B8] focus:ring-2 focus:ring-[#1D96B8]/20 transition-all duration-300 shadow-sm"
+              class="w-full pl-11 pr-4 py-3 rounded-xl text-sm text-zinc-900 bg-white border border-zinc-200/80 placeholder:text-zinc-400 focus:outline-none focus:border-[#0596B8] focus:ring-2 focus:ring-[#0596B8]/20 transition-all duration-300 shadow-sm"
             >
           </div>
         </div>
@@ -148,7 +148,7 @@ const handleSubmit = async () => {
             Password
           </label>
           <div class="relative group/input">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400 transition-colors duration-300 group-focus-within/input:text-[#1D96B8]">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400 transition-colors duration-300 group-focus-within/input:text-[#0596B8]">
               <svg
                 class="w-4 h-4"
                 fill="none"
@@ -169,7 +169,7 @@ const handleSubmit = async () => {
               required
               autocomplete="current-password"
               placeholder="••••••••"
-              class="w-full pl-11 pr-11 py-3 rounded-xl text-sm text-zinc-900 bg-white border border-zinc-200/80 placeholder:text-zinc-400 focus:outline-none focus:border-[#1D96B8] focus:ring-2 focus:ring-[#1D96B8]/20 transition-all duration-300 shadow-sm"
+              class="w-full pl-11 pr-11 py-3 rounded-xl text-sm text-zinc-900 bg-white border border-zinc-200/80 placeholder:text-zinc-400 focus:outline-none focus:border-[#0596B8] focus:ring-2 focus:ring-[#0596B8]/20 transition-all duration-300 shadow-sm"
             >
             <button
               type="button"
@@ -219,7 +219,7 @@ const handleSubmit = async () => {
         <button
           type="submit"
           :disabled="isSubmittingForm"
-          class="group relative w-full py-3 rounded-xl bg-[#1D96B8] hover:bg-[#157d9b] disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-bold shadow-[0_4px_14px_rgba(29,150,184,0.35)] hover:shadow-[0_4px_18px_rgba(29,150,184,0.5)] cursor-pointer transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-2 border border-[#1D96B8]/10"
+          class="group relative w-full py-3 rounded-xl bg-[#0596B8] hover:bg-[#157d9b] disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-bold shadow-[0_4px_14px_rgba(29,150,184,0.35)] hover:shadow-[0_4px_18px_rgba(29,150,184,0.5)] cursor-pointer transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-2 border border-[#0596B8]/10"
         >
           <svg
             v-if="isSubmittingForm"

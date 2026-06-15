@@ -44,12 +44,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section class="py-16 md:py-20 bg-[#1D96B8]">
+  <section class="py-16 md:py-20 bg-[#0596B8]">
     <div class="max-w-[1201px] mx-auto px-6 md:px-8">
       <!-- ── Header ── -->
       <div class="text-center max-w-[700px] mx-auto mb-14 md:mb-16">
         <h2
-          class="text-[#E8F600] text-[36px] md:text-[48px] leading-[1.15] font-medium mb-4"
+          class="text-[#F4ED18] text-[36px] md:text-[48px] leading-[1.15] font-medium mb-4"
           style="font-family: 'Fredoka', sans-serif;"
         >
           Featured Work
@@ -121,7 +121,7 @@ onUnmounted(() => {
       <div class="mt-14 md:mt-16">
         <NuxtLink
           to="/portfolio"
-          class="group/btn w-full flex items-center justify-center gap-2.5 py-4 bg-[#E8F600] hover:bg-[#dce400] text-black text-[15px] md:text-[16px] font-bold rounded-full transition-all duration-300 ease-out hover:-translate-y-[1px]"
+          class="group/btn w-full flex items-center justify-center gap-2.5 py-4 bg-[#F4ED18] hover:bg-[#dce400] text-black text-[15px] md:text-[16px] font-bold rounded-full transition-all duration-300 ease-out hover:-translate-y-[1px]"
           style="font-family: 'Bricolage Grotesque', sans-serif;"
         >
           <span>View All Projects</span>

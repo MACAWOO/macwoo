@@ -137,7 +137,7 @@ const paragraphs = computed(() =>
     </div>
 
     <!-- ── Teal Info Section ── -->
-    <div class="bg-[#1D96B8] px-6 md:px-[120px] py-16">
+    <div class="bg-[#0596B8] px-6 md:px-[120px] py-16">
       <!-- metadata pills -->
       <div class="flex flex-wrap gap-2 mb-7">
         <!-- services pill -->
@@ -269,7 +269,7 @@ const paragraphs = computed(() =>
     <!-- ── Story Section ── -->
     <div class="bg-white px-6 md:px-[120px] py-16">
       <h2
-        class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#1D96B8] mb-5 leading-tight"
+        class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#0596B8] mb-5 leading-tight"
         style="font-variation-settings: 'wdth' 100"
       >
         The Story Behind the Project
@@ -291,7 +291,7 @@ const paragraphs = computed(() =>
       class="bg-brand-yellow-500 px-6 md:px-[120px] py-16"
     >
       <h2
-        class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#1D96B8] mb-5 leading-tight"
+        class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#0596B8] mb-5 leading-tight"
         style="font-variation-settings: 'wdth' 100"
       >
         Design Highlights

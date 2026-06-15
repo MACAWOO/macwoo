@@ -45,7 +45,7 @@ useHead({
     <section class="bg-[#F8F9FA] py-16 md:py-24 text-center">
       <div class="max-w-[1266px] mx-auto px-6">
         <p
-          class="text-[#1D96B8] text-xs font-semibold uppercase tracking-[0.18em] mb-6"
+          class="text-[#0596B8] text-xs font-semibold uppercase tracking-[0.18em] mb-6"
           style="font-family: 'Bricolage Grotesque', sans-serif;"
         >
           Who We Are
@@ -60,7 +60,7 @@ useHead({
     </section>
 
     <!-- What We Believe Section -->
-    <section class="bg-[#1D96B8] py-16 md:py-24 text-white">
+    <section class="bg-[#0596B8] py-16 md:py-24 text-white">
       <div class="max-w-[1266px] mx-auto px-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
           <!-- Left column: Visual rounded box -->
@@ -110,7 +110,7 @@ useHead({
       <div class="max-w-[1266px] mx-auto px-6">
         <!-- Title -->
         <h2
-          class="text-[#1D96B8] text-3xl md:text-4xl lg:text-[48px] font-medium mb-12"
+          class="text-[#0596B8] text-3xl md:text-4xl lg:text-[48px] font-medium mb-12"
           style="font-family: 'Fredoka', sans-serif;"
         >
           How We Work
@@ -119,16 +119,16 @@ useHead({
         <!-- Cards Grid Container -->
         <div class="relative">
           <!-- Connecting Line (Desktop) -->
-          <div class="hidden md:block absolute left-[15%] right-[15%] top-16 h-[2px] border-t-2 border-dashed border-[#1D96B8]/30 z-0" />
+          <div class="hidden md:block absolute left-[15%] right-[15%] top-16 h-[2px] border-t-2 border-dashed border-[#0596B8]/30 z-0" />
 
           <!-- Cards Grid -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
             <!-- Strategy Card -->
             <div
-              class="bg-[#1D96B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start"
+              class="bg-[#0596B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
-              <div class="w-12 h-12 rounded-full border border-white/30 bg-[#1D96B8] flex items-center justify-center text-white mb-6 relative z-10">
+              <div class="w-12 h-12 rounded-full border border-white/30 bg-[#0596B8] flex items-center justify-center text-white mb-6 relative z-10">
                 <UIcon
                   name="i-lucide-compass"
                   class="w-6 h-6"
@@ -144,10 +144,10 @@ useHead({
 
             <!-- Creativity Card -->
             <div
-              class="bg-[#1D96B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start"
+              class="bg-[#0596B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
-              <div class="w-12 h-12 rounded-full border border-white/30 bg-[#1D96B8] flex items-center justify-center text-white mb-6 relative z-10">
+              <div class="w-12 h-12 rounded-full border border-white/30 bg-[#0596B8] flex items-center justify-center text-white mb-6 relative z-10">
                 <UIcon
                   name="i-lucide-palette"
                   class="w-6 h-6"
@@ -163,10 +163,10 @@ useHead({
 
             <!-- Growth Card -->
             <div
-              class="bg-[#1D96B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start"
+              class="bg-[#0596B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
-              <div class="w-12 h-12 rounded-full border border-white/30 bg-[#1D96B8] flex items-center justify-center text-white mb-6 relative z-10">
+              <div class="w-12 h-12 rounded-full border border-white/30 bg-[#0596B8] flex items-center justify-center text-white mb-6 relative z-10">
                 <UIcon
                   name="i-lucide-trending-up"
                   class="w-6 h-6"
@@ -185,7 +185,7 @@ useHead({
     </section>
 
     <!-- Vision Section -->
-    <section class="bg-[#1D96B8] py-16 md:py-24 text-white text-center">
+    <section class="bg-[#0596B8] py-16 md:py-24 text-white text-center">
       <div class="max-w-[1266px] mx-auto px-6">
         <p
           class="text-white/80 text-xs font-semibold uppercase tracking-[0.18em] mb-6"
@@ -206,7 +206,7 @@ useHead({
     <section class="bg-brand-yellow-500 py-20 md:py-28 text-center flex flex-col items-center justify-center">
       <div class="max-w-4xl mx-auto px-6">
         <h2
-          class="text-[#1D96B8] text-3xl md:text-5xl lg:text-[56px] font-medium leading-tight mb-6"
+          class="text-[#0596B8] text-3xl md:text-5xl lg:text-[56px] font-medium leading-tight mb-6"
           style="font-family: 'Bricolage Grotesque', sans-serif;"
         >
           To create brands that people don't just notice—but remember.
@@ -219,7 +219,7 @@ useHead({
         </p>
         <NuxtLink
           to="/contact"
-          class="inline-flex items-center gap-2 px-8 py-4 bg-[#1D96B8] text-white font-bold rounded-full text-sm hover:bg-[#1D96B8]/90 transition-colors"
+          class="inline-flex items-center gap-2 px-8 py-4 bg-[#0596B8] text-white font-bold rounded-full text-sm hover:bg-[#0596B8]/90 transition-colors"
           style="font-family: 'Bricolage Grotesque', sans-serif;"
         >
           Start Your Project <UpRightArrow

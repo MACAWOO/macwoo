@@ -254,7 +254,7 @@ const filteredFiles = computed(() => {
       <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-2">
           <svg
-            class="w-5 h-5 text-[#1D96B8]"
+            class="w-5 h-5 text-[#0596B8]"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -267,7 +267,7 @@ const filteredFiles = computed(() => {
             />
           </svg>
           <h2 class="text-sm font-bold text-zinc-800 uppercase tracking-wider">
-            {{ inline ? 'Media Library' : 'Supabase Media Picker' }}: <span class="text-[#1D96B8]">{{ bucketName }}</span>
+            {{ inline ? 'Media Library' : 'Supabase Media Picker' }}: <span class="text-[#0596B8]">{{ bucketName }}</span>
           </h2>
         </div>
         <button
@@ -318,7 +318,7 @@ const filteredFiles = computed(() => {
                 v-model="searchQuery"
                 type="text"
                 placeholder="Search files..."
-                class="w-full pl-9 pr-4 py-1.5 border border-zinc-300 rounded-lg text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] focus:bg-white"
+                class="w-full pl-9 pr-4 py-1.5 border border-zinc-300 rounded-lg text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] focus:bg-white"
               >
             </div>
 
@@ -346,7 +346,7 @@ const filteredFiles = computed(() => {
                 </svg>
               </button>
 
-              <label class="px-4 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer transition-colors">
+              <label class="px-4 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-bold rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer transition-colors">
                 <svg
                   class="w-4 h-4"
                   fill="none"
@@ -396,7 +396,7 @@ const filteredFiles = computed(() => {
             </div>
             <div class="w-full bg-zinc-200 h-2 rounded-full overflow-hidden">
               <div
-                class="bg-[#1D96B8] h-full transition-all duration-300"
+                class="bg-[#0596B8] h-full transition-all duration-300"
                 :style="`width: ${uploadProgress}%`"
               />
             </div>
@@ -405,7 +405,7 @@ const filteredFiles = computed(() => {
           <!-- Files Grid / Dropzone container -->
           <div
             class="flex-1 overflow-y-auto border border-dashed rounded-xl p-4 min-h-0"
-            :class="isDragging ? 'border-[#1D96B8] bg-blue-50/20' : 'border-zinc-200 bg-white'"
+            :class="isDragging ? 'border-[#0596B8] bg-blue-50/20' : 'border-zinc-200 bg-white'"
             @dragover.prevent="isDragging = true"
             @dragleave.prevent="isDragging = false"
             @drop.prevent="onDrop"
@@ -457,7 +457,7 @@ const filteredFiles = computed(() => {
                 v-for="file in filteredFiles"
                 :key="file.name"
                 class="group relative aspect-square border bg-zinc-50 rounded-xl overflow-hidden cursor-pointer select-none transition-all flex flex-col"
-                :class="selectedFile?.name === file.name ? 'border-[#1D96B8] ring-2 ring-[#1D96B8]/30 shadow-md' : 'border-zinc-200 hover:border-zinc-300'"
+                :class="selectedFile?.name === file.name ? 'border-[#0596B8] ring-2 ring-[#0596B8]/30 shadow-md' : 'border-zinc-200 hover:border-zinc-300'"
                 @click="selectedFile = file"
                 @dblclick="selectedFile = file; confirmSelection()"
               >
@@ -477,7 +477,7 @@ const filteredFiles = computed(() => {
                     class="flex flex-col items-center"
                   >
                     <svg
-                      class="w-10 h-10 text-zinc-400 group-hover:text-[#1D96B8] transition-colors"
+                      class="w-10 h-10 text-zinc-400 group-hover:text-[#0596B8] transition-colors"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -520,7 +520,7 @@ const filteredFiles = computed(() => {
                   <!-- Quick Select checkbox Indicator top right -->
                   <div
                     class="absolute top-2 right-2 w-4 h-4 rounded-full flex items-center justify-center transition-opacity"
-                    :class="selectedFile?.name === file.name ? 'bg-[#1D96B8] text-white opacity-100' : 'bg-black/30 text-white/70 opacity-0 group-hover:opacity-100'"
+                    :class="selectedFile?.name === file.name ? 'bg-[#0596B8] text-white opacity-100' : 'bg-black/30 text-white/70 opacity-0 group-hover:opacity-100'"
                   >
                     <svg
                       class="w-3 h-3"
@@ -643,7 +643,7 @@ const filteredFiles = computed(() => {
             <div class="pt-6 border-t border-zinc-200 space-y-2 mt-6">
               <button
                 v-if="!inline"
-                class="w-full py-2 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded-lg shadow-sm flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                class="w-full py-2 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-bold rounded-lg shadow-sm flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                 @click="confirmSelection"
               >
                 <svg
@@ -663,7 +663,7 @@ const filteredFiles = computed(() => {
               </button>
               <button
                 v-else
-                class="w-full py-2 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded-lg shadow-sm flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                class="w-full py-2 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-bold rounded-lg shadow-sm flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                 @click="copyUrlToClipboard"
               >
                 <svg

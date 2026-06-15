@@ -745,10 +745,10 @@ const filteredCareers = computed(() => {
 <template>
   <div class="min-h-screen bg-[#f8f9fa] text-zinc-800 font-sans flex flex-col antialiased">
     <!-- Django Style Topbar Header -->
-    <header class="bg-[#141111] text-white px-5 py-3.5 flex items-center justify-between border-b-4 border-[#1D96B8] shrink-0">
+    <header class="bg-[#141111] text-white px-5 py-3.5 flex items-center justify-between border-b-4 border-[#0596B8] shrink-0">
       <div class="flex items-center gap-4">
         <h1 class="text-lg font-fredoka font-semibold tracking-wider text-white">
-          MACAWOO <span class="text-[#E8F600]">ADMINISTRATION</span>
+          MACAWOO <span class="text-[#F4ED18]">ADMINISTRATION</span>
         </h1>
       </div>
       <div class="flex items-center gap-4 text-xs text-zinc-300">
@@ -811,7 +811,7 @@ const filteredCareers = computed(() => {
         <div class="p-2 space-y-4">
           <!-- Blog Application -->
           <div class="space-y-1">
-            <div class="px-2 py-1 text-xs font-bold text-[#1D96B8] uppercase tracking-wide">
+            <div class="px-2 py-1 text-xs font-bold text-[#0596B8] uppercase tracking-wide">
               Blog Journal
             </div>
             <div class="flex items-center justify-between px-2.5 py-1 text-xs hover:bg-zinc-50 rounded">
@@ -840,7 +840,7 @@ const filteredCareers = computed(() => {
 
           <!-- Portfolio Application -->
           <div class="space-y-1">
-            <div class="px-2 py-1 text-xs font-bold text-[#1D96B8] uppercase tracking-wide">
+            <div class="px-2 py-1 text-xs font-bold text-[#0596B8] uppercase tracking-wide">
               Portfolio
             </div>
             <div class="flex items-center justify-between px-2.5 py-1 text-xs hover:bg-zinc-50 rounded">
@@ -869,7 +869,7 @@ const filteredCareers = computed(() => {
 
           <!-- Case Studies Application -->
           <div class="space-y-1">
-            <div class="px-2 py-1 text-xs font-bold text-[#1D96B8] uppercase tracking-wide">
+            <div class="px-2 py-1 text-xs font-bold text-[#0596B8] uppercase tracking-wide">
               Case Studies
             </div>
             <div class="flex items-center justify-between px-2.5 py-1 text-xs hover:bg-zinc-50 rounded">
@@ -898,7 +898,7 @@ const filteredCareers = computed(() => {
 
           <!-- Careers Application -->
           <div class="space-y-1">
-            <div class="px-2 py-1 text-xs font-bold text-[#1D96B8] uppercase tracking-wide">
+            <div class="px-2 py-1 text-xs font-bold text-[#0596B8] uppercase tracking-wide">
               Careers
             </div>
             <div class="flex items-center justify-between px-2.5 py-1 text-xs hover:bg-zinc-50 rounded">
@@ -926,7 +926,7 @@ const filteredCareers = computed(() => {
 
             <!-- Site Customizer -->
             <div class="space-y-1">
-              <div class="px-2 py-1 text-xs font-bold text-[#1D96B8] uppercase tracking-wide">
+              <div class="px-2 py-1 text-xs font-bold text-[#0596B8] uppercase tracking-wide">
                 Site Customizer
               </div>
               <div class="flex items-center justify-between px-2.5 py-1 text-xs hover:bg-zinc-50 rounded">
@@ -1020,7 +1020,7 @@ const filteredCareers = computed(() => {
                     </td>
                     <td class="p-3 text-right space-x-3">
                       <button
-                        class="text-[#1D96B8] hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        class="text-[#0596B8] hover:underline cursor-pointer bg-transparent border-0 p-0"
                         @click="openAddForm('blog')"
                       >
                         + Add
@@ -1045,7 +1045,7 @@ const filteredCareers = computed(() => {
                     </td>
                     <td class="p-3 text-right space-x-3">
                       <button
-                        class="text-[#1D96B8] hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        class="text-[#0596B8] hover:underline cursor-pointer bg-transparent border-0 p-0"
                         @click="openAddForm('portfolio')"
                       >
                         + Add
@@ -1070,7 +1070,7 @@ const filteredCareers = computed(() => {
                     </td>
                     <td class="p-3 text-right space-x-3">
                       <button
-                        class="text-[#1D96B8] hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        class="text-[#0596B8] hover:underline cursor-pointer bg-transparent border-0 p-0"
                         @click="openAddForm('case-study')"
                       >
                         + Add
@@ -1095,7 +1095,7 @@ const filteredCareers = computed(() => {
                     </td>
                     <td class="p-3 text-right space-x-3">
                       <button
-                        class="text-[#1D96B8] hover:underline cursor-pointer bg-transparent border-0 p-0"
+                        class="text-[#0596B8] hover:underline cursor-pointer bg-transparent border-0 p-0"
                         @click="openAddForm('career')"
                       >
                         + Add
@@ -1243,11 +1243,11 @@ const filteredCareers = computed(() => {
                   type="text"
                   placeholder="e.g. Branding & Identity"
                   required
-                  class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-white focus:outline-none focus:border-[#1D96B8]"
+                  class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-white focus:outline-none focus:border-[#0596B8]"
                 >
                 <button
                   type="submit"
-                  class="px-4 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded shadow-sm cursor-pointer"
+                  class="px-4 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-bold rounded shadow-sm cursor-pointer"
                 >
                   + Add Category
                 </button>
@@ -1305,7 +1305,7 @@ const filteredCareers = computed(() => {
                 Select {{ currentModel === 'case-study' ? 'case study' : currentModel === 'career' ? 'role' : currentModel }} to change
               </h2>
               <button
-                class="px-4 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-bold rounded shadow-sm cursor-pointer"
+                class="px-4 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-bold rounded shadow-sm cursor-pointer"
                 @click="openAddForm(currentModel)"
               >
                 + Add {{ currentModel === 'case-study' ? 'Case Study' : currentModel === 'career' ? 'Role' : currentModel.toUpperCase() }}
@@ -1321,7 +1321,7 @@ const filteredCareers = computed(() => {
                     v-model="searchQueries[currentModel]"
                     type="text"
                     placeholder="Search title, keyword or key identifiers..."
-                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     @keydown.enter="allSelected = false"
                   >
                   <button
@@ -1406,7 +1406,7 @@ const filteredCareers = computed(() => {
                         </td>
                         <td class="p-3">
                           <button
-                            class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
+                            class="text-[#0596B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
                             @click="openEditForm('blog', post.slug)"
                           >
                             {{ post.title }}
@@ -1487,7 +1487,7 @@ const filteredCareers = computed(() => {
                         </td>
                         <td class="p-3">
                           <button
-                            class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
+                            class="text-[#0596B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
                             @click="openEditForm('portfolio', proj.slug)"
                           >
                             {{ proj.title }}
@@ -1564,7 +1564,7 @@ const filteredCareers = computed(() => {
                         </td>
                         <td class="p-3">
                           <button
-                            class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
+                            class="text-[#0596B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
                             @click="openEditForm('case-study', study.slug)"
                           >
                             {{ study.title }}
@@ -1639,7 +1639,7 @@ const filteredCareers = computed(() => {
                         </td>
                         <td class="p-3">
                           <button
-                            class="text-[#1D96B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
+                            class="text-[#0596B8] hover:underline cursor-pointer font-bold text-left bg-transparent border-0 p-0"
                             @click="openEditForm('career', job.id)"
                           >
                             {{ job.title }}
@@ -1690,7 +1690,7 @@ const filteredCareers = computed(() => {
                       >
                         <button
                           class="hover:underline text-left cursor-pointer bg-transparent border-0 p-0"
-                          :class="activeFilters.portfolioCategory === cat ? 'text-[#1D96B8] font-bold' : 'text-zinc-600'"
+                          :class="activeFilters.portfolioCategory === cat ? 'text-[#0596B8] font-bold' : 'text-zinc-600'"
                           @click="activeFilters.portfolioCategory = cat; allSelected = false"
                         >
                           {{ cat }}
@@ -1709,7 +1709,7 @@ const filteredCareers = computed(() => {
                       >
                         <button
                           class="hover:underline text-left cursor-pointer bg-transparent border-0 p-0"
-                          :class="activeFilters.portfolioFeatured === feat ? 'text-[#1D96B8] font-bold' : 'text-zinc-600'"
+                          :class="activeFilters.portfolioFeatured === feat ? 'text-[#0596B8] font-bold' : 'text-zinc-600'"
                           @click="activeFilters.portfolioFeatured = feat; allSelected = false"
                         >
                           {{ feat }}
@@ -1735,7 +1735,7 @@ const filteredCareers = computed(() => {
                       >
                         <button
                           class="hover:underline text-left cursor-pointer bg-transparent border-0 p-0"
-                          :class="activeFilters.blogYear === yr ? 'text-[#1D96B8] font-bold' : 'text-zinc-600'"
+                          :class="activeFilters.blogYear === yr ? 'text-[#0596B8] font-bold' : 'text-zinc-600'"
                           @click="activeFilters.blogYear = yr; allSelected = false"
                         >
                           {{ yr }}
@@ -1791,11 +1791,11 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. /Images/hero.png"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(settingsForm, 'indexHeroImage')"
                       >
                         Pick Media
@@ -1834,11 +1834,11 @@ const filteredCareers = computed(() => {
                         v-model="settingsForm.indexHeroVideo"
                         type="text"
                         placeholder="e.g. /Background_Videos/Hero.mp4 (leave empty to show background image)"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(settingsForm, 'indexHeroVideo')"
                       >
                         Pick Media
@@ -1864,11 +1864,11 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. /Images/Branding.jpeg"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(settingsForm, 'aboutHeroImage')"
                       >
                         Pick Media
@@ -1908,11 +1908,11 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. /Background_Videos/About.mp4"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(settingsForm, 'aboutHeroVideo')"
                       >
                         Pick Media
@@ -1935,11 +1935,11 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. /Images/Branding.jpeg"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(settingsForm, 'blogHeroImage')"
                       >
                         Pick Media
@@ -1979,11 +1979,11 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. /Background_Videos/Blog.mp4"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(settingsForm, 'blogHeroVideo')"
                       >
                         Pick Media
@@ -2006,11 +2006,11 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. /Images/Branding.jpeg"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(settingsForm, 'servicesBrandingImage')"
                       >
                         Pick Media
@@ -2050,11 +2050,11 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. /Images/Digital_Marketing.jpeg"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(settingsForm, 'servicesMarketingImage')"
                       >
                         Pick Media
@@ -2094,11 +2094,11 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. /Images/Video_Production.jpeg"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(settingsForm, 'servicesVideoImage')"
                       >
                         Pick Media
@@ -2143,11 +2143,11 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. /Images/Designing.jpeg"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(settingsForm, 'careersHeroImage')"
                       >
                         Pick Media
@@ -2187,11 +2187,11 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. /Background_Videos/Careers.mp4"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(settingsForm, 'careersHeroVideo')"
                       >
                         Pick Media
@@ -2209,11 +2209,11 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. /Images/Marketing.jpeg"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(settingsForm, 'contactHeroImage')"
                       >
                         Pick Media
@@ -2253,11 +2253,11 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. /Background_Videos/Contact.mp4"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(settingsForm, 'contactHeroVideo')"
                       >
                         Pick Media
@@ -2278,7 +2278,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. Scaling Brand Identity in 2026"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                     <p class="text-[10px] text-zinc-400">
                       The core heading of the journal page.
@@ -2294,7 +2294,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. scaling-brand-identity-2026"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                       :disabled="currentId !== null"
                     >
                     <p class="text-[10px] text-zinc-400">
@@ -2311,7 +2311,7 @@ const filteredCareers = computed(() => {
                       required
                       rows="2"
                       placeholder="A short card synopsis summary..."
-                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     />
                   </div>
                 </div>
@@ -2323,7 +2323,7 @@ const filteredCareers = computed(() => {
                       v-model="blogForm.date"
                       type="date"
                       required
-                      class="w-48 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-48 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2336,7 +2336,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. 5 Min Read"
-                      class="w-48 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-48 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2349,11 +2349,11 @@ const filteredCareers = computed(() => {
                         v-model="blogForm.image"
                         type="text"
                         required
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(blogForm, 'image')"
                       >
                         Pick Media
@@ -2396,7 +2396,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. Lecrown Brand Launch"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2409,7 +2409,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. lecrown"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                       :disabled="currentId !== null"
                     >
                   </div>
@@ -2423,7 +2423,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. Branding & Strategy Development"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2433,7 +2433,7 @@ const filteredCareers = computed(() => {
                   <div class="flex-1 w-full space-y-1">
                     <select
                       v-model="portfolioForm.category"
-                      class="w-48 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-48 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                       <option
                         v-for="cat in categories"
@@ -2453,7 +2453,7 @@ const filteredCareers = computed(() => {
                       v-model="portfolioForm.tagline"
                       type="text"
                       placeholder="e.g. A comprehensive brand transformation for a mountain resort..."
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2465,7 +2465,7 @@ const filteredCareers = computed(() => {
                       v-model="portfolioForm.services"
                       type="text"
                       placeholder="e.g. Branding, Designing, Video Production"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2477,7 +2477,7 @@ const filteredCareers = computed(() => {
                       v-model="portfolioForm.industry"
                       type="text"
                       placeholder="e.g. Resorts & Hospitality"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2489,7 +2489,7 @@ const filteredCareers = computed(() => {
                       v-model="portfolioForm.date"
                       type="text"
                       placeholder="e.g. June, 2026"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2502,11 +2502,11 @@ const filteredCareers = computed(() => {
                         v-model="portfolioForm.image"
                         type="text"
                         required
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(portfolioForm, 'image')"
                       >
                         Pick Media
@@ -2542,11 +2542,11 @@ const filteredCareers = computed(() => {
                         v-model="portfolioForm.heroImage"
                         type="text"
                         required
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(portfolioForm, 'heroImage')"
                       >
                         Pick Media
@@ -2581,7 +2581,7 @@ const filteredCareers = computed(() => {
                       v-model="portfolioForm.tagsString"
                       type="text"
                       placeholder="Branding, Marketing, Social Media"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2598,11 +2598,11 @@ const filteredCareers = computed(() => {
                         v-model="portfolioForm.galleryImages[idx]"
                         type="text"
                         placeholder="/Images/Pinklabel.jpg"
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(portfolioForm.galleryImages, idx)"
                       >
                         Pick Media
@@ -2618,7 +2618,7 @@ const filteredCareers = computed(() => {
                     </div>
                     <button
                       type="button"
-                      class="px-3 py-1.5 border border-[#1D96B8] text-[#1D96B8] hover:bg-[#1D96B8] hover:text-white text-xs font-semibold rounded cursor-pointer transition-colors"
+                      class="px-3 py-1.5 border border-[#0596B8] text-[#0596B8] hover:bg-[#0596B8] hover:text-white text-xs font-semibold rounded cursor-pointer transition-colors"
                       @click="portfolioForm.galleryImages.push('')"
                     >
                       + Add Image
@@ -2634,7 +2634,7 @@ const filteredCareers = computed(() => {
                       required
                       rows="5"
                       placeholder="Write the detailed story behind this project here..."
-                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     />
                   </div>
                 </div>
@@ -2646,7 +2646,7 @@ const filteredCareers = computed(() => {
                       v-model="portfolioForm.displayOrder"
                       type="number"
                       required
-                      class="w-32 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-32 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2658,7 +2658,7 @@ const filteredCareers = computed(() => {
                       id="form-feat-checkbox"
                       v-model="portfolioForm.featured"
                       type="checkbox"
-                      class="w-4 h-4 rounded text-[#1D96B8] focus:ring-[#1D96B8] border-zinc-300"
+                      class="w-4 h-4 rounded text-[#0596B8] focus:ring-[#0596B8] border-zinc-300"
                     >
                     <label
                       for="form-feat-checkbox"
@@ -2679,7 +2679,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. Campaign Title"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2692,7 +2692,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. campaign-slug"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                       :disabled="currentId !== null"
                     >
                   </div>
@@ -2706,7 +2706,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. Client Ltd."
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2716,7 +2716,7 @@ const filteredCareers = computed(() => {
                   <div class="flex-1 w-full space-y-1">
                     <select
                       v-model="caseStudyForm.category"
-                      class="w-48 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-48 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                       <option value="">
                         -- select category --
@@ -2739,7 +2739,7 @@ const filteredCareers = computed(() => {
                       v-model="caseStudyForm.tagline"
                       type="text"
                       placeholder="e.g. Luxury Hospitality Branding & Marketing..."
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2751,7 +2751,7 @@ const filteredCareers = computed(() => {
                       v-model="caseStudyForm.services"
                       type="text"
                       placeholder="e.g. Branding, Designing, Video Production"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2763,7 +2763,7 @@ const filteredCareers = computed(() => {
                       v-model="caseStudyForm.industry"
                       type="text"
                       placeholder="e.g. Resorts & Hospitality"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2775,7 +2775,7 @@ const filteredCareers = computed(() => {
                       v-model="caseStudyForm.date"
                       type="text"
                       placeholder="e.g. June, 2026"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2788,7 +2788,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="Branding, Campaigns"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2801,11 +2801,11 @@ const filteredCareers = computed(() => {
                         v-model="caseStudyForm.image"
                         type="text"
                         required
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(caseStudyForm, 'image')"
                       >
                         Pick Media
@@ -2822,11 +2822,11 @@ const filteredCareers = computed(() => {
                         v-model="caseStudyForm.heroImage"
                         type="text"
                         required
-                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8] font-mono text-[11px]"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
                       >
                       <button
                         type="button"
-                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
                         @click="openMediaPicker(caseStudyForm, 'heroImage')"
                       >
                         Pick Media
@@ -2843,7 +2843,7 @@ const filteredCareers = computed(() => {
                       required
                       rows="3"
                       placeholder="Describe the challenge..."
-                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     />
                   </div>
                 </div>
@@ -2856,7 +2856,7 @@ const filteredCareers = computed(() => {
                       required
                       rows="3"
                       placeholder="Describe our strategic design approach..."
-                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     />
                   </div>
                 </div>
@@ -2868,7 +2868,7 @@ const filteredCareers = computed(() => {
                       v-model="caseStudyForm.resultsSummary"
                       rows="3"
                       placeholder="e.g. The project established a cohesive and recognizable visual identity..."
-                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-2xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     />
                   </div>
                 </div>
@@ -2885,7 +2885,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. Senior Copywriter"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2898,7 +2898,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. Creative Strategy"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2911,7 +2911,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. Kochi, Kerala (Onsite / Hybrid)"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2924,7 +2924,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. Full-Time or Contract"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2937,7 +2937,7 @@ const filteredCareers = computed(() => {
                       type="text"
                       required
                       placeholder="e.g. 3+ Years Experience"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                   </div>
                 </div>
@@ -2949,7 +2949,7 @@ const filteredCareers = computed(() => {
                       v-model="careerForm.applyUrl"
                       type="url"
                       placeholder="e.g. https://linkedin.com/jobs/view/123456"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                     >
                     <p class="text-[10px] text-zinc-400">
                       External job posting link — visitors clicking this role will be redirected here.
@@ -2990,7 +2990,7 @@ const filteredCareers = computed(() => {
                     required
                     rows="3"
                     placeholder="Write a paragraph describing the project's story..."
-                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                   />
                   <button
                     type="button"
@@ -3044,7 +3044,7 @@ const filteredCareers = computed(() => {
                         v-model="section.heading"
                         type="text"
                         placeholder="e.g. The Psychology of Color"
-                        class="flex-1 w-full px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                        class="flex-1 w-full px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                       >
                     </div>
                     <div class="flex flex-col md:flex-row gap-4 items-start">
@@ -3054,7 +3054,7 @@ const filteredCareers = computed(() => {
                         required
                         rows="4"
                         placeholder="Write body paragraph text here..."
-                        class="flex-1 w-full px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                        class="flex-1 w-full px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                       />
                     </div>
                   </div>
@@ -3092,7 +3092,7 @@ const filteredCareers = computed(() => {
                     required
                     rows="3"
                     placeholder="Write a paragraph describing the challenge..."
-                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                   />
                   <button
                     type="button"
@@ -3135,7 +3135,7 @@ const filteredCareers = computed(() => {
                     required
                     rows="3"
                     placeholder="Write a paragraph describing the strategic approach..."
-                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                   />
                   <button
                     type="button"
@@ -3178,7 +3178,7 @@ const filteredCareers = computed(() => {
                     type="text"
                     required
                     placeholder="e.g. Professional photography and videography capturing the property"
-                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                    class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                   >
                   <button
                     type="button"
@@ -3233,7 +3233,7 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. +180% or 3.2x"
-                        class="px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                        class="px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                       >
                     </div>
                     <div class="flex flex-col gap-1">
@@ -3243,7 +3243,7 @@ const filteredCareers = computed(() => {
                         type="text"
                         required
                         placeholder="e.g. Growth in Social Reach"
-                        class="px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                        class="px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
                       >
                     </div>
                   </div>

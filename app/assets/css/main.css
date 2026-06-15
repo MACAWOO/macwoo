@@ -8,30 +8,30 @@
   --font-fredoka: 'Fredoka', sans-serif;
 
   /* Brand Yellow */
-  --color-brand-yellow-50:  #FEFCE8;
-  --color-brand-yellow-100: #FEF9C3;
-  --color-brand-yellow-200: #FEF08A;
-  --color-brand-yellow-300: #FDE047;
-  --color-brand-yellow-400: #FACC15;
-  --color-brand-yellow-500: #EDE000;
-  --color-brand-yellow-600: #CA8A04;
-  --color-brand-yellow-700: #A16207;
-  --color-brand-yellow-800: #854D0E;
-  --color-brand-yellow-900: #713F12;
-  --color-brand-yellow-950: #422006;
+  --color-brand-yellow-50:  #FEFDE8;
+  --color-brand-yellow-100: #FEFBC2;
+  --color-brand-yellow-200: #FEF787;
+  --color-brand-yellow-300: #FDF242;
+  --color-brand-yellow-400: #FAE712;
+  --color-brand-yellow-500: #F7EC12;
+  --color-brand-yellow-600: #D8CE0B;
+  --color-brand-yellow-700: #ADA509;
+  --color-brand-yellow-800: #8B8407;
+  --color-brand-yellow-900: #746F06;
+  --color-brand-yellow-950: #464303;
 
   /* Brand Teal */
-  --color-brand-teal-50:  #ECFEFF;
-  --color-brand-teal-100: #CFFAFE;
-  --color-brand-teal-200: #A5F3FC;
-  --color-brand-teal-300: #67E8F9;
-  --color-brand-teal-400: #22D3EE;
-  --color-brand-teal-500: #009CB8;
-  --color-brand-teal-600: #0891B2;
-  --color-brand-teal-700: #007080;
-  --color-brand-teal-800: #155E75;
-  --color-brand-teal-900: #164E63;
-  --color-brand-teal-950: #083344;
+  --color-brand-teal-50:  #EDF9FC;
+  --color-brand-teal-100: #D2F0F7;
+  --color-brand-teal-200: #A9E1EF;
+  --color-brand-teal-300: #70CCE4;
+  --color-brand-teal-400: #33B2D5;
+  --color-brand-teal-500: #0596B8;
+  --color-brand-teal-600: #047E9B;
+  --color-brand-teal-700: #03657C;
+  --color-brand-teal-800: #025163;
+  --color-brand-teal-900: #024352;
+  --color-brand-teal-950: #012730;
 
   /* Flat tokens */
   --color-brand-dark: #0A1628;

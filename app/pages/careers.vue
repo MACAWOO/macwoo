@@ -72,7 +72,7 @@ const handleJobClick = (job: typeof jobs.value[number]) => {
     />
 
     <!-- We Engineer Digital Excellence -->
-    <section class="py-20 bg-[#1D96B8] text-white">
+    <section class="py-20 bg-[#0596B8] text-white">
       <div class="max-w-7xl mx-auto px-6">
         <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
           <!-- Left side Content (2/3 width on desktop) -->
@@ -131,7 +131,7 @@ const handleJobClick = (job: typeof jobs.value[number]) => {
     <!-- Open Roles -->
     <section
       id="open-roles"
-      class="py-20 bg-[#1D96B8] text-white"
+      class="py-20 bg-[#0596B8] text-white"
     >
       <div class="max-w-7xl mx-auto px-6">
         <h2 class="text-3xl md:text-[46px] font-medium text-brand-yellow-500 mb-2 uppercase tracking-wide">

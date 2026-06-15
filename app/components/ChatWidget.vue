@@ -4,6 +4,14 @@ import { ref, watch, nextTick } from 'vue'
 const isOpen = ref(false)
 const messagesContainer = ref<HTMLElement | null>(null)
 
+interface ChatOption {
+  id: number | string
+  icon: string
+  question: string
+  action?: string
+  response?: string[]
+}
+
 interface ChatMessage {
   id: string
   text?: string
@@ -12,32 +20,11 @@ interface ChatMessage {
   time?: string
   hasCTA?: boolean
   showOptions?: boolean
-}
-
-// Initial welcome message and options
-const messages = ref<ChatMessage[]>([
-  {
-    id: 'welcome',
-    text: 'Hello! Welcome to Macawoo. How can we help you today? Please select one of the frequently asked questions:',
-    from: 'bot',
-    showOptions: true
-  }
-])
-
-const WHATSAPP_NUMBER = '919876543210'
-const DEFAULT_MESSAGE = 'Hello Macawoo Team, I would like to know more about your services.'
-
-function getWhatsAppUrl(customMessage?: string) {
-  const text = encodeURIComponent(customMessage || DEFAULT_MESSAGE)
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`
-}
-
-function openWhatsApp(customMessage?: string) {
-  window.open(getWhatsAppUrl(customMessage), '_blank')
+  options?: ChatOption[]
 }
 
 // FAQ Options definitions from macawoo_chat_bot.pdf
-const faqOptions = [
+const faqOptions: ChatOption[] = [
   {
     id: 1,
     icon: '🎨',
@@ -48,8 +35,7 @@ const faqOptions = [
       '• Digital Marketing',
       '• Video Production',
       '• Website Development'
-    ],
-    ctaText: 'Talk to Our Team'
+    ]
   },
   {
     id: 2,
@@ -57,8 +43,7 @@ const faqOptions = [
     question: 'Get a Project Quote',
     response: [
       'We\'d be happy to understand your requirements and provide a custom quotation for your project.'
-    ],
-    ctaText: 'Talk to Our Team'
+    ]
   },
   {
     id: 3,
@@ -71,8 +56,7 @@ const faqOptions = [
       '• Product Shoots',
       '• Drone Videography',
       '• Social Media Reels & Content'
-    ],
-    ctaText: 'Talk to Our Team'
+    ]
   },
   {
     id: 4,
@@ -85,8 +69,7 @@ const faqOptions = [
       '• Meta Ads',
       '• Google Ads',
       '• Lead Generation Campaigns'
-    ],
-    ctaText: 'Talk to Our Team'
+    ]
   },
   {
     id: 5,
@@ -99,8 +82,7 @@ const faqOptions = [
       '• Brand Strategy',
       '• Packaging Design',
       '• Brand Guidelines'
-    ],
-    ctaText: 'Talk to Our Team'
+    ]
   },
   {
     id: 6,
@@ -113,8 +95,7 @@ const faqOptions = [
       '• Landing Pages',
       '• E-commerce Websites',
       '• Custom Web Solutions'
-    ],
-    ctaText: 'Talk to Our Team'
+    ]
   },
   {
     id: 7,
@@ -123,6 +104,29 @@ const faqOptions = [
     action: 'whatsapp'
   }
 ]
+
+// Initial welcome message and options
+const messages = ref<ChatMessage[]>([
+  {
+    id: 'welcome',
+    text: 'Hello! Welcome to Macawoo. How can we help you today? Please select one of the frequently asked questions:',
+    from: 'bot',
+    showOptions: true,
+    options: faqOptions
+  }
+])
+
+const WHATSAPP_NUMBER = '919747477502'
+const DEFAULT_MESSAGE = 'Hello Macawoo Team, I would like to know more about your services.'
+
+function getWhatsAppUrl(customMessage?: string) {
+  const text = encodeURIComponent(customMessage || DEFAULT_MESSAGE)
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`
+}
+
+function openWhatsApp(customMessage?: string) {
+  window.open(getWhatsAppUrl(customMessage), '_blank')
+}
 
 function getWhatsAppMessageForCTA(msg: ChatMessage) {
   if (msg.list && msg.list[0]?.includes('offers')) {
@@ -143,7 +147,7 @@ function getWhatsAppMessageForCTA(msg: ChatMessage) {
   return 'Hello Macawoo Team, I would like to talk to a representative.'
 }
 
-async function handleOptionClick(option: typeof faqOptions[0], messageIndex: number) {
+async function handleOptionClick(option: ChatOption, messageIndex: number) {
   // Hide the options list for this specific historical message
   if (messages.value[messageIndex]) {
     messages.value[messageIndex].showOptions = false
@@ -168,6 +172,15 @@ async function handleOptionClick(option: typeof faqOptions[0], messageIndex: num
         from: 'bot'
       })
       openWhatsApp()
+    } else if (option.action === 'more_questions') {
+      // Display other questions
+      messages.value.push({
+        id: `bot-more-${Date.now()}`,
+        text: 'Here are the other questions you can ask:',
+        from: 'bot',
+        showOptions: true,
+        options: faqOptions.filter(o => o.action !== 'whatsapp')
+      })
     } else {
       // Standard FAQ response
       messages.value.push({
@@ -176,15 +189,29 @@ async function handleOptionClick(option: typeof faqOptions[0], messageIndex: num
         from: 'bot',
         hasCTA: true
       })
-    }
 
-    // Append new options prompt
-    messages.value.push({
-      id: `options-${Date.now()}`,
-      text: 'Would you like to ask anything else? Select an option below:',
-      from: 'bot',
-      showOptions: true
-    })
+      // Append new options prompt
+      messages.value.push({
+        id: `options-${Date.now()}`,
+        text: 'Would you like to ask anything else? Select an option below:',
+        from: 'bot',
+        showOptions: true,
+        options: [
+          {
+            id: 'more_questions',
+            icon: '❓',
+            question: 'More Questions',
+            action: 'more_questions'
+          },
+          {
+            id: 7,
+            icon: '📞',
+            question: 'Talk to Our Team',
+            action: 'whatsapp'
+          }
+        ]
+      })
+    }
 
     await scrollToBottom()
   }, 400)
@@ -221,12 +248,12 @@ watch(isOpen, async (val) => {
     >
       <div
         v-if="isOpen"
-        class="w-[calc(100vw-32px)] sm:w-[310px] bg-[#EDE000] rounded-[20px] border border-[#d6cb00] shadow-[0_15px_40px_rgba(0,0,0,0.22)] flex flex-col overflow-hidden mb-1"
+        class="w-[calc(100vw-32px)] sm:w-[310px] bg-[#F7EC12] rounded-[20px] border border-[#DED410] shadow-[0_15px_40px_rgba(0,0,0,0.22)] flex flex-col overflow-hidden mb-1"
       >
         <!-- Header -->
-        <div class="flex items-center justify-between px-3.5 py-2 border-b border-black/10 shrink-0 bg-[#EDE000]">
+        <div class="flex items-center justify-between px-3.5 py-2 border-b border-black/10 shrink-0 bg-[#F7EC12]">
           <div class="flex items-center gap-2">
-            <div class="relative w-7 h-7 bg-[#1D96B8] rounded-full flex items-center justify-center border border-black/5 shadow-sm">
+            <div class="relative w-7 h-7 bg-[#0596B8] rounded-full flex items-center justify-center border border-black/5 shadow-sm">
               <img
                 src="/Images/Logo.png"
                 alt="Macawoo Logo"
@@ -298,7 +325,7 @@ watch(isOpen, async (val) => {
                   <!-- Optional CTA inside bot bubble -->
                   <button
                     v-if="msg.from === 'bot' && msg.hasCTA"
-                    class="mt-2 w-full bg-[#1D96B8] hover:bg-[#157d9b] text-white py-1.5 px-2.5 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all duration-200 cursor-pointer shadow-sm"
+                    class="mt-2 w-full bg-[#0596B8] hover:bg-[#157d9b] text-white py-1.5 px-2.5 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all duration-200 cursor-pointer shadow-sm"
                     @click="openWhatsApp(getWhatsAppMessageForCTA(msg))"
                   >
                     <svg
@@ -317,9 +344,9 @@ watch(isOpen, async (val) => {
                   class="mt-2 flex flex-col gap-1.5 w-full"
                 >
                   <button
-                    v-for="opt in faqOptions"
+                    v-for="opt in (msg.options || faqOptions)"
                     :key="opt.id"
-                    class="w-full text-left px-2.5 py-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-[#EDE000]/10 hover:border-[#EDE000] active:scale-[0.98] transition-all duration-200 text-[10px] font-semibold text-zinc-800 flex items-center gap-1.5 shadow-sm cursor-pointer"
+                    class="w-full text-left px-2.5 py-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-[#F7EC12]/10 hover:border-[#F7EC12] active:scale-[0.98] transition-all duration-200 text-[10px] font-semibold text-zinc-800 flex items-center gap-1.5 shadow-sm cursor-pointer"
                     @click="handleOptionClick(opt, i)"
                   >
                     <span class="text-xs shrink-0">{{ opt.icon }}</span>
@@ -347,17 +374,17 @@ watch(isOpen, async (val) => {
           cx="50"
           cy="50"
           r="40"
-          fill="#EDE000"
+          fill="#F7EC12"
         />
         <polygon
           points="65,82 82,65 88,88"
-          fill="#EDE000"
+          fill="#F7EC12"
         />
       </svg>
 
       <div
         v-if="!isOpen"
-        class="w-[16px] h-[16px] bg-[#1D96B8] rounded-full absolute z-0"
+        class="w-[16px] h-[16px] bg-[#0596B8] rounded-full absolute z-0"
       />
 
       <img
@@ -400,7 +427,7 @@ watch(isOpen, async (val) => {
 }
 
 .user-bubble {
-  background: #1D96B8;
+  background: #0596B8;
   color: white;
   border-radius: 12px 12px 3px 12px;
 }

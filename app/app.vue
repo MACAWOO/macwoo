@@ -93,13 +93,13 @@ useHead({
 const isBlog = computed(() => route.path.startsWith('/blog'))
 const isContact = computed(() => route.path === '/contact')
 const footerBgColor = computed(() => {
-  if (isBlog.value) return 'bg-[#1D96B8]'
+  if (isBlog.value) return 'bg-[#0596B8]'
   if (isContact.value) return 'bg-brand-yellow-500'
   return undefined
 })
 const footerColor = computed(() => {
   if (isBlog.value) return 'bg-brand-yellow-500'
-  if (isContact.value) return 'bg-[#1D96B8]'
+  if (isContact.value) return 'bg-[#0596B8]'
   return undefined
 })
 const isAdmin = computed(() => route.path.startsWith('/admin'))

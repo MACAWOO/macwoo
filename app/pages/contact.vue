@@ -89,9 +89,9 @@ const handleSubmit = async () => {
           <div class="w-full lg:max-w-[600px]">
             <div
               v-if="isSubmitted"
-              class="flex flex-col items-center justify-center text-center p-8 bg-[#1D96B8]/20 rounded-[24px] border border-white/20 min-h-[350px] text-white"
+              class="flex flex-col items-center justify-center text-center p-8 bg-[#0596B8]/20 rounded-[24px] border border-white/20 min-h-[350px] text-white"
             >
-              <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-[#1D96B8] mb-4 shadow-lg animate-bounce">
+              <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-[#0596B8] mb-4 shadow-lg animate-bounce">
                 <svg
                   class="w-8 h-8"
                   fill="none"
@@ -278,10 +278,10 @@ const handleSubmit = async () => {
                       Call Us
                     </p>
                     <a
-                      href="tel:+919876543210"
+                      href="tel:+919747477502"
                       class="text-lg font-medium hover:underline"
                     >
-                      +91 98765 43210
+                      +91 97474 77502
                     </a>
                   </div>
                 </div>

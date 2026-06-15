@@ -80,9 +80,9 @@ function formatDate(dateStr: string) {
       show-grid
     />
 
-    <section class="bg-[#1d96b8] py-16 pb-20">
+    <section class="bg-[#0596B8] py-16 pb-20">
       <div class="max-w-[1440px] mx-auto px-[120px]">
-        <h2 class="font-fredoka font-medium text-[48px] text-[#f4ed18] leading-[51px] mb-12">
+        <h2 class="font-fredoka font-medium text-[48px] text-[#F7EC12] leading-[51px] mb-12">
           Latest Articles
         </h2>
 

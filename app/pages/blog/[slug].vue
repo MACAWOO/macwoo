@@ -134,7 +134,7 @@ function formatDate(dateStr: string) {
     </div>
 
     <!-- Article header on teal -->
-    <div class="bg-[#1d96b8]">
+    <div class="bg-[#0596B8]">
       <div class="max-w-[1440px] mx-auto px-[120px] pt-[59px] pb-[40px]">
         <div class="max-w-[894px]">
           <div class="flex gap-[15px] mb-[13px]">
@@ -163,7 +163,7 @@ function formatDate(dateStr: string) {
               {{ post.readTime }}
             </span>
           </div>
-          <h1 class="font-fredoka font-medium text-[48px] text-[#f4ed18] leading-[51px] mb-[14px]">
+          <h1 class="font-fredoka font-medium text-[48px] text-[#F7EC12] leading-[51px] mb-[14px]">
             {{ post.title }}
           </h1>
           <p class="text-[18px] font-['Bricolage_Grotesque'] font-normal text-white leading-relaxed">
@@ -184,7 +184,7 @@ function formatDate(dateStr: string) {
           >
             <h2
               v-if="section.heading"
-              class="font-fredoka font-medium text-[32px] text-[#1d96b8] leading-normal"
+              class="font-fredoka font-medium text-[32px] text-[#0596B8] leading-normal"
             >
               {{ section.heading }}
             </h2>
@@ -197,9 +197,9 @@ function formatDate(dateStr: string) {
     </article>
 
     <!-- Recommended reading -->
-    <section class="bg-[#1d96b8] py-16">
+    <section class="bg-[#0596B8] py-16">
       <div class="max-w-[1440px] mx-auto px-[120px]">
-        <h2 class="font-fredoka font-medium text-[48px] text-[#f4ed18] leading-[51px] mb-8">
+        <h2 class="font-fredoka font-medium text-[48px] text-[#F7EC12] leading-[51px] mb-8">
           Recommended Reading
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -138,7 +138,7 @@ const logos = [
           SERVICES
         </p>
         <h1
-          class="text-[#F4ED18] text-[32px] md:text-[48px] leading-[58px] font-medium mb-2"
+          class="text-[#F7EC12] text-[32px] md:text-[48px] leading-[58px] font-medium mb-2"
           style="font-family: 'Fredoka', sans-serif;"
         >
           Branding &amp; Design
@@ -175,7 +175,7 @@ const logos = [
     <!-- ═══════════════════════════════════════════
          SUB-SERVICES CARDS (Teal Background)
          ═══════════════════════════════════════════ -->
-    <section class="bg-[#1D96B8] relative overflow-hidden pt-16 md:pt-20 pb-20 md:pb-24">
+    <section class="bg-[#0596B8] relative overflow-hidden pt-16 md:pt-20 pb-20 md:pb-24">
       <div class="max-w-[1120px] mx-auto px-6">
         <div
           ref="containerRef"
@@ -190,7 +190,7 @@ const logos = [
             <!-- Gradient left strip -->
             <div
               class="w-[60px] md:w-[78px] shrink-0 flex items-start justify-center pt-8 md:pt-9"
-              style="background: linear-gradient(180deg, #F4ED18 0%, #1D96B8 100%); border-radius: 10px 0 0 10px;"
+              style="background: linear-gradient(180deg, #F7EC12 0%, #0596B8 100%); border-radius: 10px 0 0 10px;"
             >
               <NuxtImg
                 :src="s.icon"
@@ -203,7 +203,7 @@ const logos = [
             <!-- Content -->
             <div class="flex-1 flex flex-col justify-center px-5 md:px-9 py-6 md:py-0">
               <h3
-                class="text-[#1D96B8] text-[24px] md:text-[32px] font-medium leading-[38px] mb-3 md:mb-[19px]"
+                class="text-[#0596B8] text-[24px] md:text-[32px] font-medium leading-[38px] mb-3 md:mb-[19px]"
                 style="font-family: 'Bricolage Grotesque', sans-serif;"
               >
                 {{ s.title }}
@@ -251,10 +251,10 @@ const logos = [
     <!-- ═══════════════════════════════════════════
          THE METHODOLOGY
          ═══════════════════════════════════════════ -->
-    <section class="py-16 md:py-20 bg-[#F4ED18]">
+    <section class="py-16 md:py-20 bg-[#F7EC12]">
       <div class="max-w-[1192px] mx-auto px-6 md:px-8">
         <h2
-          class="text-[#1D96B8] text-[36px] md:text-[48px] leading-[58px] font-medium tracking-[-0.48px] mb-10 md:mb-[42px]"
+          class="text-[#0596B8] text-[36px] md:text-[48px] leading-[58px] font-medium tracking-[-0.48px] mb-10 md:mb-[42px]"
           style="font-family: 'Fredoka', sans-serif;"
         >
           The Methodology
@@ -267,13 +267,13 @@ const logos = [
           <div
             v-for="(step, idx) in steps"
             :key="step.number"
-            class="bg-[#1D96B8] rounded-[8px] p-6 flex flex-col"
+            class="bg-[#0596B8] rounded-[8px] p-6 flex flex-col"
             :class="idx > 0 ? 'reveal-card' : ''"
             :style="[idx > 0 ? { transitionDelay: ((idx - 1) * 150) + 'ms' } : {}, { border: '1px solid rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(2px)', minHeight: '218px' }]"
           >
             <!-- Number -->
             <p
-              class="text-[#F4ED18] text-[48px] md:text-[64px] leading-[64px] font-bold"
+              class="text-[#F7EC12] text-[48px] md:text-[64px] leading-[64px] font-bold"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
             >
               {{ step.number }}
@@ -303,7 +303,7 @@ const logos = [
     <section class="py-16 md:py-20 bg-white text-center">
       <div class="max-w-[524px] mx-auto px-6">
         <h2
-          class="text-[#1D96B8] text-[40px] md:text-[64px] leading-[1.2] font-medium mb-0"
+          class="text-[#0596B8] text-[40px] md:text-[64px] leading-[1.2] font-medium mb-0"
           style="font-family: 'Fredoka', sans-serif;"
         >
           Build Your Brand
@@ -316,7 +316,7 @@ const logos = [
         </p>
         <NuxtLink
           to="/contact"
-          class="inline-flex items-center justify-center gap-[5px] px-6 md:px-8 py-2.5 bg-[#F4ED18] text-[#201F1F] text-[16px] md:text-[20px] font-bold rounded-full hover:brightness-95 transition-all"
+          class="inline-flex items-center justify-center gap-[5px] px-6 md:px-8 py-2.5 bg-[#F7EC12] text-[#201F1F] text-[16px] md:text-[20px] font-bold rounded-full hover:brightness-95 transition-all"
           style="font-family: 'Bricolage Grotesque', sans-serif; box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);"
         >
           <span>Start Your Project</span>

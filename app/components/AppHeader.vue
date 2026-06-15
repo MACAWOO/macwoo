@@ -314,7 +314,7 @@ watch(() => route.path, () => {
           >
             <svg
               v-if="!isMenuOpen"
-              class="w-[22px] h-[22px] text-[#1D96B8]"
+              class="w-[22px] h-[22px] text-[#0596B8]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -325,7 +325,7 @@ watch(() => route.path, () => {
             </svg>
             <svg
               v-else
-              class="w-[22px] h-[22px] text-[#1D96B8]"
+              class="w-[22px] h-[22px] text-[#0596B8]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -359,7 +359,7 @@ watch(() => route.path, () => {
               @click="isMenuOpen = false; isMobileServicesOpen = false"
             >
               <svg
-                class="w-7 h-7 text-[#1D96B8]"
+                class="w-7 h-7 text-[#0596B8]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -376,7 +376,7 @@ watch(() => route.path, () => {
             <!-- Home -->
             <NuxtLink
               to="/"
-              class="py-5 text-[#1D96B8] text-[22px] font-medium tracking-wide border-b border-[#1D96B8]/30"
+              class="py-5 text-[#0596B8] text-[22px] font-medium tracking-wide border-b border-[#0596B8]/30"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
               @click="isMenuOpen = false; isMobileServicesOpen = false"
             >
@@ -384,19 +384,19 @@ watch(() => route.path, () => {
             </NuxtLink>
 
             <!-- Services (accordion) -->
-            <div class="border-b border-[#1D96B8]/30">
+            <div class="border-b border-[#0596B8]/30">
               <button
                 class="w-full flex items-center justify-between py-5 cursor-pointer"
                 @click="isMobileServicesOpen = !isMobileServicesOpen"
               >
                 <span
-                  class="text-[#1D96B8] text-[22px] font-medium tracking-wide"
+                  class="text-[#0596B8] text-[22px] font-medium tracking-wide"
                   style="font-family: 'Bricolage Grotesque', sans-serif;"
                 >
                   Services
                 </span>
                 <svg
-                  class="w-6 h-6 text-[#1D96B8] transition-transform duration-300"
+                  class="w-6 h-6 text-[#0596B8] transition-transform duration-300"
                   :class="{ 'rotate-180': isMobileServicesOpen }"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -421,7 +421,7 @@ watch(() => route.path, () => {
                     v-for="service in services"
                     :key="service.to"
                     :to="service.to"
-                    class="py-2.5 text-[#1D96B8]/70 text-[17px] font-normal hover:text-[#1D96B8] transition-colors"
+                    class="py-2.5 text-[#0596B8]/70 text-[17px] font-normal hover:text-[#0596B8] transition-colors"
                     style="font-family: 'Bricolage Grotesque', sans-serif;"
                     @click="isMenuOpen = false; isMobileServicesOpen = false"
                   >
@@ -434,7 +434,7 @@ watch(() => route.path, () => {
             <!-- Portfolio -->
             <NuxtLink
               to="/portfolio"
-              class="py-5 text-[#1D96B8] text-[22px] font-medium tracking-wide border-b border-[#1D96B8]/30"
+              class="py-5 text-[#0596B8] text-[22px] font-medium tracking-wide border-b border-[#0596B8]/30"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
               @click="isMenuOpen = false; isMobileServicesOpen = false"
             >
@@ -444,7 +444,7 @@ watch(() => route.path, () => {
             <!-- Case Studies -->
             <NuxtLink
               to="/case-studies"
-              class="py-5 text-[#1D96B8] text-[22px] font-medium tracking-wide border-b border-[#1D96B8]/30"
+              class="py-5 text-[#0596B8] text-[22px] font-medium tracking-wide border-b border-[#0596B8]/30"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
               @click="isMenuOpen = false; isMobileServicesOpen = false"
             >
@@ -454,7 +454,7 @@ watch(() => route.path, () => {
             <!-- About -->
             <NuxtLink
               to="/about"
-              class="py-5 text-[#1D96B8] text-[22px] font-medium tracking-wide border-b border-[#1D96B8]/30"
+              class="py-5 text-[#0596B8] text-[22px] font-medium tracking-wide border-b border-[#0596B8]/30"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
               @click="isMenuOpen = false; isMobileServicesOpen = false"
             >
@@ -464,7 +464,7 @@ watch(() => route.path, () => {
             <!-- Contact -->
             <NuxtLink
               to="/contact"
-              class="py-5 text-[#1D96B8] text-[22px] font-medium tracking-wide border-b border-[#1D96B8]/30"
+              class="py-5 text-[#0596B8] text-[22px] font-medium tracking-wide border-b border-[#0596B8]/30"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
               @click="isMenuOpen = false; isMobileServicesOpen = false"
             >

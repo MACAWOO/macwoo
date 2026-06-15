@@ -19,10 +19,10 @@ const isYellowMode = computed(() => {
 </script>
 
 <template>
-  <footer :class="[bgColor || (isYellowFooter ? 'bg-[#1D96B8]' : 'bg-white'), 'px-4 md:px-10 py-16 md:py-24 overflow-hidden']">
+  <footer :class="[bgColor || (isYellowFooter ? 'bg-[#0596B8]' : 'bg-white'), 'px-4 md:px-10 py-16 md:py-24 overflow-hidden']">
     <div
       class="max-w-[1400px] mx-auto rounded-[2.5rem] px-5 pt-10 pb-8 sm:px-8 md:px-16 md:pt-20 md:pb-12 overflow-hidden transition-colors duration-300"
-      :class="[footerColor || (isYellowFooter ? 'bg-brand-yellow-500' : 'bg-[#1D96B8]'), isYellowMode ? 'text-brand-dark' : 'text-white']"
+      :class="[footerColor || (isYellowFooter ? 'bg-brand-yellow-500' : 'bg-[#0596B8]'), isYellowMode ? 'text-brand-dark' : 'text-white']"
     >
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 mb-12">
         <!-- Navigation -->

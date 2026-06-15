@@ -84,7 +84,7 @@ const pairs = computed(() => {
       show-grid
     />
 
-    <div class="bg-[#1D96B8]">
+    <div class="bg-[#0596B8]">
       <!-- Filters -->
       <div class="max-w-[1200px] mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-8 sm:pb-10 flex flex-wrap gap-2 sm:gap-3 justify-center">
         <button

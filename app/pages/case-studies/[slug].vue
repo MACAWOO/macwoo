@@ -138,7 +138,7 @@ const approachParas = computed(() =>
     </div>
 
     <!-- ── Teal Info Section ── -->
-    <div class="bg-[#1D96B8] px-6 md:px-[120px] py-16">
+    <div class="bg-[#0596B8] px-6 md:px-[120px] py-16">
       <!-- Metadata pills -->
       <div class="flex flex-wrap gap-2 mb-7">
         <span
@@ -270,7 +270,7 @@ const approachParas = computed(() =>
         <!-- Challenge -->
         <div class="flex flex-col gap-4">
           <h2
-            class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#1D96B8] leading-tight"
+            class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#0596B8] leading-tight"
             style="font-variation-settings: 'wdth' 100"
           >
             The Challenge
@@ -289,7 +289,7 @@ const approachParas = computed(() =>
         <!-- Approach -->
         <div class="flex flex-col gap-4">
           <h2
-            class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#1D96B8] leading-tight"
+            class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#0596B8] leading-tight"
             style="font-variation-settings: 'wdth' 100"
           >
             Our Approach
@@ -308,7 +308,7 @@ const approachParas = computed(() =>
         <!-- Solution -->
         <div class="flex flex-col gap-4">
           <h2
-            class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#1D96B8] leading-tight"
+            class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#0596B8] leading-tight"
             style="font-variation-settings: 'wdth' 100"
           >
             The Solution
@@ -332,7 +332,7 @@ const approachParas = computed(() =>
         <!-- Heading + summary -->
         <div class="flex flex-col gap-4">
           <h2
-            class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#1D96B8] leading-tight"
+            class="font-fredoka font-medium text-[40px] md:text-[48px] text-[#0596B8] leading-tight"
             style="font-variation-settings: 'wdth' 100"
           >
             Results
@@ -350,7 +350,7 @@ const approachParas = computed(() =>
           <div
             v-for="result in study.results"
             :key="result.label"
-            class="bg-[#1D96B8] border border-white/5 rounded-lg p-6 flex flex-col gap-2"
+            class="bg-[#0596B8] border border-white/5 rounded-lg p-6 flex flex-col gap-2"
           >
             <span class="font-bold text-brand-yellow-500 text-[48px] md:text-[64px] leading-[64px]">
               {{ result.metric }}
@@ -367,7 +367,7 @@ const approachParas = computed(() =>
     <div class="bg-white px-6 py-20 flex flex-col items-center text-center gap-8">
       <div class="flex flex-col gap-3">
         <h2
-          class="font-fredoka font-medium text-[48px] md:text-[64px] text-[#1D96B8] leading-tight"
+          class="font-fredoka font-medium text-[48px] md:text-[64px] text-[#0596B8] leading-tight"
           style="font-variation-settings: 'wdth' 100"
         >
           Want Results Like This?

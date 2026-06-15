@@ -358,7 +358,7 @@ onUnmounted(() => {
       :class="isMobile ? 'relative h-auto bg-transparent' : 'relative h-[400vh] bg-transparent'"
     >
       <!-- Pinned Viewport Container (Sticky h-screen) -->
-      <div :class="isMobile ? 'relative h-auto w-full bg-[#1D96B8]' : 'sticky top-0 h-screen w-full overflow-hidden bg-brand-dark'">
+      <div :class="isMobile ? 'relative h-auto w-full bg-[#0596B8]' : 'sticky top-0 h-screen w-full overflow-hidden bg-brand-dark'">
         <!-- 1. Hero Section (Pinned and fades out) -->
         <div
           :class="isMobile ? 'relative z-20' : 'absolute inset-0 z-20 transition-opacity duration-75'"
@@ -379,13 +379,13 @@ onUnmounted(() => {
         <!-- 2. Sliding/Fading Teal Background Overlay -->
         <div
           v-if="!isMobile"
-          class="absolute inset-0 bg-[#1D96B8] transition-opacity duration-75 z-10"
+          class="absolute inset-0 bg-[#0596B8] transition-opacity duration-75 z-10"
           :style="backgroundStyle"
         />
 
         <!-- 3. About Us Content Section -->
         <div
-          :class="isMobile ? 'relative z-30 py-16 bg-[#1D96B8]' : 'absolute inset-0 flex items-center'"
+          :class="isMobile ? 'relative z-30 py-16 bg-[#0596B8]' : 'absolute inset-0 flex items-center'"
           :style="aboutSectionStyle"
         >
           <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8">
@@ -397,9 +397,9 @@ onUnmounted(() => {
                   class="flex items-center gap-2 transition-opacity duration-300"
                   :style="{ opacity: labelOpacity }"
                 >
-                  <span class="w-2 h-2 rounded-full bg-[#E8F600] inline-block shrink-0" />
+                  <span class="w-2 h-2 rounded-full bg-[#F4ED18] inline-block shrink-0" />
                   <span
-                    class="text-[#E8F600] text-xs font-semibold uppercase tracking-[0.18em]"
+                    class="text-[#F4ED18] text-xs font-semibold uppercase tracking-[0.18em]"
                     style="font-family: 'Bricolage Grotesque', sans-serif;"
                   >About Us</span>
                 </div>
@@ -421,7 +421,7 @@ onUnmounted(() => {
 
                 <!-- Tagline below logo (fades in after logo finishes moving) -->
                 <p
-                  class="text-[#E8F600] text-sm leading-relaxed max-w-[260px] transition-opacity duration-300"
+                  class="text-[#F4ED18] text-sm leading-relaxed max-w-[260px] transition-opacity duration-300"
                   :style="{ opacity: taglineOpacity }"
                   style="font-family: 'Bricolage Grotesque', sans-serif;"
                 >
@@ -465,7 +465,7 @@ onUnmounted(() => {
           <!-- Header (Centered) -->
           <div class="text-center shrink-0">
             <h2
-              class="text-[#1D96B8] text-3xl md:text-[48px] font-medium font-fredoka leading-tight"
+              class="text-[#0596B8] text-3xl md:text-[48px] font-medium font-fredoka leading-tight"
             >
               What We Do
             </h2>
@@ -500,7 +500,7 @@ onUnmounted(() => {
               />
               <!-- Hover overlay -->
               <div
-                class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
+                class="absolute inset-0 bg-[#0596B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
               />
               <div class="absolute inset-0 flex items-center justify-center">
                 <h3
@@ -533,7 +533,7 @@ onUnmounted(() => {
               />
               <!-- Hover overlay -->
               <div
-                class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
+                class="absolute inset-0 bg-[#0596B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
               />
               <div class="absolute inset-0 flex items-center justify-center">
                 <h3
@@ -566,7 +566,7 @@ onUnmounted(() => {
               />
               <!-- Hover overlay -->
               <div
-                class="absolute inset-0 bg-[#1D96B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
+                class="absolute inset-0 bg-[#0596B8] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
               />
               <div class="absolute inset-0 flex items-center justify-center">
                 <h3
@@ -602,7 +602,7 @@ onUnmounted(() => {
           <!-- Header -->
           <div class="mb-6 md:mb-16">
             <h2
-              class="text-[#1D96B8] text-3xl md:text-[48px] font-medium font-fredoka leading-tight"
+              class="text-[#0596B8] text-3xl md:text-[48px] font-medium font-fredoka leading-tight"
             >
               Our Approach
             </h2>
@@ -615,7 +615,7 @@ onUnmounted(() => {
           <div class="relative w-full max-w-4xl mx-auto pl-16 md:pl-28 py-4">
             <!-- Stretching Yellow Pill background -->
             <div
-              class="absolute left-4 md:left-6 top-0 w-16 md:w-24 bg-gradient-to-b from-[#FCFFC1] to-[#E8F600] rounded-t-full rounded-b-full transition-all duration-75 ease-out z-0"
+              class="absolute left-4 md:left-6 top-0 w-16 md:w-24 bg-gradient-to-b from-[#FCFFC1] to-[#F4ED18] rounded-t-full rounded-b-full transition-all duration-75 ease-out z-0"
               :style="{ height: isMobile ? '100%' : (approachProgress === 0 ? '80px' : `calc(80px + (100% - 80px) * ${approachProgress})`) }"
             />
 
@@ -721,7 +721,7 @@ onUnmounted(() => {
     <WhyMacawoo />
 
     <!-- CTA (Get Started Form & Card ) -->
-    <section class="py-20 md:py-28 bg-[#1D96B8] relative overflow-hidden">
+    <section class="py-20 md:py-28 bg-[#0596B8] relative overflow-hidden">
       <div class="max-w-[1266px] mx-auto px-6 md:px-8">
         <div class="flex flex-col lg:flex-row gap-12 lg:gap-20 items-stretch">
           <!-- Left side: Design card -->
@@ -750,7 +750,7 @@ onUnmounted(() => {
               v-if="isSubmitted"
               class="flex flex-col items-center justify-center text-center p-8 bg-[#1684A2]/50 rounded-[32px] border border-white/10 h-full min-h-[400px]"
             >
-              <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-[#1D96B8] mb-4 shadow-lg animate-bounce">
+              <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-[#0596B8] mb-4 shadow-lg animate-bounce">
                 <svg
                   class="w-8 h-8"
                   fill="none"

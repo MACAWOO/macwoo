@@ -76,7 +76,7 @@ const filtered = computed(() => {
       show-grid
     />
 
-    <div class="bg-[#1D96B8]">
+    <div class="bg-[#0596B8]">
       <!-- Filters -->
       <div class="max-w-[1200px] mx-auto px-6 pt-16 pb-10 flex flex-wrap gap-3 justify-center">
         <button
