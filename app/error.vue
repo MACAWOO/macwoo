@@ -4,20 +4,27 @@ defineProps<{ error: { statusCode: number, statusMessage?: string, message?: str
 function goHome() {
   clearError({ redirect: '/' })
 }
+
+// Bright center column, fading toward both edges
+function columnAlpha(i: number) {
+  const center = 7
+  const dist = Math.abs(i - center)
+  return Math.max(0.12, 0.85 - dist * 0.11)
+}
 </script>
 
 <template>
   <div class="min-h-screen bg-white relative overflow-hidden flex flex-col">
     <!-- Yellow column pattern background -->
     <div
-      class="absolute inset-0 flex gap-3 opacity-30 pointer-events-none"
+      class="absolute inset-y-0 right-0 w-[62%] flex pointer-events-none"
       aria-hidden="true"
     >
       <div
-        v-for="i in 14"
+        v-for="i in 13"
         :key="i"
-        class="flex-1 rounded-full"
-        :style="`background: linear-gradient(to bottom, #EDE000 ${i % 3 === 0 ? '40%' : i % 3 === 1 ? '60%' : '50%'}, transparent 100%)`"
+        class="flex-1"
+        :style="`background: linear-gradient(to bottom, rgba(237,224,0,${columnAlpha(i)}) 0%, rgba(237,224,0,0) 95%)`"
       />
     </div>
 
@@ -41,10 +48,13 @@ function goHome() {
           We couldn't find the page you were looking for.
         </p>
         <button
-          class="inline-flex items-center gap-2 px-6 py-3 bg-brand-yellow-500 text-brand-dark text-sm font-bold rounded-full hover:bg-brand-yellow-400 transition-colors w-fit"
+          class="group/cta inline-flex items-center gap-2 px-6 py-3 bg-brand-yellow-500 text-brand-dark text-sm font-bold rounded-full hover:bg-brand-yellow-400 transition-colors w-fit"
           @click="goHome"
         >
-          Back to Home ×
+          Back to Home
+          <UpRightArrow
+            class="w-[14px] h-[14px] shrink-0 transition-transform duration-300 ease-out group-hover/cta:translate-x-[2px] group-hover/cta:-translate-y-[2px]"
+          />
         </button>
       </div>
     </div>

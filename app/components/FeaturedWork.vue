@@ -1,5 +1,46 @@
 <script setup lang="ts">
 const { projects, pending } = useFeaturedProjects()
+
+const MAX_VISIBLE = 4
+const ROTATE_MS = 10000
+
+// Indices (into `projects`) currently shown in each of the 4 slots
+const slotIndices = ref<number[]>([])
+
+watch(projects, (list) => {
+  slotIndices.value = list.slice(0, MAX_VISIBLE).map((_, i) => i)
+}, { immediate: true })
+
+// Projects rendered in the grid, in slot order
+const visibleProjects = computed(() =>
+  slotIndices.value.map(i => projects.value[i]).filter(Boolean)
+)
+
+let rotateTimer: ReturnType<typeof setInterval> | null = null
+
+function rotate() {
+  const total = projects.value.length
+  if (total <= MAX_VISIBLE) return
+
+  const shown = new Set(slotIndices.value)
+  const hidden = []
+  for (let i = 0; i < total; i++) {
+    if (!shown.has(i)) hidden.push(i)
+  }
+  if (hidden.length === 0) return
+
+  const slot = Math.floor(Math.random() * slotIndices.value.length)
+  const pick = hidden[Math.floor(Math.random() * hidden.length)]!
+  slotIndices.value = slotIndices.value.map((v, i) => (i === slot ? pick : v))
+}
+
+onMounted(() => {
+  rotateTimer = setInterval(rotate, ROTATE_MS)
+})
+
+onUnmounted(() => {
+  if (rotateTimer) clearInterval(rotateTimer)
+})
 </script>
 
 <template>
@@ -47,23 +88,33 @@ const { projects, pending } = useFeaturedProjects()
         </div>
       </div>
 
-      <!-- ── Project grid ── -->
+      <!-- ── Project grid (max 4, slots rotate every 10s) ── -->
       <div
         v-else
         class="flex flex-col md:flex-row md:flex-wrap gap-y-10 md:gap-x-[28px]"
       >
-        <FeaturedWorkCard
-          v-for="(project, index) in projects"
-          :key="project.id"
-          :project="project"
-          :is-large="index % 4 === 0 || index % 4 === 3"
+        <div
+          v-for="(project, index) in visibleProjects"
+          :key="index"
           :class="[
             'w-full',
             index % 4 === 0 || index % 4 === 3
               ? 'md:w-[calc((100%-28px)*0.5459)]'
               : 'md:w-[calc((100%-28px)*0.4541)]'
           ]"
-        />
+        >
+          <Transition
+            name="featured-swap"
+            mode="out-in"
+          >
+            <FeaturedWorkCard
+              :key="project.id"
+              :project="project"
+              :is-large="index % 4 === 0 || index % 4 === 3"
+              class="w-full"
+            />
+          </Transition>
+        </div>
       </div>
 
       <!-- ── CTA Button ── -->
@@ -82,3 +133,15 @@ const { projects, pending } = useFeaturedProjects()
     </div>
   </section>
 </template>
+
+<style scoped>
+.featured-swap-enter-active,
+.featured-swap-leave-active {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.featured-swap-enter-from,
+.featured-swap-leave-to {
+  opacity: 0;
+  transform: scale(0.97);
+}
+</style>

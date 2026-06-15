@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const isMenuOpen = ref(false)
 const isServicesOpen = ref(false)
+const isMobileServicesOpen = ref(false)
 const isScrolled = ref(false)
 const scrollProgress = ref(0)
 
@@ -299,7 +300,13 @@ watch(() => route.path, () => {
 
         <!-- ═══════════════════════ MOBILE NAV ═══════════════════════ -->
         <div class="md:hidden flex items-center justify-between w-full">
-          <NavBarLogo class="shrink-0" />
+          <NavBarLogo
+            class="shrink-0 transition-opacity duration-300"
+            :style="{
+              opacity: 1 - scrollProgress,
+              pointerEvents: scrollProgress > 0.8 ? 'none' : 'auto'
+            }"
+          />
           <button
             class="w-12 h-12 rounded-[16px] bg-white flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform shrink-0 cursor-pointer"
             aria-label="Toggle menu"
@@ -333,60 +340,137 @@ watch(() => route.path, () => {
 
       <!-- Mobile menu panel -->
       <Transition
-        enter-active-class="transition duration-200 ease-out"
-        enter-from-class="opacity-0 -translate-y-2"
-        enter-to-class="opacity-100 translate-y-0"
-        leave-active-class="transition duration-150 ease-in"
-        leave-from-class="opacity-100 translate-y-0"
-        leave-to-class="opacity-0 -translate-y-2"
+        enter-active-class="transition duration-300 ease-out"
+        enter-from-class="opacity-0 scale-95"
+        enter-to-class="opacity-100 scale-100"
+        leave-active-class="transition duration-200 ease-in"
+        leave-from-class="opacity-100 scale-100"
+        leave-to-class="opacity-0 scale-95"
       >
         <div
           v-if="isMenuOpen"
-          class="md:hidden mt-2 rounded-2xl overflow-hidden px-4 py-4 flex flex-col gap-2"
-          style="background:rgba(18,40,70,0.92);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.12);"
+          class="md:hidden fixed inset-0 z-[60] bg-white flex flex-col"
         >
-          <NuxtLink
-            to="/"
-            class="text-white/80 hover:text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-white/8 transition-colors"
-            @click="isMenuOpen = false"
-          >Home</NuxtLink>
-          <div class="text-white/40 text-xs font-semibold uppercase tracking-widest px-3 pt-1">
-            Services
+          <!-- Close button -->
+          <div class="flex justify-end px-8 pt-8 pb-4">
+            <button
+              class="w-10 h-10 flex items-center justify-center cursor-pointer"
+              aria-label="Close menu"
+              @click="isMenuOpen = false; isMobileServicesOpen = false"
+            >
+              <svg
+                class="w-7 h-7 text-[#1D96B8]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              >
+                <path d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-          <NuxtLink
-            v-for="service in services"
-            :key="service.to"
-            :to="service.to"
-            class="text-white/80 hover:text-white text-sm font-medium py-2 px-5 rounded-xl hover:bg-white/8 transition-colors"
-            @click="isMenuOpen = false"
-          >{{ service.label }}</NuxtLink>
-          <div class="border-t border-white/10 my-1" />
-          <NuxtLink
-            to="/portfolio"
-            class="text-white/80 hover:text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-white/8 transition-colors"
-            @click="isMenuOpen = false"
-          >Portfolio</NuxtLink>
-          <NuxtLink
-            to="/case-studies"
-            class="text-white/80 hover:text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-white/8 transition-colors"
-            @click="isMenuOpen = false"
-          >Case Studies</NuxtLink>
-          <NuxtLink
-            to="/about"
-            class="text-white/80 hover:text-white text-sm font-medium py-2 px-3 rounded-xl hover:bg-white/8 transition-colors"
-            @click="isMenuOpen = false"
-          >About</NuxtLink>
-          <div class="border-t border-white/10 my-1" />
-          <NuxtLink
-            to="/contact"
-            class="group/cta flex items-center justify-center gap-2 bg-white text-black font-bold text-sm py-3 px-5 rounded-full hover:bg-zinc-100 transition-colors"
-            @click="isMenuOpen = false"
-          >
-            Get in Touch
-            <UpRightArrow
-              class="w-[12px] h-[12px] transition-transform duration-300 ease-out group-hover/cta:translate-x-[2px] group-hover/cta:-translate-y-[2px]"
-            />
-          </NuxtLink>
+
+          <!-- Menu items -->
+          <nav class="flex-1 flex flex-col px-8 overflow-y-auto">
+            <!-- Home -->
+            <NuxtLink
+              to="/"
+              class="py-5 text-[#1D96B8] text-[22px] font-medium tracking-wide border-b border-[#1D96B8]/30"
+              style="font-family: 'Bricolage Grotesque', sans-serif;"
+              @click="isMenuOpen = false; isMobileServicesOpen = false"
+            >
+              Home
+            </NuxtLink>
+
+            <!-- Services (accordion) -->
+            <div class="border-b border-[#1D96B8]/30">
+              <button
+                class="w-full flex items-center justify-between py-5 cursor-pointer"
+                @click="isMobileServicesOpen = !isMobileServicesOpen"
+              >
+                <span
+                  class="text-[#1D96B8] text-[22px] font-medium tracking-wide"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >
+                  Services
+                </span>
+                <svg
+                  class="w-6 h-6 text-[#1D96B8] transition-transform duration-300"
+                  :class="{ 'rotate-180': isMobileServicesOpen }"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M8 10l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <!-- Sub-items -->
+              <Transition
+                enter-active-class="transition-all duration-300 ease-out overflow-hidden"
+                enter-from-class="max-h-0 opacity-0"
+                enter-to-class="max-h-[200px] opacity-100"
+                leave-active-class="transition-all duration-200 ease-in overflow-hidden"
+                leave-from-class="max-h-[200px] opacity-100"
+                leave-to-class="max-h-0 opacity-0"
+              >
+                <div v-if="isMobileServicesOpen" class="pb-4 pl-4 flex flex-col gap-1">
+                  <NuxtLink
+                    v-for="service in services"
+                    :key="service.to"
+                    :to="service.to"
+                    class="py-2.5 text-[#1D96B8]/70 text-[17px] font-normal hover:text-[#1D96B8] transition-colors"
+                    style="font-family: 'Bricolage Grotesque', sans-serif;"
+                    @click="isMenuOpen = false; isMobileServicesOpen = false"
+                  >
+                    {{ service.label }}
+                  </NuxtLink>
+                </div>
+              </Transition>
+            </div>
+
+            <!-- Portfolio -->
+            <NuxtLink
+              to="/portfolio"
+              class="py-5 text-[#1D96B8] text-[22px] font-medium tracking-wide border-b border-[#1D96B8]/30"
+              style="font-family: 'Bricolage Grotesque', sans-serif;"
+              @click="isMenuOpen = false; isMobileServicesOpen = false"
+            >
+              Portfolio
+            </NuxtLink>
+
+            <!-- Case Studies -->
+            <NuxtLink
+              to="/case-studies"
+              class="py-5 text-[#1D96B8] text-[22px] font-medium tracking-wide border-b border-[#1D96B8]/30"
+              style="font-family: 'Bricolage Grotesque', sans-serif;"
+              @click="isMenuOpen = false; isMobileServicesOpen = false"
+            >
+              Case Studies
+            </NuxtLink>
+
+            <!-- About -->
+            <NuxtLink
+              to="/about"
+              class="py-5 text-[#1D96B8] text-[22px] font-medium tracking-wide border-b border-[#1D96B8]/30"
+              style="font-family: 'Bricolage Grotesque', sans-serif;"
+              @click="isMenuOpen = false; isMobileServicesOpen = false"
+            >
+              About
+            </NuxtLink>
+
+            <!-- Contact -->
+            <NuxtLink
+              to="/contact"
+              class="py-5 text-[#1D96B8] text-[22px] font-medium tracking-wide border-b border-[#1D96B8]/30"
+              style="font-family: 'Bricolage Grotesque', sans-serif;"
+              @click="isMenuOpen = false; isMobileServicesOpen = false"
+            >
+              Contact
+            </NuxtLink>
+          </nav>
         </div>
       </Transition>
     </div>

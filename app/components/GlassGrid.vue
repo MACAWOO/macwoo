@@ -3,8 +3,37 @@ interface Props {
   grids?: number
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   grids: 53
+})
+
+// Responsive grid count — scales proportionally with viewport width
+const responsiveCount = ref(props.grids)
+
+function updateCount() {
+  const w = window.innerWidth
+  if (w >= 1280) {
+    responsiveCount.value = props.grids          // xl+: full count (e.g. 53 or 15)
+  } else if (w >= 1024) {
+    responsiveCount.value = Math.round(props.grids * 0.72)  // lg: ~72%
+  } else if (w >= 768) {
+    responsiveCount.value = Math.round(props.grids * 0.50)  // md: ~50%
+  } else if (w >= 480) {
+    responsiveCount.value = Math.round(props.grids * 0.30)  // sm: ~30%
+  } else {
+    responsiveCount.value = Math.round(props.grids * 0.18)  // xs: ~18%
+  }
+  // Always show at least 3 panels
+  if (responsiveCount.value < 3) responsiveCount.value = 3
+}
+
+onMounted(() => {
+  updateCount()
+  window.addEventListener('resize', updateCount, { passive: true })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateCount)
 })
 </script>
 
@@ -23,13 +52,13 @@ withDefaults(defineProps<Props>(), {
       aria-hidden="true"
     >
       <div
-        v-for="i in grids"
+        v-for="i in responsiveCount"
         :key="i"
         class="glass-panel"
         :style="{
           '--panel-index': i,
-          'width': `calc(100% / ${grids})`,
-          'flex': `0 0 calc(100% / ${grids})`
+          'width': `calc(100% / ${responsiveCount})`,
+          'flex': `0 0 calc(100% / ${responsiveCount})`
         }"
       >
         <svg

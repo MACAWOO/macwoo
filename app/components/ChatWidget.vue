@@ -235,12 +235,9 @@ watch(isOpen, async (val) => {
               <span class="absolute bottom-0 right-0 w-1.5 h-1.5 bg-green-500 rounded-full border border-white" />
             </div>
             <div>
-              <h3 class="text-xs font-extrabold text-black leading-tight">
+              <h3 class="text-xs font-semibold text-black leading-tight">
                 Macawoo Assistant
               </h3>
-              <p class="text-[9px] text-zinc-700 font-semibold flex items-center gap-0.5 mt-0.5">
-                Online • Replies instantly
-              </p>
             </div>
           </div>
 
@@ -267,7 +264,7 @@ watch(isOpen, async (val) => {
         <!-- Messages area -->
         <div
           ref="messagesContainer"
-          class="bg-white mx-2 my-2 h-[290px] rounded-[12px] overflow-y-auto p-2.5 flex flex-col gap-2.5 shadow-inner"
+          class="bg-white mx-2 my-2 h-[290px] rounded-[12px] overflow-y-auto p-2.5 flex flex-col gap-2.5 shadow-inner scrollbar-hide"
         >
           <div class="flex flex-col gap-2.5">
             <div
@@ -338,7 +335,7 @@ watch(isOpen, async (val) => {
 
     <!-- Toggle button -->
     <button
-      class="w-[52px] h-[52px] relative flex items-center justify-center hover:opacity-95 transition-all duration-300 active:scale-95 cursor-pointer"
+      class="w-[64px] h-[64px] sm:w-[52px] sm:h-[52px] relative flex items-center justify-center hover:opacity-95 transition-all duration-300 active:scale-95 cursor-pointer"
       @click="isOpen = !isOpen"
     >
       <svg
@@ -367,7 +364,7 @@ watch(isOpen, async (val) => {
         v-if="!isOpen"
         src="/Images/Logo.png"
         alt="Macawoo"
-        class="w-8 h-8 object-contain select-none pointer-events-none z-10"
+        class="w-10 h-10 sm:w-8 sm:h-8 object-contain select-none pointer-events-none z-10"
       >
       <svg
         v-else
@@ -388,6 +385,15 @@ watch(isOpen, async (val) => {
 </template>
 
 <style scoped>
+/* Hide scrollbar across all browsers */
+.scrollbar-hide {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE / Edge */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;                /* Chrome / Safari / Opera */
+}
+
 .bot-bubble {
   background: #f3f4f6;
   border-radius: 12px 12px 12px 3px;

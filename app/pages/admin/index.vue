@@ -166,7 +166,7 @@ const portfolioForm = ref({
   tagsString: '',
   image: '/Images/Lecrown.png',
   heroImage: '/Images/Lecrown.png',
-  galleryImagesString: '',
+  galleryImages: [] as string[],
   story: '',
   featured: true,
   displayOrder: 1,
@@ -286,7 +286,7 @@ const openAddForm = (model: ModelType) => {
       tagsString: '',
       image: '/Images/Lecrown.png',
       heroImage: '/Images/Lecrown.png',
-      galleryImagesString: '',
+      galleryImages: [] as string[],
       story: '',
       featured: true,
       displayOrder: portfolio.value.length + 1,
@@ -348,7 +348,7 @@ const openEditForm = (model: ModelType, id: string | number) => {
       portfolioForm.value = {
         ...JSON.parse(JSON.stringify(original)),
         tagsString: original.tags.join(', '),
-        galleryImagesString: original.galleryImages.join(', '),
+        galleryImages: original.galleryImages ? [...original.galleryImages] : [],
         tagline: original.tagline || '',
         services: original.services || '',
         industry: original.industry || '',
@@ -422,11 +422,11 @@ const handleSave = async (actionType: 'save' | 'save_and_add' | 'save_and_contin
     }
   } else if (currentModel.value === 'portfolio') {
     loggedName = portfolioForm.value.title
-    const { tagsString, galleryImagesString, ...projectData } = portfolioForm.value
+    const { tagsString, ...projectData } = portfolioForm.value
     const processedProject = {
       ...projectData,
       tags: tagsString.split(',').map(s => s.trim()).filter(Boolean),
-      galleryImages: galleryImagesString.split(',').map(s => s.trim()).filter(Boolean),
+      galleryImages: portfolioForm.value.galleryImages.map(s => s.trim()).filter(Boolean),
       storyParagraphs: portfolioForm.value.storyParagraphs.filter(Boolean)
     }
 
@@ -2584,16 +2584,44 @@ const filteredCareers = computed(() => {
                     >
                   </div>
                 </div>
-                <!-- Row: Gallery Image String -->
+                <!-- Row: Gallery Images -->
                 <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
-                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Gallery Images (comma-separated):</label>
-                  <div class="flex-1 w-full space-y-1">
-                    <input
-                      v-model="portfolioForm.galleryImagesString"
-                      type="text"
-                      placeholder="/Images/Pinklabel.jpg, /Images/Lecrown.png"
-                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Gallery Images:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <div
+                      v-for="(img, idx) in portfolioForm.galleryImages"
+                      :key="idx"
+                      class="flex items-center gap-2 max-w-xl"
                     >
+                      <input
+                        v-model="portfolioForm.galleryImages[idx]"
+                        type="text"
+                        placeholder="/Images/Pinklabel.jpg"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#1D96B8]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#1D96B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(portfolioForm.galleryImages, idx)"
+                      >
+                        Pick Media
+                      </button>
+                      <button
+                        type="button"
+                        class="px-2.5 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-600 text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        aria-label="Remove image"
+                        @click="portfolioForm.galleryImages.splice(idx, 1)"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      class="px-3 py-1.5 border border-[#1D96B8] text-[#1D96B8] hover:bg-[#1D96B8] hover:text-white text-xs font-semibold rounded cursor-pointer transition-colors"
+                      @click="portfolioForm.galleryImages.push('')"
+                    >
+                      + Add Image
+                    </button>
                   </div>
                 </div>
                 <!-- Row: Story -->

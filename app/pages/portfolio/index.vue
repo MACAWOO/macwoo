@@ -46,11 +46,11 @@ const pairs = computed(() => {
 
     <div class="bg-[#1D96B8]">
       <!-- Filters -->
-      <div class="max-w-[1200px] mx-auto px-6 pt-16 pb-10 flex flex-wrap gap-3 justify-center">
+      <div class="max-w-[1200px] mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-8 sm:pb-10 flex flex-wrap gap-2 sm:gap-3 justify-center">
         <button
           v-for="filter in filters"
           :key="filter"
-          class="px-5 py-2 rounded-full text-base font-medium transition-colors"
+          class="px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full text-sm sm:text-base font-medium transition-colors whitespace-nowrap"
           :class="activeFilter === filter
             ? 'bg-brand-yellow-500 text-brand-dark'
             : 'border border-brand-yellow-500 text-brand-yellow-500 hover:bg-brand-yellow-500/10'"
