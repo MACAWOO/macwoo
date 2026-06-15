@@ -69,7 +69,9 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    '/': { prerender: true },
+    // Homepage hero/featured content comes from Supabase at request time.
+    // Prerendering froze the hero image at build, so render it dynamically (SSR).
+    '/': { prerender: false },
     // Admin area is client-rendered SPA. Prerendering the SPA shells ensures
     // Cloudflare Pages serves them directly, avoiding 404s.
     '/admin': { ssr: false },
