@@ -24,7 +24,7 @@ interface Props {
   imageStyle?: Record<string, string | number | undefined>
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   minHeight: 'min-h-screen',
   align: 'center',
   showGrid: false,
@@ -33,9 +33,81 @@ withDefaults(defineProps<Props>(), {
 })
 
 const videoLoaded = ref(false)
+const activeVideo = ref<'A' | 'B'>('A')
+const videoARef = ref<HTMLVideoElement | null>(null)
+const videoBRef = ref<HTMLVideoElement | null>(null)
+
+const opacityA = ref(1)
+const opacityB = ref(0)
+const switching = ref(false)
+
 const handleVideoPlayable = () => {
   videoLoaded.value = true
 }
+
+const handleTimeUpdateA = () => {
+  const elA = videoARef.value
+  const elB = videoBRef.value
+  if (!elA || !elB || switching.value) return
+
+  const duration = elA.duration
+  if (!duration || isNaN(duration)) return
+
+  const crossfadeTime = Math.min(1.2, duration * 0.1)
+
+  if (activeVideo.value === 'A' && elA.currentTime >= duration - crossfadeTime) {
+    switching.value = true
+    elB.currentTime = 0
+    elB.play().then(() => {
+      activeVideo.value = 'B'
+      opacityA.value = 0
+      opacityB.value = 1
+      setTimeout(() => {
+        elA.pause()
+        switching.value = false
+      }, 1000)
+    }).catch((err) => {
+      console.error('Play B failed:', err)
+      switching.value = false
+    })
+  }
+}
+
+const handleTimeUpdateB = () => {
+  const elA = videoARef.value
+  const elB = videoBRef.value
+  if (!elA || !elB || switching.value) return
+
+  const duration = elB.duration
+  if (!duration || isNaN(duration)) return
+
+  const crossfadeTime = Math.min(1.2, duration * 0.1)
+
+  if (activeVideo.value === 'B' && elB.currentTime >= duration - crossfadeTime) {
+    switching.value = true
+    elA.currentTime = 0
+    elA.play().then(() => {
+      activeVideo.value = 'A'
+      opacityB.value = 0
+      opacityA.value = 1
+      setTimeout(() => {
+        elB.pause()
+        switching.value = false
+      }, 1000)
+    }).catch((err) => {
+      console.error('Play A failed:', err)
+      switching.value = false
+    })
+  }
+}
+
+watch(() => props.video, () => {
+  activeVideo.value = 'A'
+  opacityA.value = 1
+  opacityB.value = 0
+  switching.value = false
+  videoLoaded.value = false
+})
 </script>
 
 <template>
@@ -45,28 +117,48 @@ const handleVideoPlayable = () => {
       minHeight
     ]"
   >
-    <!-- Video background -->
-    <video
+    <!-- Video background wrapper -->
+    <div
       v-if="video"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="auto"
       class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
       :class="[videoLoaded ? 'opacity-100' : 'opacity-0']"
       :style="imageStyle"
-      @loadeddata="handleVideoPlayable"
     >
-      <source
-        :src="video"
-        type="video/mp4"
+      <!-- Video A -->
+      <video
+        ref="videoARef"
+        autoplay
+        muted
+        playsinline
+        preload="auto"
+        class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+        :style="{ opacity: opacityA }"
+        @timeupdate="handleTimeUpdateA"
+        @loadeddata="handleVideoPlayable"
       >
-    </video>
+        <source
+          :src="video"
+          type="video/mp4"
+        >
+      </video>
 
-    <!-- Premium Glass Panel Overlay -->
-    <GlassGrid v-if="showGrid" />
-
+      <!-- Video B -->
+      <video
+        ref="videoBRef"
+        muted
+        playsinline
+        preload="auto"
+        class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+        :style="{ opacity: opacityB }"
+        @timeupdate="handleTimeUpdateB"
+      >
+        <source
+          :src="video"
+          type="video/mp4"
+        >
+      </video>
+    </div>
+ 
     <!-- Static image background -->
     <NuxtImg
       v-else-if="image"
@@ -78,6 +170,9 @@ const handleVideoPlayable = () => {
       preload
       format="webp"
     />
+
+    <!-- Premium Glass Panel Overlay -->
+    <GlassGrid v-if="showGrid" />
 
     <!-- Left Arrow -->
     <NuxtLink
