@@ -47,7 +47,7 @@ onUnmounted(() => {
   <section class="py-16 md:py-20 bg-[#0596B8]">
     <div class="max-w-[1201px] mx-auto px-6 md:px-8">
       <!-- ── Header ── -->
-      <div class="text-center max-w-[700px] mx-auto mb-14 md:mb-16">
+      <div class="text-left md:text-center max-w-[700px] md:mx-auto mb-14 md:mb-16">
         <h2
           class="text-[#F7EC12] text-[36px] md:text-[48px] leading-[1.15] font-medium mb-4"
           style="font-family: 'Fredoka', sans-serif;"
