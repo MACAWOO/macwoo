@@ -53,7 +53,6 @@ const handleVideoPlayable = () => {
       loop
       playsinline
       preload="auto"
-      :poster="image"
       class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
       :class="[videoLoaded ? 'opacity-100' : 'opacity-0']"
       :style="imageStyle"
