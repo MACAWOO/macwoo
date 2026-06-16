@@ -1,4 +1,9 @@
 <script setup lang="ts">
+const { settings, fetchPromise: settingsPromise } = usePageSettings()
+if (settingsPromise) {
+  await settingsPromise
+}
+
 useSeoMeta({
   title: 'Video Production & Narrative Storytelling — Macawoo',
   description: 'From concept to final cut, we produce video content that commands attention and drives meaningful engagement.',
@@ -246,12 +251,13 @@ const logos = [
         </h2>
         <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-zinc-300 shadow-lg">
           <video
+            :key="settings.servicesVideoShowreel"
             class="w-full h-full object-cover"
             controls
             poster="/Images/Video_Production.jpeg"
           >
             <source
-              src="/Background_Videos/Portfolio.mp4"
+              :src="settings.servicesVideoShowreel"
               type="video/mp4"
             >
           </video>

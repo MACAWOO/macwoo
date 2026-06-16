@@ -274,6 +274,7 @@ export type Database = {
           services_branding_image: string | null
           services_marketing_image: string | null
           services_video_image: string | null
+          services_video_showreel: string | null
           updated_at: string | null
         }
         Insert: {
@@ -291,6 +292,7 @@ export type Database = {
           services_branding_image?: string | null
           services_marketing_image?: string | null
           services_video_image?: string | null
+          services_video_showreel?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -308,6 +310,7 @@ export type Database = {
           services_branding_image?: string | null
           services_marketing_image?: string | null
           services_video_image?: string | null
+          services_video_showreel?: string | null
           updated_at?: string | null
         }
         Relationships: []

@@ -391,7 +391,7 @@ onUnmounted(() => {
           <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8">
             <div class="flex flex-col md:flex-row gap-12 md:gap-20 items-center md:items-start relative">
               <!-- Left column -->
-              <div class="md:w-[340px] shrink-0 flex flex-col gap-6 items-center md:items-start text-center md:text-left">
+              <div class="w-full md:w-[340px] shrink-0 flex flex-col gap-6 items-start md:items-start text-left md:text-left">
                 <!-- ABOUT US label (fades in as teal bg arrives) -->
                 <div
                   class="flex items-center gap-2 transition-opacity duration-300"
@@ -399,7 +399,7 @@ onUnmounted(() => {
                 >
                   <span class="w-2 h-2 rounded-full bg-[#F7EC12] inline-block shrink-0" />
                   <span
-                    class="text-[#F7EC12] text-xs font-semibold uppercase tracking-[0.18em]"
+                    class="text-white md:text-[#F7EC12] text-xs font-semibold uppercase tracking-[0.18em]"
                     style="font-family: 'Bricolage Grotesque', sans-serif;"
                   >About Us</span>
                 </div>
@@ -407,7 +407,7 @@ onUnmounted(() => {
                 <!-- Logo container (This will be animated from center to left) -->
                 <div
                   ref="logoPlaceholderRef"
-                  class="relative h-[140px] w-[140px] shrink-0"
+                  class="hidden md:block relative h-[140px] w-[140px] shrink-0"
                 >
                   <NuxtImg
                     src="/Images/Logo.png"
@@ -421,7 +421,7 @@ onUnmounted(() => {
 
                 <!-- Tagline below logo (fades in after logo finishes moving) -->
                 <p
-                  class="text-[#F7EC12] text-sm leading-relaxed max-w-[260px] transition-opacity duration-300"
+                  class="hidden md:block text-[#F7EC12] text-sm font-light leading-relaxed max-w-[260px] transition-opacity duration-300"
                   :style="{ opacity: taglineOpacity }"
                   style="font-family: 'Bricolage Grotesque', sans-serif;"
                 >
