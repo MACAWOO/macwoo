@@ -132,6 +132,11 @@ const generateSlug = (text: string) => {
     .replace(/(^-|-$)+/g, '')
 }
 
+const isVideoUrl = (url?: string) => {
+  if (!url) return false
+  return /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(url)
+}
+
 // Form models
 const settingsForm = ref({
   indexHeroImage: '',
@@ -169,6 +174,7 @@ const portfolioForm = ref({
   image: '/Images/Lecrown.png',
   heroImage: '/Images/Lecrown.png',
   galleryImages: [] as string[],
+  galleryVideos: [] as string[],
   story: '',
   featured: true,
   displayOrder: 1,
@@ -289,6 +295,7 @@ const openAddForm = (model: ModelType) => {
       image: '/Images/Lecrown.png',
       heroImage: '/Images/Lecrown.png',
       galleryImages: [] as string[],
+      galleryVideos: [] as string[],
       story: '',
       featured: true,
       displayOrder: portfolio.value.length + 1,
@@ -350,7 +357,8 @@ const openEditForm = (model: ModelType, id: string | number) => {
       portfolioForm.value = {
         ...JSON.parse(JSON.stringify(original)),
         tagsString: original.tags.join(', '),
-        galleryImages: original.galleryImages ? [...original.galleryImages] : [],
+        galleryImages: original.galleryImages ? original.galleryImages.filter(url => !isVideoUrl(url)) : [],
+        galleryVideos: original.galleryImages ? original.galleryImages.filter(url => isVideoUrl(url)) : [],
         tagline: original.tagline || '',
         services: original.services || '',
         industry: original.industry || '',
@@ -424,11 +432,16 @@ const handleSave = async (actionType: 'save' | 'save_and_add' | 'save_and_contin
     }
   } else if (currentModel.value === 'portfolio') {
     loggedName = portfolioForm.value.title
-    const { tagsString, ...projectData } = portfolioForm.value
+    const { tagsString, galleryVideos, ...projectData } = portfolioForm.value
+    const combinedGallery = [
+      ...portfolioForm.value.galleryImages,
+      ...portfolioForm.value.galleryVideos
+    ].map(s => s.trim()).filter(Boolean)
+
     const processedProject = {
       ...projectData,
       tags: tagsString.split(',').map(s => s.trim()).filter(Boolean),
-      galleryImages: portfolioForm.value.galleryImages.map(s => s.trim()).filter(Boolean),
+      galleryImages: combinedGallery,
       storyParagraphs: portfolioForm.value.storyParagraphs.filter(Boolean)
     }
 
@@ -2646,6 +2659,46 @@ const filteredCareers = computed(() => {
                       @click="portfolioForm.galleryImages.push('')"
                     >
                       + Add Image
+                    </button>
+                  </div>
+                </div>
+                <!-- Row: Gallery Videos -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start border-t border-zinc-100">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Gallery Videos:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <div
+                      v-for="(vid, idx) in portfolioForm.galleryVideos"
+                      :key="idx"
+                      class="flex items-center gap-2 max-w-xl"
+                    >
+                      <input
+                        v-model="portfolioForm.galleryVideos[idx]"
+                        type="text"
+                        placeholder="/Videos/highlight.mp4"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(portfolioForm.galleryVideos, idx)"
+                      >
+                        Pick Media
+                      </button>
+                      <button
+                        type="button"
+                        class="px-2.5 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-600 text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        aria-label="Remove video"
+                        @click="portfolioForm.galleryVideos.splice(idx, 1)"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      class="px-3 py-1.5 border border-[#0596B8] text-[#0596B8] hover:bg-[#0596B8] hover:text-white text-xs font-semibold rounded cursor-pointer transition-colors"
+                      @click="portfolioForm.galleryVideos.push('')"
+                    >
+                      + Add Video
                     </button>
                   </div>
                 </div>

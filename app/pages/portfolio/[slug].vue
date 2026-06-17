@@ -88,6 +88,11 @@ const paragraphs = computed(() =>
     ? project.value.storyParagraphs
     : [project.value?.story ?? '']
 )
+
+const isVideoUrl = (url?: string) => {
+  if (!url) return false
+  return /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(url)
+}
 </script>
 
 <template>
@@ -297,35 +302,40 @@ const paragraphs = computed(() =>
         Design Highlights
       </h2>
 
-      <div class="relative rounded-[28px] overflow-hidden">
+      <div class="relative rounded-[28px] overflow-hidden aspect-video w-full bg-zinc-900">
         <NuxtImg
+          v-if="!isVideoUrl(project.galleryImages[galleryIndex])"
           :src="project.galleryImages[galleryIndex]"
           :alt="`${project.title} design highlight ${galleryIndex + 1}`"
           format="webp"
-          class="w-full object-cover rounded-[28px]"
-          style="min-height: 280px; max-height: 619px;"
+          class="w-full h-full object-cover rounded-[28px]"
+        />
+        <video
+          v-else
+          :src="project.galleryImages[galleryIndex]"
+          controls
+          playsinline
+          loop
+          class="w-full h-full object-cover rounded-[28px]"
         />
 
         <!-- prev / next buttons -->
-        <div
-          v-if="project.galleryImages.length > 1"
-          class="absolute bottom-5 right-5 flex gap-2"
-        >
+        <template v-if="project.galleryImages.length > 1">
           <button
-            class="w-14 h-14 rounded-full bg-brand-yellow-500 border-2 border-brand-yellow-500 flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-30"
+            class="absolute left-5 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-brand-yellow-500 border-2 border-brand-yellow-500 flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-30 z-30 shadow-md"
             :disabled="galleryIndex === 0"
             @click="galleryIndex = Math.max(0, galleryIndex - 1)"
           >
             <LeftArrow class="w-5 h-5 text-brand-dark" />
           </button>
           <button
-            class="w-14 h-14 rounded-full bg-brand-yellow-500 border-2 border-brand-yellow-500 flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-30"
+            class="absolute right-5 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-brand-yellow-500 border-2 border-brand-yellow-500 flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-30 z-30 shadow-md"
             :disabled="galleryIndex >= project.galleryImages.length - 1"
             @click="galleryIndex = Math.min(project.galleryImages.length - 1, galleryIndex + 1)"
           >
             <RightArrow class="w-5 h-5 text-brand-dark" />
           </button>
-        </div>
+        </template>
       </div>
     </div>
   </div>
