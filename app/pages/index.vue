@@ -368,7 +368,7 @@ onUnmounted(() => {
             title-html="FEEL THE <span class=&quot;text-brand-yellow-500&quot;>WOO</span>"
             :image="settings.indexHeroImage"
             :video="settings.indexHeroVideo"
-            description="From strategy to storytelling, we create brands, campaigns, and content that don't just look good but perform, connect, and grow."
+            description-html="From strategy to storytelling,<br class='md:hidden'> we create brands, campaigns, and content that don't just look good but perform, connect, and grow."
             image-class="!opacity-60"
             :class="isMobile ? 'min-h-[calc(100vh-80px)]' : 'h-full w-full'"
             :image-style="isMobile ? {} : heroBgStyle"

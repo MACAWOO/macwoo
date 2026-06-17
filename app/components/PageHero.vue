@@ -12,6 +12,7 @@ interface Props {
   eyebrow?: string
   titleHtml: string
   description?: string
+  descriptionHtml?: string
   ctas?: Cta[]
   showArrows?: boolean
   prevTo?: string
@@ -216,8 +217,14 @@ watch(() => props.video, () => {
       />
 
       <!-- Description -->
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <p
-        v-if="description"
+        v-if="descriptionHtml"
+        class="text-white text-base md:text-lg lg:text-[20px] font-normal leading-relaxed lg:leading-[28px] lg:max-w-[728px] text-center mb-8"
+        v-html="descriptionHtml"
+      />
+      <p
+        v-else-if="description"
         class="text-white text-base md:text-lg lg:text-[20px] font-normal leading-relaxed lg:leading-[28px] lg:max-w-[728px] text-center mb-8"
       >
         {{ description }}
