@@ -756,11 +756,12 @@ onUnmounted(() => {
           <div class="flex-1 flex flex-col justify-center">
             <div
               v-if="isSubmitted"
-              class="flex flex-col items-center justify-center text-center p-8 bg-[#1684A2]/50 rounded-[32px] border border-white/10 h-full min-h-[400px]"
+              class="bg-brand-yellow-500 rounded-[32px] min-h-[400px] flex flex-col items-start justify-center px-10 py-12 animate-success-pop"
             >
-              <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-[#0596B8] mb-4 shadow-lg animate-bounce">
+              <h3 class="text-[32px] md:text-[40px] font-medium text-brand-dark leading-tight flex items-center gap-3 animate-success-text">
+                Message Sent
                 <svg
-                  class="w-8 h-8"
+                  class="w-7 h-7 md:w-8 md:h-8 text-brand-dark animate-success-arrow"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -768,17 +769,11 @@ onUnmounted(() => {
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    stroke-width="3"
-                    d="M5 13l4 4L19 7"
+                    stroke-width="2.5"
+                    d="M7 17L17 7M17 7H8M17 7v9"
                   />
                 </svg>
-              </div>
-              <h3 class="text-2xl font-medium text-white mb-2">
-                Message Sent!
               </h3>
-              <p class="text-white/80 max-w-sm">
-                Thank you for reaching out. The Macawoo team will get back to you shortly.
-              </p>
             </div>
 
             <form
