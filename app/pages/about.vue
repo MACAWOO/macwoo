@@ -279,12 +279,12 @@ onUnmounted(() => {
 
     <!-- CTA Section -->
     <section class="bg-brand-yellow-500 py-20 md:py-28 text-center flex flex-col items-center justify-center">
-      <div class="max-w-4xl mx-auto px-6">
+      <div class="max-w-6xl mx-auto px-6">
         <h2
           class="text-[#0596B8] text-3xl md:text-5xl lg:text-[56px] font-medium leading-tight mb-6"
           style="font-family: 'Bricolage Grotesque', sans-serif;"
         >
-          To create brands that people don't just notice—but remember.
+          To create brands <span style="white-space: nowrap">that people don't just</span><br> notice—but remember.
         </h2>
         <p
           class="text-brand-dark/70 text-sm md:text-base font-semibold mb-8 uppercase tracking-wider"
