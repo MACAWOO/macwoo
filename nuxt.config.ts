@@ -64,9 +64,11 @@ export default defineNuxtConfig({
   runtimeConfig: {
     resendApiKey: process.env.RESEND_API_KEY || '',
     contactRecipientEmail: process.env.CONTACT_RECIPIENT_EMAIL || '',
+    turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY || '',
     public: {
       supabaseUrl: process.env.SUPABASE_URL || 'https://vewmzejakdfsgsyxdlpa.supabase.co',
-      supabaseKey: process.env.SUPABASE_KEY || 'sb_publishable_SjN1foafYhhbb3k-DI82Aw_xsjStWt_'
+      supabaseKey: process.env.SUPABASE_KEY || 'sb_publishable_SjN1foafYhhbb3k-DI82Aw_xsjStWt_',
+      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '0x4AAAAAADmur0Me-uiKizSt'
     }
   },
 

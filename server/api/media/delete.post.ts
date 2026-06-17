@@ -33,8 +33,15 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const filename = body?.filename
 
-  if (!filename) {
+  if (!filename || typeof filename !== 'string') {
     throw createError({ statusCode: 400, statusMessage: 'Bad Request: Filename parameter is required' })
+  }
+
+  // Only allow a single flat object key (matches the upload naming scheme:
+  // `${Date.now()}_${cleanedName}`). Reject path separators / traversal so a
+  // caller can't target arbitrary paths in the bucket.
+  if (!/^[a-zA-Z0-9._-]+$/.test(filename)) {
+    throw createError({ statusCode: 400, statusMessage: 'Bad Request: Invalid filename' })
   }
 
   // Initialize a scoped Supabase client with the user's token for authorized deletion

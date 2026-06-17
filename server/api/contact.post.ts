@@ -1,11 +1,23 @@
 import { defineEventHandler, readBody, createError } from 'h3'
 import { createClient } from '@supabase/supabase-js'
 
+// Escape user input before interpolating into the HTML email body. Prevents the
+// submitter from injecting markup/links (phishing) into the mail we receive.
+const escapeHtml = (s: unknown): string =>
+  String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
   const body = await readBody(event)
 
-  const { name, email, phone, service, message } = body
+  const { name, email, phone, service, message, token } = body
 
   // Validate required fields
   if (!name || !email || !message) {
@@ -13,6 +25,52 @@ export default defineEventHandler(async (event) => {
       statusCode: 400,
       statusMessage: 'Please fill in all required fields (Name, Email, and Message).'
     })
+  }
+
+  // Verify Cloudflare Turnstile token
+  const turnstileSecret = config.turnstileSecretKey || process.env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA'
+  if (!token) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Security verification is required (missing Turnstile token).'
+    })
+  }
+
+  try {
+    const verifyResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        secret: turnstileSecret,
+        response: token
+      })
+    })
+
+    const verifyResult = await verifyResponse.json()
+    if (!verifyResult.success) {
+      console.error('Turnstile verification failed for contact form:', verifyResult)
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Security verification failed. Please try again.'
+      })
+    }
+  } catch (err: any) {
+    console.error('Turnstile verification request failed:', err)
+    if (err.statusCode) throw err
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Error performing security verification.'
+    })
+  }
+
+  // Validate email format and bound input sizes (cheap abuse guard).
+  if (typeof email !== 'string' || !EMAIL_RE.test(email) || email.length > 320) {
+    throw createError({ statusCode: 400, statusMessage: 'Please provide a valid email address.' })
+  }
+  if (String(name).length > 200 || String(message).length > 5000) {
+    throw createError({ statusCode: 400, statusMessage: 'Input exceeds the allowed length.' })
   }
 
   // Insert submission into Supabase contact_submissions table
@@ -62,25 +120,25 @@ export default defineEventHandler(async (event) => {
         <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
           <tr>
             <td style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold; width: 140px;">Name:</td>
-            <td style="padding: 10px; border-bottom: 1px solid #eee;">${name}</td>
+            <td style="padding: 10px; border-bottom: 1px solid #eee;">${escapeHtml(name)}</td>
           </tr>
           <tr>
             <td style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold;">Email:</td>
-            <td style="padding: 10px; border-bottom: 1px solid #eee;"><a href="mailto:${email}" style="color: #0596B8; text-decoration: none;">${email}</a></td>
+            <td style="padding: 10px; border-bottom: 1px solid #eee;"><a href="mailto:${encodeURIComponent(email)}" style="color: #0596B8; text-decoration: none;">${escapeHtml(email)}</a></td>
           </tr>
           <tr>
             <td style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold;">Phone:</td>
-            <td style="padding: 10px; border-bottom: 1px solid #eee;">${phone || 'Not provided'}</td>
+            <td style="padding: 10px; border-bottom: 1px solid #eee;">${escapeHtml(phone || 'Not provided')}</td>
           </tr>
           <tr>
             <td style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold;">Requested Service:</td>
-            <td style="padding: 10px; border-bottom: 1px solid #eee;"><span style="background-color: #F7EC12; color: #000; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">${service || 'General Inquiry'}</span></td>
+            <td style="padding: 10px; border-bottom: 1px solid #eee;"><span style="background-color: #F7EC12; color: #000; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">${escapeHtml(service || 'General Inquiry')}</span></td>
           </tr>
         </table>
-        
+
         <div style="margin-top: 25px;">
           <h3 style="font-size: 16px; border-bottom: 2px solid #0596B8; padding-bottom: 6px; color: #0596B8;">Message:</h3>
-          <p style="background-color: #f9f9f9; padding: 15px; border-left: 4px solid #0596B8; border-radius: 4px; font-style: italic; white-space: pre-wrap; margin-top: 10px;">${message}</p>
+          <p style="background-color: #f9f9f9; padding: 15px; border-left: 4px solid #0596B8; border-radius: 4px; font-style: italic; white-space: pre-wrap; margin-top: 10px;">${escapeHtml(message)}</p>
         </div>
       </div>
       <div style="background-color: #f4f4f4; padding: 15px; text-align: center; font-size: 12px; color: #777; border-top: 1px solid #eee;">
@@ -98,7 +156,7 @@ export default defineEventHandler(async (event) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'Macawoo Form <onboarding@resend.dev>',
+        from: 'Macawoo Form <contact@macawoo.co>',
         to: recipientEmail,
         subject: `Macawoo Lead: ${name} (${service || 'General Inquiry'})`,
         html: htmlContent,
@@ -115,11 +173,12 @@ export default defineEventHandler(async (event) => {
     const data = await response.json()
     return { success: true, id: data.id }
   } catch (error: unknown) {
+    // Log the real cause server-side; return a generic message so we don't leak
+    // Resend/internal details to the client.
     console.error('Mail sending failed:', error)
-    const err = error as Error
     throw createError({
       statusCode: 500,
-      statusMessage: err.message || 'Failed to dispatch contact message.'
+      statusMessage: 'Failed to dispatch contact message. Please try again or email us directly.'
     })
   }
 })

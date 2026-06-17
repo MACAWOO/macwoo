@@ -258,7 +258,24 @@ const handleScroll = () => {
   requestAnimationFrame(computeScrollProgress)
 }
 
+const turnstileRef = ref<any>(null)
+const turnstileToken = ref('')
+
+const handleVerify = (token: string) => {
+  turnstileToken.value = token
+  errorMsg.value = ''
+}
+
+const handleExpire = () => {
+  turnstileToken.value = ''
+}
+
 const handleSubmit = async () => {
+  if (!turnstileToken.value) {
+    errorMsg.value = 'Please complete the security verification.'
+    return
+  }
+
   isSubmitting.value = true
   errorMsg.value = ''
   try {
@@ -269,7 +286,8 @@ const handleSubmit = async () => {
         service: form.service,
         email: form.email,
         phone: form.phone,
-        message: form.message
+        message: form.message,
+        token: turnstileToken.value
       }
     })
     isSubmitted.value = true
@@ -281,6 +299,11 @@ const handleSubmit = async () => {
     form.phone = ''
     form.message = ''
 
+    if (turnstileRef.value) {
+      turnstileRef.value.reset()
+    }
+    turnstileToken.value = ''
+
     // Clear success message after 5 seconds
     setTimeout(() => {
       isSubmitted.value = false
@@ -289,6 +312,10 @@ const handleSubmit = async () => {
     console.error('Failed to submit form:', err)
     const fetchError = err as { data?: { statusMessage?: string } }
     errorMsg.value = fetchError.data?.statusMessage || 'Failed to send your request. Please try again or email us directly.'
+    if (turnstileRef.value) {
+      turnstileRef.value.reset()
+    }
+    turnstileToken.value = ''
   } finally {
     isSubmitting.value = false
   }
@@ -875,6 +902,14 @@ onUnmounted(() => {
                   class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 text-base transition-colors resize-none"
                 />
               </div>
+
+              <!-- Cloudflare Turnstile -->
+              <Turnstile
+                ref="turnstileRef"
+                @verify="handleVerify"
+                @expire="handleExpire"
+                @error="handleExpire"
+              />
 
               <!-- Submit Button -->
               <div>

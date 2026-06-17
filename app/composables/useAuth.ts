@@ -9,7 +9,9 @@ export function useAuth() {
   const tokenCookie = useCookie<string | null>('sb-access-token', {
     maxAge: 60 * 60 * 24 * 7, // 1 week
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    // import.meta.dev is reliable in Nuxt; process.env.NODE_ENV is undefined on
+    // the Cloudflare Workers runtime, which left this false in production.
+    secure: !import.meta.dev,
     path: '/'
   })
 
