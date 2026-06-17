@@ -144,7 +144,7 @@ const logos = [
       <!-- Left Arrow -->
       <NuxtLink
         :to="prevTo"
-        class="absolute left-4 md:left-[120px] top-1/2 -translate-y-1/2 z-20 w-[48px] h-[48px] md:w-[68px] md:h-[68px] flex items-center justify-center hover:scale-105 transition-transform"
+        class="hidden md:flex absolute left-4 md:left-[120px] top-1/2 -translate-y-1/2 z-20 w-[48px] h-[48px] md:w-[68px] md:h-[68px] items-center justify-center hover:scale-105 transition-transform"
       >
         <div class="w-full h-full rounded-full bg-white flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.12)]">
           <LeftArrow class="w-[38%] h-[38%]" />
@@ -154,7 +154,7 @@ const logos = [
       <!-- Right Arrow -->
       <NuxtLink
         :to="nextTo"
-        class="absolute right-4 md:right-[120px] top-1/2 -translate-y-1/2 z-20 w-[48px] h-[48px] md:w-[68px] md:h-[68px] flex items-center justify-center hover:scale-105 transition-transform"
+        class="hidden md:flex absolute right-4 md:right-[120px] top-1/2 -translate-y-1/2 z-20 w-[48px] h-[48px] md:w-[68px] md:h-[68px] items-center justify-center hover:scale-105 transition-transform"
       >
         <div class="w-full h-full rounded-full bg-white flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.12)]">
           <RightArrow class="w-[38%] h-[38%]" />
@@ -165,7 +165,26 @@ const logos = [
     <!-- ═══════════════════════════════════════════
          SUB-SERVICES CARDS (Teal Background)
          ═══════════════════════════════════════════ -->
-    <section class="bg-[#0596B8] relative overflow-hidden pt-16 md:pt-20 pb-20 md:pb-24">
+    <section class="bg-[#0596B8] relative overflow-hidden pt-6 md:pt-20 pb-20 md:pb-24">
+      <!-- Mobile Navigation Arrows (Centered inside Section on Mobile) -->
+      <div class="flex md:hidden items-center justify-center gap-6 pb-6">
+        <NuxtLink
+          :to="prevTo"
+          class="w-[48px] h-[48px] flex items-center justify-center hover:scale-105 transition-transform"
+        >
+          <div class="w-full h-full rounded-full bg-white flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.12)] border border-zinc-200">
+            <LeftArrow class="w-[38%] h-[38%]" />
+          </div>
+        </NuxtLink>
+        <NuxtLink
+          :to="nextTo"
+          class="w-[48px] h-[48px] flex items-center justify-center hover:scale-105 transition-transform"
+        >
+          <div class="w-full h-full rounded-full bg-white flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.12)] border border-zinc-200">
+            <RightArrow class="w-[38%] h-[38%]" />
+          </div>
+        </NuxtLink>
+      </div>
       <div class="max-w-[1120px] mx-auto px-6">
         <div
           ref="containerRef"
