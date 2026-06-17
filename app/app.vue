@@ -76,7 +76,7 @@ useHead({
             'name': 'Macawoo',
             'url': siteUrl,
             'logo': `${siteUrl}/icon-512.png`,
-            'email': 'macawooofficial@gmail.com',
+            'email': 'info@macawoo.co',
             'description': 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
             'sameAs': [
               'https://www.linkedin.com/company/macawoo',

@@ -98,7 +98,7 @@ export default defineEventHandler(async (event) => {
 
   // Get Resend API Key from runtime config / env
   const resendApiKey = config.resendApiKey || process.env.RESEND_API_KEY
-  const recipientEmail = config.contactRecipientEmail || process.env.CONTACT_RECIPIENT_EMAIL || 'macawooofficial@gmail.com'
+  const recipientEmail = config.contactRecipientEmail || process.env.CONTACT_RECIPIENT_EMAIL || 'info@macawoo.co'
 
   if (!resendApiKey) {
     console.error('RESEND_API_KEY environment variable is not configured.')

@@ -143,7 +143,7 @@ const isYellowMode = computed(() => {
               :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               class="text-sm md:text-base break-all"
             >
-              macawooofficial@gmail.com
+              info@macawoo.co
             </li>
           </ul>
         </div>

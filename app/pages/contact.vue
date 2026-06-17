@@ -288,10 +288,10 @@ const handleSubmit = async () => {
                       Email Us
                     </p>
                     <a
-                      href="mailto:macawooofficial@gmail.com"
+                      href="mailto:info@macawoo.co"
                       class="text-lg font-medium hover:underline break-all"
                     >
-                      macawooofficial@gmail.com
+                      info@macawoo.co
                     </a>
                   </div>
                 </div>
