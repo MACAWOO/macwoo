@@ -90,7 +90,7 @@ const subServices = [
   { icon: '/Icons/Package@4x.png', title: 'Packaging Design', description: 'Design impactful packaging that captures attention and enhances customer experience.' },
   { icon: '/Icons/Figma@4x.png', title: 'UI/UX Design', description: 'Craft intuitive digital experiences that improve usability, engagement, and customer satisfaction.' },
   { icon: '/Icons/Palette@4x.png', title: 'Corporate Design', description: 'Develop professional brand assets that ensure clear and consistent business communication.' },
-  { icon: '/Icons/Brain@4x.png', title: 'Creative Design', description: 'Lead creative concepts and visual storytelling that bring your brand vision to life.' }
+  { icon: '/Icons/Brain@4x.png', title: 'Creative Design', description: 'Lead creative concepts and visual storytelling that bring your brand vision\nto life.' }
 ]
 
 const steps = [
@@ -201,7 +201,7 @@ const logos = [
               />
             </div>
             <!-- Content -->
-            <div class="flex-1 flex flex-col justify-center px-5 md:px-9 py-6 md:py-0">
+            <div class="flex-1 flex flex-col justify-start px-5 md:px-9 pt-8 md:pt-9 pb-6">
               <h3
                 class="text-[#0596B8] text-[24px] md:text-[32px] font-medium leading-[38px] mb-3 md:mb-[19px]"
                 style="font-family: 'Bricolage Grotesque', sans-serif;"
@@ -209,7 +209,7 @@ const logos = [
                 {{ s.title }}
               </h3>
               <p
-                class="text-black text-[15px] md:text-[18px] font-normal leading-[26px] md:leading-[28px]"
+                class="text-black text-[15px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] whitespace-pre-line"
                 style="font-family: 'Bricolage Grotesque', sans-serif;"
               >
                 {{ s.description }}
