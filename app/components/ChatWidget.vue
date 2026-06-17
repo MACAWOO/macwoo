@@ -417,7 +417,7 @@ watch(isOpen, async (val) => {
           <img
             src="/Icons/chat_widget.svg"
             alt="Macawoo Assistant"
-            class="w-full h-full object-contain select-none pointer-events-none"
+            class="w-full h-full object-contain select-none pointer-events-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.3)]"
           >
         </div>
       </transition>
