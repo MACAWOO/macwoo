@@ -1,13 +1,11 @@
 <script setup lang="ts">
 const { posts, fetchPromise: blogsPromise } = useBlogs()
-if (blogsPromise) {
-  await blogsPromise
-}
-
 const { settings, fetchPromise: settingsPromise } = usePageSettings()
-if (settingsPromise) {
-  await settingsPromise
-}
+
+await Promise.all([
+  blogsPromise || Promise.resolve(),
+  settingsPromise || Promise.resolve()
+])
 
 useSeoMeta({
   title: 'Macawoo Blog — Insights on Branding, Design & Marketing',

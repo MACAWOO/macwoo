@@ -75,25 +75,51 @@ function mapSettingsToDb(settings: PageSettings): Omit<Database['public']['Table
   }
 }
 
+let cachedSettings: PageSettings | null = null
+let cacheTime = 0
+let activeFetchPromise: Promise<void> | null = null
+const CACHE_TTL = 300000 // 5 minutes
+
 export function usePageSettings() {
   const supabase = useSupabase()
   const settings = useState<PageSettings>('page_settings', () => ({ ...defaultSettings }))
 
   const fetchSettings = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('page_settings')
-        .select('*')
-        .limit(1)
-        .maybeSingle()
-
-      if (error) throw error
-      if (data) {
-        settings.value = mapDbToSettings(data)
-      }
-    } catch (e) {
-      console.error('Error fetching page settings from Supabase:', e)
+    if (cachedSettings && (Date.now() - cacheTime < CACHE_TTL)) {
+      settings.value = cachedSettings
+      return
     }
+
+    if (activeFetchPromise) {
+      await activeFetchPromise
+      if (cachedSettings) {
+        settings.value = cachedSettings
+      }
+      return
+    }
+
+    activeFetchPromise = (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('page_settings')
+          .select('*')
+          .limit(1)
+          .maybeSingle()
+
+        if (error) throw error
+        if (data) {
+          cachedSettings = mapDbToSettings(data)
+          cacheTime = Date.now()
+          settings.value = cachedSettings
+        }
+      } catch (e) {
+        console.error('Error fetching page settings from Supabase:', e)
+      } finally {
+        activeFetchPromise = null
+      }
+    })()
+
+    await activeFetchPromise
   }
 
   // Trigger fetch on server or if clean default
@@ -103,6 +129,8 @@ export function usePageSettings() {
   }
 
   const updateSettings = async (updated: Partial<PageSettings>) => {
+    cachedSettings = null
+    cacheTime = 0
     settings.value = { ...settings.value, ...updated }
     try {
       const { data: current } = await supabase
@@ -130,6 +158,8 @@ export function usePageSettings() {
   }
 
   const resetSettings = async () => {
+    cachedSettings = null
+    cacheTime = 0
     settings.value = { ...defaultSettings }
     await updateSettings(defaultSettings)
   }

@@ -14,41 +14,67 @@ const initialProjects: AdminPortfolioProject[] = defaultProjects.map((p, i) => (
   displayOrder: i + 1
 }))
 
+let cachedProjects: AdminPortfolioProject[] | null = null
+let cacheTime = 0
+let activeFetchPromise: Promise<void> | null = null
+const CACHE_TTL = 300000 // 5 minutes
+
 export function usePortfolio() {
   const supabase = useSupabase()
   const projects = useState<AdminPortfolioProject[]>('portfolio', () => [])
 
   const fetchProjects = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('portfolio_projects')
-        .select('*, categories(name)')
-        .order('sort_order', { ascending: true })
-
-      if (error) throw error
-      if (data) {
-        projects.value = data.map((d: any) => ({
-          slug: d.slug,
-          title: d.title,
-          subtitle: d.subtitle,
-          tags: d.tags || [],
-          category: d.categories?.name || 'Branding',
-          image: d.image,
-          heroImage: d.hero_image,
-          galleryImages: d.gallery_images || [],
-          story: d.story || '',
-          tagline: d.tagline || undefined,
-          services: d.services || undefined,
-          industry: d.industry || undefined,
-          date: d.date || undefined,
-          storyParagraphs: d.story_paragraphs || [],
-          featured: true,
-          displayOrder: d.sort_order
-        }))
-      }
-    } catch (e) {
-      console.error('Error fetching portfolio projects:', e)
+    if (cachedProjects && (Date.now() - cacheTime < CACHE_TTL)) {
+      projects.value = cachedProjects
+      return
     }
+
+    if (activeFetchPromise) {
+      await activeFetchPromise
+      if (cachedProjects) {
+        projects.value = cachedProjects
+      }
+      return
+    }
+
+    activeFetchPromise = (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('portfolio_projects')
+          .select('*, categories(name)')
+          .order('sort_order', { ascending: true })
+
+        if (error) throw error
+        if (data) {
+          cachedProjects = data.map((d: any) => ({
+            slug: d.slug,
+            title: d.title,
+            subtitle: d.subtitle,
+            tags: d.tags || [],
+            category: d.categories?.name || 'Branding',
+            image: d.image,
+            heroImage: d.hero_image,
+            galleryImages: d.gallery_images || [],
+            story: d.story || '',
+            tagline: d.tagline || undefined,
+            services: d.services || undefined,
+            industry: d.industry || undefined,
+            date: d.date || undefined,
+            storyParagraphs: d.story_paragraphs || [],
+            featured: true,
+            displayOrder: d.sort_order
+          }))
+          cacheTime = Date.now()
+          projects.value = cachedProjects
+        }
+      } catch (e) {
+        console.error('Error fetching portfolio projects:', e)
+      } finally {
+        activeFetchPromise = null
+      }
+    })()
+
+    await activeFetchPromise
   }
 
   // Trigger fetch on server or if empty
@@ -68,6 +94,8 @@ export function usePortfolio() {
   }
 
   const addProject = async (project: AdminPortfolioProject) => {
+    cachedProjects = null
+    cacheTime = 0
     const categoryId = await resolveCategoryId(project.category)
     const payload = {
       slug: project.slug,
@@ -100,6 +128,8 @@ export function usePortfolio() {
   }
 
   const updateProject = async (slug: string, updated: AdminPortfolioProject) => {
+    cachedProjects = null
+    cacheTime = 0
     const categoryId = await resolveCategoryId(updated.category)
     const payload = {
       slug: updated.slug,
@@ -137,6 +167,8 @@ export function usePortfolio() {
   }
 
   const deleteProject = async (slug: string) => {
+    cachedProjects = null
+    cacheTime = 0
     try {
       const { error } = await supabase
         .from('portfolio_projects')
@@ -150,6 +182,8 @@ export function usePortfolio() {
   }
 
   const resetPortfolio = async () => {
+    cachedProjects = null
+    cacheTime = 0
     try {
       await supabase.from('portfolio_projects').delete().neq('slug', 'doesnotexist')
       const { data: cats } = await supabase.from('categories').select('*')

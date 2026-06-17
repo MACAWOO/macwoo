@@ -3,43 +3,69 @@ import { useSupabase } from './useSupabase'
 import { caseStudies as defaultCaseStudies } from '~/data/case-studies'
 import type { CaseStudy } from '~/data/case-studies'
 
+let cachedCaseStudies: CaseStudy[] | null = null
+let cacheTime = 0
+let activeFetchPromise: Promise<void> | null = null
+const CACHE_TTL = 300000 // 5 minutes
+
 export function useCaseStudies() {
   const supabase = useSupabase()
   const caseStudies = useState<CaseStudy[]>('caseStudies', () => [])
 
   const fetchCaseStudies = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('case_studies')
-        .select('*, categories(name)')
-        .order('sort_order', { ascending: true })
-
-      if (error) throw error
-      if (data) {
-        caseStudies.value = data.map((d: any) => ({
-          slug: d.slug,
-          title: d.title,
-          client: d.client,
-          tags: d.tags || [],
-          category: d.categories?.name || 'Branding',
-          image: d.image,
-          heroImage: d.hero_image,
-          tagline: d.tagline || undefined,
-          services: d.services || undefined,
-          industry: d.industry || undefined,
-          date: d.date || undefined,
-          challenge: d.challenge || '',
-          challengeParagraphs: d.challenge_paragraphs || [],
-          approach: d.approach || '',
-          approachParagraphs: d.approach_paragraphs || [],
-          solution: d.solution || [],
-          results: (d.results as any) || [],
-          resultsSummary: d.results_summary || undefined
-        }))
-      }
-    } catch (e) {
-      console.error('Error fetching case studies:', e)
+    if (cachedCaseStudies && (Date.now() - cacheTime < CACHE_TTL)) {
+      caseStudies.value = cachedCaseStudies
+      return
     }
+
+    if (activeFetchPromise) {
+      await activeFetchPromise
+      if (cachedCaseStudies) {
+        caseStudies.value = cachedCaseStudies
+      }
+      return
+    }
+
+    activeFetchPromise = (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('case_studies')
+          .select('*, categories(name)')
+          .order('sort_order', { ascending: true })
+
+        if (error) throw error
+        if (data) {
+          cachedCaseStudies = data.map((d: any) => ({
+            slug: d.slug,
+            title: d.title,
+            client: d.client,
+            tags: d.tags || [],
+            category: d.categories?.name || 'Branding',
+            image: d.image,
+            heroImage: d.hero_image,
+            tagline: d.tagline || undefined,
+            services: d.services || undefined,
+            industry: d.industry || undefined,
+            date: d.date || undefined,
+            challenge: d.challenge || '',
+            challengeParagraphs: d.challenge_paragraphs || [],
+            approach: d.approach || '',
+            approachParagraphs: d.approach_paragraphs || [],
+            solution: d.solution || [],
+            results: (d.results as any) || [],
+            resultsSummary: d.results_summary || undefined
+          }))
+          cacheTime = Date.now()
+          caseStudies.value = cachedCaseStudies
+        }
+      } catch (e) {
+        console.error('Error fetching case studies:', e)
+      } finally {
+        activeFetchPromise = null
+      }
+    })()
+
+    await activeFetchPromise
   }
 
   // Trigger fetch on server or if empty
@@ -60,6 +86,8 @@ export function useCaseStudies() {
   }
 
   const addCaseStudy = async (study: CaseStudy) => {
+    cachedCaseStudies = null
+    cacheTime = 0
     const categoryId = await resolveCategoryId(study.category)
     const payload = {
       slug: study.slug,
@@ -96,6 +124,8 @@ export function useCaseStudies() {
   }
 
   const updateCaseStudy = async (slug: string, updated: CaseStudy) => {
+    cachedCaseStudies = null
+    cacheTime = 0
     const categoryId = await resolveCategoryId(updated.category)
     const payload = {
       slug: updated.slug,
@@ -136,6 +166,8 @@ export function useCaseStudies() {
   }
 
   const deleteCaseStudy = async (slug: string) => {
+    cachedCaseStudies = null
+    cacheTime = 0
     try {
       const { error } = await supabase
         .from('case_studies')
@@ -149,6 +181,8 @@ export function useCaseStudies() {
   }
 
   const resetCaseStudies = async () => {
+    cachedCaseStudies = null
+    cacheTime = 0
     try {
       await supabase.from('case_studies').delete().neq('slug', 'doesnotexist')
       const { data: cats } = await supabase.from('categories').select('*')

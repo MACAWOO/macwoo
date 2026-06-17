@@ -3,33 +3,59 @@ import { useSupabase } from './useSupabase'
 import { posts as defaultPosts } from '~/data/blog'
 import type { BlogPost } from '~/data/blog'
 
+let cachedPosts: BlogPost[] | null = null
+let cacheTime = 0
+let activeFetchPromise: Promise<void> | null = null
+const CACHE_TTL = 300000 // 5 minutes
+
 export function useBlogs() {
   const supabase = useSupabase()
   const posts = useState<BlogPost[]>('blogs', () => [])
 
   const fetchBlogs = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*, categories(name)')
-        .order('date', { ascending: false })
-
-      if (error) throw error
-      if (data) {
-        posts.value = data.map((d: any) => ({
-          slug: d.slug,
-          title: d.title,
-          excerpt: d.excerpt,
-          date: d.date,
-          readTime: d.read_time,
-          image: d.image,
-          body: (d.body as any) || [],
-          category: d.categories?.name || undefined
-        }))
-      }
-    } catch (e) {
-      console.error('Error fetching blogs:', e)
+    if (cachedPosts && (Date.now() - cacheTime < CACHE_TTL)) {
+      posts.value = cachedPosts
+      return
     }
+
+    if (activeFetchPromise) {
+      await activeFetchPromise
+      if (cachedPosts) {
+        posts.value = cachedPosts
+      }
+      return
+    }
+
+    activeFetchPromise = (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('*, categories(name)')
+          .order('date', { ascending: false })
+
+        if (error) throw error
+        if (data) {
+          cachedPosts = data.map((d: any) => ({
+            slug: d.slug,
+            title: d.title,
+            excerpt: d.excerpt,
+            date: d.date,
+            readTime: d.read_time,
+            image: d.image,
+            body: (d.body as any) || [],
+            category: d.categories?.name || undefined
+          }))
+          cacheTime = Date.now()
+          posts.value = cachedPosts
+        }
+      } catch (e) {
+        console.error('Error fetching blogs:', e)
+      } finally {
+        activeFetchPromise = null
+      }
+    })()
+
+    await activeFetchPromise
   }
 
   // Trigger fetch on server or if empty
@@ -50,6 +76,8 @@ export function useBlogs() {
   }
 
   const addPost = async (post: BlogPost & { category?: string }) => {
+    cachedPosts = null
+    cacheTime = 0
     const categoryId = await resolveCategoryId(post.category)
     const payload = {
       slug: post.slug,
@@ -75,6 +103,8 @@ export function useBlogs() {
   }
 
   const updatePost = async (slug: string, updated: BlogPost & { category?: string }) => {
+    cachedPosts = null
+    cacheTime = 0
     const categoryId = await resolveCategoryId(updated.category)
     const payload = {
       slug: updated.slug,
@@ -105,6 +135,8 @@ export function useBlogs() {
   }
 
   const deletePost = async (slug: string) => {
+    cachedPosts = null
+    cacheTime = 0
     try {
       const { error } = await supabase
         .from('blog_posts')
@@ -118,6 +150,8 @@ export function useBlogs() {
   }
 
   const resetBlogs = async () => {
+    cachedPosts = null
+    cacheTime = 0
     try {
       await supabase.from('blog_posts').delete().neq('slug', 'doesnotexist')
       const { data: cats } = await supabase.from('categories').select('*')

@@ -7,24 +7,50 @@ export interface Category {
   sort_order: number
 }
 
+let cachedCategories: Category[] | null = null
+let cacheTime = 0
+let activeFetchPromise: Promise<void> | null = null
+const CACHE_TTL = 300000 // 5 minutes
+
 export function useCategories() {
   const supabase = useSupabase()
   const dbCategories = useState<Category[]>('db_categories', () => [])
   const categories = computed(() => dbCategories.value.map(c => c.name))
 
   const fetchCategories = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .order('sort_order', { ascending: true })
-      if (error) throw error
-      if (data) {
-        dbCategories.value = data
-      }
-    } catch (e) {
-      console.error('Error fetching categories:', e)
+    if (cachedCategories && (Date.now() - cacheTime < CACHE_TTL)) {
+      dbCategories.value = cachedCategories
+      return
     }
+
+    if (activeFetchPromise) {
+      await activeFetchPromise
+      if (cachedCategories) {
+        dbCategories.value = cachedCategories
+      }
+      return
+    }
+
+    activeFetchPromise = (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('categories')
+          .select('*')
+          .order('sort_order', { ascending: true })
+        if (error) throw error
+        if (data) {
+          cachedCategories = data
+          cacheTime = Date.now()
+          dbCategories.value = cachedCategories
+        }
+      } catch (e) {
+        console.error('Error fetching categories:', e)
+      } finally {
+        activeFetchPromise = null
+      }
+    })()
+
+    await activeFetchPromise
   }
 
   // Trigger fetch on server or if empty
@@ -34,6 +60,8 @@ export function useCategories() {
   }
 
   const addCategory = async (catName: string) => {
+    cachedCategories = null
+    cacheTime = 0
     const trimmed = catName.trim()
     if (!trimmed) return
     if (dbCategories.value.some(c => c.name.toLowerCase() === trimmed.toLowerCase())) return
@@ -57,6 +85,8 @@ export function useCategories() {
   }
 
   const deleteCategory = async (catName: string) => {
+    cachedCategories = null
+    cacheTime = 0
     const target = dbCategories.value.find(c => c.name === catName)
     if (!target) return
     try {
@@ -72,6 +102,8 @@ export function useCategories() {
   }
 
   const resetCategories = async () => {
+    cachedCategories = null
+    cacheTime = 0
     const defaults = [
       { name: 'Branding', slug: 'branding', sort_order: 1 },
       { name: 'Marketing', slug: 'marketing', sort_order: 2 },

@@ -41,9 +41,19 @@ const videoBRef = ref<HTMLVideoElement | null>(null)
 const opacityA = ref(1)
 const opacityB = ref(0)
 const switching = ref(false)
+const bPreloaded = ref(false)
 
 const handleVideoPlayable = () => {
   videoLoaded.value = true
+}
+
+// Video B starts with preload="none" so the hero video isn't downloaded twice
+// on first paint. Once A is half-way through, warm B so the crossfade is ready.
+const ensureBPreloaded = (elB: HTMLVideoElement) => {
+  if (bPreloaded.value) return
+  bPreloaded.value = true
+  elB.preload = 'auto'
+  elB.load()
 }
 
 const handleTimeUpdateA = () => {
@@ -53,6 +63,8 @@ const handleTimeUpdateA = () => {
 
   const duration = elA.duration
   if (!duration || isNaN(duration)) return
+
+  if (elA.currentTime >= duration * 0.5) ensureBPreloaded(elB)
 
   const crossfadeTime = Math.min(1.2, duration * 0.1)
 
@@ -108,6 +120,25 @@ watch(() => props.video, () => {
   opacityB.value = 0
   switching.value = false
   videoLoaded.value = false
+  bPreloaded.value = false
+})
+
+useHead({
+  link: computed(() => {
+    const links: any[] = []
+    if (props.image) {
+      links.push({
+        rel: 'preload',
+        as: 'image',
+        href: props.image,
+        fetchpriority: 'high'
+      })
+    }
+    // NOTE: deliberately no <link rel=preload as=video>. The hero video is a
+    // decorative background, not the LCP element — preloading it high-priority
+    // starves the real LCP (hero image/text) of bandwidth on first paint.
+    return links
+  })
 })
 </script>
 
@@ -148,7 +179,7 @@ watch(() => props.video, () => {
         ref="videoBRef"
         muted
         playsinline
-        preload="auto"
+        preload="none"
         class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
         :style="{ opacity: opacityB }"
         @timeupdate="handleTimeUpdateB"
@@ -159,7 +190,7 @@ watch(() => props.video, () => {
         >
       </video>
     </div>
- 
+
     <!-- Static image background -->
     <NuxtImg
       v-else-if="image"

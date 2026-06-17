@@ -3,33 +3,59 @@ import { useSupabase } from './useSupabase'
 import { jobs as defaultJobs } from '~/data/careers'
 import type { JobListing } from '~/data/careers'
 
+let cachedJobs: JobListing[] | null = null
+let cacheTime = 0
+let activeFetchPromise: Promise<void> | null = null
+const CACHE_TTL = 300000 // 5 minutes
+
 export function useCareers() {
   const supabase = useSupabase()
   const jobs = useState<JobListing[]>('careers', () => [])
 
   const fetchCareers = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('careers')
-        .select('*')
-        .eq('is_active', true)
-        .order('sort_order', { ascending: true })
-
-      if (error) throw error
-      if (data) {
-        jobs.value = data.map((d: any) => ({
-          id: d.id,
-          title: d.title,
-          department: d.department,
-          location: d.location,
-          type: d.type,
-          experience: d.experience,
-          applyUrl: d.apply_url || ''
-        }))
-      }
-    } catch (e) {
-      console.error('Error fetching careers:', e)
+    if (cachedJobs && (Date.now() - cacheTime < CACHE_TTL)) {
+      jobs.value = cachedJobs
+      return
     }
+
+    if (activeFetchPromise) {
+      await activeFetchPromise
+      if (cachedJobs) {
+        jobs.value = cachedJobs
+      }
+      return
+    }
+
+    activeFetchPromise = (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('careers')
+          .select('*')
+          .eq('is_active', true)
+          .order('sort_order', { ascending: true })
+
+        if (error) throw error
+        if (data) {
+          cachedJobs = data.map((d: any) => ({
+            id: d.id,
+            title: d.title,
+            department: d.department,
+            location: d.location,
+            type: d.type,
+            experience: d.experience,
+            applyUrl: d.apply_url || ''
+          }))
+          cacheTime = Date.now()
+          jobs.value = cachedJobs
+        }
+      } catch (e) {
+        console.error('Error fetching careers:', e)
+      } finally {
+        activeFetchPromise = null
+      }
+    })()
+
+    await activeFetchPromise
   }
 
   // Trigger fetch on server or if empty
@@ -39,6 +65,8 @@ export function useCareers() {
   }
 
   const addJob = async (job: Omit<JobListing, 'id'> & { id?: string }) => {
+    cachedJobs = null
+    cacheTime = 0
     const payload = {
       title: job.title,
       department: job.department,
@@ -74,6 +102,8 @@ export function useCareers() {
   }
 
   const updateJob = async (id: string, updated: JobListing) => {
+    cachedJobs = null
+    cacheTime = 0
     const payload = {
       title: updated.title,
       department: updated.department,
@@ -100,6 +130,8 @@ export function useCareers() {
   }
 
   const deleteJob = async (id: string) => {
+    cachedJobs = null
+    cacheTime = 0
     try {
       const { error } = await supabase
         .from('careers')
@@ -113,6 +145,8 @@ export function useCareers() {
   }
 
   const resetCareers = async () => {
+    cachedJobs = null
+    cacheTime = 0
     try {
       await supabase.from('careers').delete().neq('title', 'doesnotexist')
 

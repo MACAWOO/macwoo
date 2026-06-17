@@ -9,14 +9,8 @@ useSeoMeta({
 })
 
 const { settings, fetchPromise: settingsPromise } = usePageSettings()
-if (settingsPromise) {
-  await settingsPromise
-}
 
-const { fetchPromise: portfolioPromise } = usePortfolio()
-if (portfolioPromise) {
-  await portfolioPromise
-}
+await (settingsPromise || Promise.resolve())
 
 const containerRef = ref<HTMLElement | null>(null)
 const textRevealRef = ref<HTMLElement | null>(null)
@@ -90,9 +84,12 @@ const heroContentStyle = computed(() => {
   const opacityVal = Math.max(0, 1 - t * 1.2) // Fully fades out slightly before 0.22
   const blurVal = t * 24
   const scaleVal = 1 + t * 0.15
+  // Only attach the feTurbulence/feDisplacement filter while actually dispersing.
+  // At t===0 the displacement is a no-op but the browser still re-renders the
+  // whole filter graph each frame — skip it entirely when idle.
   return {
     opacity: opacityVal,
-    filter: `url(#hero-disperse) blur(${blurVal}px)`,
+    filter: t > 0 ? `url(#hero-disperse) blur(${blurVal}px)` : 'none',
     transform: `scale(${scaleVal})`,
     pointerEvents: (opacityVal > 0 ? 'auto' : 'none') as 'auto' | 'none'
   }
@@ -229,46 +226,36 @@ const getWordStyle = (index: number) => {
   }
 }
 
-const handleScroll = () => {
-  if (!aboutTrackRef.value) return
-  const rect = aboutTrackRef.value.getBoundingClientRect()
-  const windowHeight = window.innerHeight
-
-  const totalDistance = rect.height - windowHeight
-  const scrolledDistance = -rect.top
-
-  const progress = Math.max(0, Math.min(1, scrolledDistance / totalDistance))
-  trackProgress.value = progress
-}
-
 const approachTrackRef = ref<HTMLElement | null>(null)
 const approachProgress = ref(0)
-
-const handleApproachScroll = () => {
-  if (!approachTrackRef.value) return
-  const rect = approachTrackRef.value.getBoundingClientRect()
-  const windowHeight = window.innerHeight
-
-  const totalDistance = rect.height - windowHeight
-  const scrolledDistance = -rect.top
-
-  const progress = Math.max(0, Math.min(1, scrolledDistance / totalDistance))
-  approachProgress.value = progress
-}
-
 const whatWeDoTrackRef = ref<HTMLElement | null>(null)
 const whatWeDoProgress = ref(0)
 
-const handleWhatWeDoScroll = () => {
-  if (!whatWeDoTrackRef.value) return
-  const rect = whatWeDoTrackRef.value.getBoundingClientRect()
-  const windowHeight = window.innerHeight
+const trackProgressOf = (el: HTMLElement | null) => {
+  if (!el) return 0
+  const rect = el.getBoundingClientRect()
+  const totalDistance = rect.height - window.innerHeight
+  if (totalDistance <= 0) return 0
+  return Math.max(0, Math.min(1, -rect.top / totalDistance))
+}
 
-  const totalDistance = rect.height - windowHeight
-  const scrolledDistance = -rect.top
+// Single rAF-batched scroll handler. All three track reads happen in one frame
+// so getBoundingClientRect() reflows are coalesced instead of fired per listener
+// per scroll event. Scroll-driven animation is desktop-only — bail on mobile.
+let scrollScheduled = false
 
-  const progress = Math.max(0, Math.min(1, scrolledDistance / totalDistance))
-  whatWeDoProgress.value = progress
+const computeScrollProgress = () => {
+  scrollScheduled = false
+  if (isMobile.value) return
+  trackProgress.value = trackProgressOf(aboutTrackRef.value)
+  approachProgress.value = trackProgressOf(approachTrackRef.value)
+  whatWeDoProgress.value = trackProgressOf(whatWeDoTrackRef.value)
+}
+
+const handleScroll = () => {
+  if (scrollScheduled) return
+  scrollScheduled = true
+  requestAnimationFrame(computeScrollProgress)
 }
 
 const handleSubmit = async () => {
@@ -328,13 +315,9 @@ onMounted(() => {
   checkMobile()
   window.addEventListener('resize', checkMobile)
 
-  window.addEventListener('scroll', handleScroll)
-  window.addEventListener('scroll', handleApproachScroll)
-  window.addEventListener('scroll', handleWhatWeDoScroll)
+  window.addEventListener('scroll', handleScroll, { passive: true })
   window.addEventListener('resize', updateLogoOffset)
-  handleScroll()
-  handleApproachScroll()
-  handleWhatWeDoScroll()
+  computeScrollProgress()
 
   nextTick(() => {
     updateLogoOffset()
@@ -344,8 +327,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', checkMobile)
   window.removeEventListener('scroll', handleScroll)
-  window.removeEventListener('scroll', handleApproachScroll)
-  window.removeEventListener('scroll', handleWhatWeDoScroll)
   window.removeEventListener('resize', updateLogoOffset)
 })
 </script>
