@@ -79,6 +79,7 @@ const handleSubmit = async () => {
       :video="settings.contactHeroVideo"
       description="Ready to elevate your brand? Drop us a line and let's start crafting a narrative that commands attention and drives results."
       class="custom-hero-ratio"
+      show-grid
     />
 
     <!-- Form + Direct Lines -->
