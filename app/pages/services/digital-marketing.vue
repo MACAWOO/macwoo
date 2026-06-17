@@ -132,7 +132,7 @@ const logos = [
           class="text-white text-[14px] md:text-[18px] font-normal leading-[28px] max-w-[910px]"
           style="font-family: 'Bricolage Grotesque', sans-serif;"
         >
-          Growth Isn't Luck.<br> It's Strategy.
+          Growth Isn't Luck. It's Strategy.
         </p>
       </div>
 
