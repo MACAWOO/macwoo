@@ -379,51 +379,48 @@ watch(isOpen, async (val) => {
 
     <!-- Toggle button -->
     <button
-      class="w-[64px] h-[64px] sm:w-[52px] sm:h-[52px] relative flex items-center justify-center hover:opacity-95 transition-all duration-300 active:scale-95 cursor-pointer"
+      class="w-[84px] h-[84px] sm:w-[72px] sm:h-[72px] mb-2 sm:mb-0 relative flex items-center justify-center hover:opacity-95 active:scale-95 cursor-pointer bg-transparent border-none outline-none"
       @click="isOpen = !isOpen"
     >
-      <svg
-        class="absolute inset-0 w-full h-full drop-shadow-[0px_4px_8px_rgba(0,0,0,0.15)]"
-        viewBox="0 0 100 100"
-        fill="none"
-      >
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          fill="#F7EC12"
-        />
-        <polygon
-          points="65,82 82,65 88,88"
-          fill="#F7EC12"
-        />
-      </svg>
+      <transition name="fade-scale" mode="out-in">
+        <div v-if="isOpen" key="open" class="w-[63%] h-[63%] flex items-center justify-center">
+          <div class="relative w-full h-full flex items-center justify-center -translate-x-[3.9%] -translate-y-[3.9%]">
+            <svg
+              class="absolute inset-0 w-full h-full drop-shadow-[0px_4px_8px_rgba(0,0,0,0.15)]"
+              viewBox="0 0 100 100"
+              fill="none"
+            >
+              <circle
+                cx="50"
+                cy="50"
+                r="50"
+                fill="#F7EC12"
+              />
+            </svg>
 
-      <div
-        v-if="!isOpen"
-        class="w-[16px] h-[16px] bg-[#0596B8] rounded-full absolute z-0"
-      />
-
-      <img
-        v-if="!isOpen"
-        src="/Images/Logo.png"
-        alt="Macawoo"
-        class="w-10 h-10 sm:w-8 sm:h-8 object-contain select-none pointer-events-none z-10"
-      >
-      <svg
-        v-else
-        class="w-5.5 h-5.5 text-black z-10"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2.5"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
+            <svg
+              class="w-[42%] h-[42%] text-black z-10"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </div>
+        </div>
+        <div v-else key="closed" class="w-full h-full flex items-center justify-center">
+          <img
+            src="/icons/chat_widget.svg"
+            alt="Macawoo Assistant"
+            class="w-full h-full object-contain select-none pointer-events-none"
+          >
+        </div>
+      </transition>
     </button>
   </div>
 </template>
@@ -447,5 +444,17 @@ watch(isOpen, async (val) => {
   background: #0596B8;
   color: white;
   border-radius: 12px 12px 3px 12px;
+}
+
+/* Transition styles for the toggle button */
+.fade-scale-enter-active,
+.fade-scale-leave-active {
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-scale-enter-from,
+.fade-scale-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
 }
 </style>
