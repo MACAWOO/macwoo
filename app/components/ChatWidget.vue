@@ -415,7 +415,7 @@ watch(isOpen, async (val) => {
         </div>
         <div v-else key="closed" class="w-full h-full flex items-center justify-center">
           <img
-            src="/icons/chat_widget.svg"
+            src="/Icons/chat_widget.svg"
             alt="Macawoo Assistant"
             class="w-full h-full object-contain select-none pointer-events-none"
           >

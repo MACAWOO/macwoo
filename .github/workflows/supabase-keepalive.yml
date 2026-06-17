@@ -1,0 +1,35 @@
+name: supabase-keepalive
+
+# Supabase free-tier projects pause after 7 consecutive days with no database
+# activity. A paused project cold-starts on the next request, stalling the
+# homepage's SSR settings fetch. This workflow runs a trivial SELECT once a day
+# to keep the project warm. Daily (not every 6 days) on purpose: a single
+# missed run — GitHub delays scheduled jobs under load — must not exhaust the
+# 7-day window.
+
+on:
+  schedule:
+    # 06:00 UTC every day
+    - cron: '0 6 * * *'
+  # Allow manual trigger from the Actions tab for testing.
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          url="${SUPABASE_URL:-https://vewmzejakdfsgsyxdlpa.supabase.co}"
+          key="${SUPABASE_ANON_KEY:-sb_publishable_SjN1foafYhhbb3k-DI82Aw_xsjStWt_}"
+          status=$(curl -s -o /dev/null -w '%{http_code}' \
+            "$url/rest/v1/page_settings?select=id&limit=1" \
+            -H "apikey: $key" \
+            -H "Authorization: Bearer $key")
+          echo "HTTP $status"
+          # 2xx = DB reachable and activity recorded. Anything else fails the run.
+          [ "$status" -ge 200 ] && [ "$status" -lt 300 ]
