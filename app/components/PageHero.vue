@@ -23,6 +23,7 @@ interface Props {
   imageClass?: string
   contentStyle?: Record<string, string | number | undefined>
   imageStyle?: Record<string, string | number | undefined>
+  showScrollIndicator?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -30,7 +31,8 @@ const props = withDefaults(defineProps<Props>(), {
   align: 'center',
   showGrid: false,
   imageClass: '',
-  contentStyle: () => ({})
+  contentStyle: () => ({}),
+  showScrollIndicator: false
 })
 
 const videoLoaded = ref(false)
@@ -139,6 +141,30 @@ useHead({
     // starves the real LCP (hero image/text) of bandwidth on first paint.
     return links
   })
+})
+
+const isScrolled = ref(false)
+
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 50
+}
+
+const scrollToNext = () => {
+  window.scrollTo({
+    top: window.innerHeight,
+    behavior: 'smooth'
+  })
+}
+
+onMounted(() => {
+  if (props.showScrollIndicator) {
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+  }
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
 })
 </script>
 
@@ -435,6 +461,24 @@ useHead({
         </filter>
       </defs>
     </svg>
+
+    <!-- Scroll Down Indicator -->
+    <div
+      v-if="showScrollIndicator"
+      class="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 cursor-pointer group transition-all duration-500"
+      :class="[isScrolled ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0']"
+      @click="scrollToNext"
+    >
+      <span
+        class="text-white/60 group-hover:text-white text-[10px] md:text-xs font-semibold uppercase tracking-[0.2em] select-none transition-colors duration-300"
+        style="font-family: 'Bricolage Grotesque', sans-serif;"
+      >
+        Scroll Down
+      </span>
+      <div class="relative w-[24px] h-[40px] rounded-full border-2 border-white/40 flex justify-center group-hover:border-white/80 transition-colors duration-300">
+        <div class="w-1.5 h-1.5 bg-[#F7EC12] rounded-full mt-2 scroll-dot-animated" />
+      </div>
+    </div>
   </section>
 </template>
 
@@ -495,5 +539,26 @@ useHead({
     line-height: 1.35rem !important;
     margin-bottom: 1.25rem !important;
   }
+}
+
+@keyframes scroll-dot {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+}
+
+.scroll-dot-animated {
+  animation: scroll-dot 1.8s infinite cubic-bezier(0.15, 0.41, 0.69, 0.94);
 }
 </style>

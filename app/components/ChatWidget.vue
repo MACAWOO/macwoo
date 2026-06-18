@@ -290,7 +290,7 @@ watch(isOpen, async (val) => {
         <!-- Messages area -->
         <div
           ref="messagesContainer"
-          class="bg-white mx-2 my-2 h-[380px] rounded-[12px] overflow-y-auto p-2.5 flex flex-col gap-2.5 shadow-inner scrollbar-hide"
+          class="bg-white mx-2 my-2 h-[430px] sm:h-[380px] rounded-[12px] overflow-y-auto p-2.5 flex flex-col gap-2.5 shadow-inner scrollbar-hide"
         >
           <div class="flex flex-col gap-2.5">
             <template
@@ -300,7 +300,7 @@ watch(isOpen, async (val) => {
               <div :class="msg.from === 'user' ? 'flex justify-end' : 'flex justify-start'">
                 <div class="flex flex-col max-w-[85%]">
                   <div
-                    class="px-3 py-1.5 text-[11px] font-semibold"
+                    class="px-3 py-1.5 text-[13px] sm:text-[11px] font-semibold"
                     :class="msg.from === 'bot' ? 'bot-bubble text-zinc-900 shadow-sm' : 'user-bubble shadow-sm'"
                   >
                     <div
@@ -352,7 +352,7 @@ watch(isOpen, async (val) => {
                   <button
                     v-for="opt in (msg.options || faqOptions)"
                     :key="opt.id"
-                    class="w-full text-left px-3 py-1.5 rounded-[12px_12px_3px_12px] bg-[#0596B8] text-white hover:bg-[#157d9b] active:scale-[0.98] transition-all duration-200 text-[11px] font-semibold flex items-center gap-1.5 shadow-sm cursor-pointer"
+                    class="w-full text-left px-3 py-1.5 rounded-[12px_12px_3px_12px] bg-[#0596B8] text-white hover:bg-[#157d9b] active:scale-[0.98] transition-all duration-200 text-[13px] sm:text-[11px] font-semibold flex items-center gap-1.5 shadow-sm cursor-pointer"
                     @click="handleOptionClick(opt, i)"
                   >
                     <svg

@@ -381,6 +381,7 @@ onUnmounted(() => {
             :class="isMobile ? 'min-h-[calc(100vh-80px)]' : 'h-full w-full'"
             :image-style="isMobile ? {} : heroBgStyle"
             :content-style="isMobile ? {} : heroContentStyle"
+            show-scroll-indicator
           />
         </div>
 

@@ -115,7 +115,7 @@ function formatDate(dateStr: string) {
       <div class="absolute inset-0 bg-black/20" />
       <button
         type="button"
-        class="absolute top-[90px] left-[120px] bg-white flex items-center gap-[3px] px-5 py-[10px] rounded-full font-extrabold text-[16px] text-[#201f1f] leading-[28px] hover:bg-zinc-100 transition-colors z-10 cursor-pointer"
+        class="absolute top-[90px] left-6 md:left-[120px] bg-white flex items-center gap-[3px] px-5 py-[10px] rounded-full font-extrabold text-[16px] text-[#201f1f] leading-[28px] hover:bg-zinc-100 transition-colors z-10 cursor-pointer"
         @click="$router.back()"
       >
         <LeftArrow
@@ -127,7 +127,7 @@ function formatDate(dateStr: string) {
 
     <!-- Article header on teal -->
     <div class="bg-[#0596B8]">
-      <div class="max-w-[1440px] mx-auto px-[120px] pt-[59px] pb-[40px]">
+      <div class="max-w-[1440px] mx-auto px-6 md:px-[120px] pt-[59px] pb-[40px]">
         <div class="max-w-[894px]">
           <div class="flex gap-[15px] mb-[13px]">
             <span class="border border-white rounded-full px-[9px] py-[5px] text-[16px] font-['Bricolage_Grotesque'] text-white leading-[28px] whitespace-nowrap">
@@ -167,7 +167,7 @@ function formatDate(dateStr: string) {
 
     <!-- Article body (white) -->
     <article class="bg-white">
-      <div class="max-w-[1440px] mx-auto px-[120px] py-[34px]">
+      <div class="max-w-[1440px] mx-auto px-6 md:px-[120px] py-[34px]">
         <div class="flex flex-col gap-[34px]">
           <div
             v-for="section in post.body"
@@ -190,7 +190,7 @@ function formatDate(dateStr: string) {
 
     <!-- Recommended reading -->
     <section class="bg-[#0596B8] py-16">
-      <div class="max-w-[1440px] mx-auto px-[120px]">
+      <div class="max-w-[1440px] mx-auto px-6 md:px-[120px]">
         <h2 class="font-fredoka font-medium text-[48px] text-[#F7EC12] leading-[51px] mb-8">
           Recommended Reading
         </h2>
@@ -199,9 +199,9 @@ function formatDate(dateStr: string) {
             v-for="rec in recommended"
             :key="rec.slug"
             :to="`/blog/${rec.slug}`"
-            class="group block rounded-[34px] overflow-hidden"
+            class="group flex flex-row md:block bg-white md:bg-transparent rounded-[34px] p-4 md:p-0 gap-4 md:gap-0 overflow-hidden"
           >
-            <div class="h-[337px] overflow-hidden rounded-t-[34px] bg-zinc-200">
+            <div class="w-[100px] h-[100px] md:w-full md:h-[337px] shrink-0 overflow-hidden rounded-[24px] md:rounded-none md:rounded-t-[34px] bg-zinc-200">
               <NuxtImg
                 :src="rec.image"
                 :alt="rec.title"
@@ -210,14 +210,28 @@ function formatDate(dateStr: string) {
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <div class="bg-white rounded-b-[34px] px-[21px] pt-[14px] pb-[18px] flex flex-col gap-[10px]">
-              <div class="flex gap-2 flex-wrap">
-                <span class="border border-[#201f1f] rounded-full px-[9px] py-[3px] text-[16px] text-[#201f1f] leading-[28px] whitespace-nowrap">
+            <div class="flex-1 bg-transparent md:bg-white md:rounded-b-[34px] p-0 md:px-[21px] md:pt-[14px] md:pb-[18px] flex flex-col gap-[6px] md:gap-[10px] justify-center">
+              <div class="flex flex-col md:flex-row gap-1.5 md:gap-2 items-start">
+                <span class="border border-[#201f1f] rounded-full px-[9px] py-[4px] md:py-[3px] text-[14px] md:text-[16px] text-[#201f1f] leading-none md:leading-[28px] flex items-center gap-[5px] whitespace-nowrap">
+                  <svg
+                    class="w-[16px] h-[16px] md:w-[18px] md:h-[18px] shrink-0"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M8 2v4" />
+                    <path d="M16 2v4" />
+                    <rect width="18" height="18" x="3" y="4" rx="2" />
+                    <path d="M3 10h18" />
+                  </svg>
                   {{ formatDate(rec.date) }}
                 </span>
-                <span class="border border-[#201f1f] rounded-full px-[9px] py-[3px] text-[16px] text-[#201f1f] leading-[28px] flex items-center gap-[5px] whitespace-nowrap">
+                <span class="border border-[#201f1f] rounded-full px-[9px] py-[4px] md:py-[3px] text-[14px] md:text-[16px] text-[#201f1f] leading-none md:leading-[28px] flex items-center gap-[5px] whitespace-nowrap">
                   <svg
-                    class="w-[18px] h-[18px] shrink-0"
+                    class="w-[16px] h-[16px] md:w-[18px] md:h-[18px] shrink-0"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -237,7 +251,7 @@ function formatDate(dateStr: string) {
                   {{ rec.readTime }}
                 </span>
               </div>
-              <h3 class="text-[32px] font-normal text-[#201f1f] leading-tight">
+              <h3 class="text-[20px] md:text-[32px] font-normal text-[#201f1f] leading-tight">
                 {{ rec.title }}
               </h3>
             </div>
