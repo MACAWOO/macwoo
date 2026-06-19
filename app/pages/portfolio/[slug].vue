@@ -89,9 +89,41 @@ const paragraphs = computed(() =>
     : [project.value?.story ?? '']
 )
 
+const isYouTubeUrl = (url?: string) => {
+  if (!url) return false
+  return /youtube\.com|youtu\.be|youtube-nocookie\.com/i.test(url)
+}
+
+const getYouTubeEmbedUrl = (url?: string) => {
+  if (!url) return ''
+  const cleanUrl = url.trim().replace(/\/+$/, '')
+  let videoId = ''
+  
+  const vMatch = cleanUrl.match(/[?&]v(?:i)?=([^&#?]+)/i)
+  if (vMatch && vMatch[1]) {
+    videoId = vMatch[1]
+  } else {
+    const pathMatch = cleanUrl.match(/(?:embed\/|shorts\/|v\/|vi\/|youtu\.be\/|watch\/)([^&#?\/]+)/i)
+    if (pathMatch && pathMatch[1]) {
+      videoId = pathMatch[1]
+    } else {
+      const endMatch = cleanUrl.match(/\/([^&#?\/]{11})$/i)
+      if (endMatch && endMatch[1]) {
+        videoId = endMatch[1]
+      }
+    }
+  }
+  
+  if (videoId) {
+    videoId = videoId.split(/[?&#]/)[0].trim()
+  }
+  
+  return videoId && videoId.length === 11 ? `https://www.youtube.com/embed/${videoId}` : url
+}
+
 const isVideoUrl = (url?: string) => {
   if (!url) return false
-  return /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(url)
+  return /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(url) || isYouTubeUrl(url)
 }
 </script>
 
@@ -303,19 +335,27 @@ const isVideoUrl = (url?: string) => {
       </h2>
 
       <div class="relative rounded-[28px] overflow-hidden aspect-video w-full bg-zinc-900">
-        <NuxtImg
-          v-if="!isVideoUrl(project.galleryImages[galleryIndex])"
-          :src="project.galleryImages[galleryIndex]"
-          :alt="`${project.title} design highlight ${galleryIndex + 1}`"
-          format="webp"
-          class="w-full h-full object-cover rounded-[28px]"
-        />
+        <iframe
+          v-if="isYouTubeUrl(project.galleryImages[galleryIndex])"
+          :key="project.galleryImages[galleryIndex]"
+          :src="getYouTubeEmbedUrl(project.galleryImages[galleryIndex])"
+          class="w-full h-full border-0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
         <video
-          v-else
+          v-else-if="isVideoUrl(project.galleryImages[galleryIndex])"
           :src="project.galleryImages[galleryIndex]"
           controls
           playsinline
           loop
+          class="w-full h-full object-cover rounded-[28px]"
+        />
+        <NuxtImg
+          v-else
+          :src="project.galleryImages[galleryIndex]"
+          :alt="`${project.title} design highlight ${galleryIndex + 1}`"
+          format="webp"
           class="w-full h-full object-cover rounded-[28px]"
         />
 

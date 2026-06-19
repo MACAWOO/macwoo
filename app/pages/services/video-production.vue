@@ -4,6 +4,38 @@ if (settingsPromise) {
   await settingsPromise
 }
 
+const isYouTubeUrl = (url?: string) => {
+  if (!url) return false
+  return /youtube\.com|youtu\.be|youtube-nocookie\.com/i.test(url)
+}
+
+const getYouTubeEmbedUrl = (url?: string) => {
+  if (!url) return ''
+  const cleanUrl = url.trim().replace(/\/+$/, '')
+  let videoId = ''
+  
+  const vMatch = cleanUrl.match(/[?&]v(?:i)?=([^&#?]+)/i)
+  if (vMatch && vMatch[1]) {
+    videoId = vMatch[1]
+  } else {
+    const pathMatch = cleanUrl.match(/(?:embed\/|shorts\/|v\/|vi\/|youtu\.be\/|watch\/)([^&#?\/]+)/i)
+    if (pathMatch && pathMatch[1]) {
+      videoId = pathMatch[1]
+    } else {
+      const endMatch = cleanUrl.match(/\/([^&#?\/]{11})$/i)
+      if (endMatch && endMatch[1]) {
+        videoId = endMatch[1]
+      }
+    }
+  }
+  
+  if (videoId) {
+    videoId = videoId.split(/[?&#]/)[0].trim()
+  }
+  
+  return videoId && videoId.length === 11 ? `https://www.youtube.com/embed/${videoId}` : url
+}
+
 useSeoMeta({
   title: 'Video Production & Narrative Storytelling — Macawoo',
   description: 'From concept to final cut, we produce video content that commands attention and drives meaningful engagement.',
@@ -269,7 +301,16 @@ const logos = [
           Agency Showreel 2026
         </h2>
         <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-zinc-300 shadow-lg">
+          <iframe
+            v-if="isYouTubeUrl(settings.servicesVideoShowreel)"
+            :key="settings.servicesVideoShowreel"
+            :src="getYouTubeEmbedUrl(settings.servicesVideoShowreel)"
+            class="w-full h-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
           <video
+            v-else
             :key="settings.servicesVideoShowreel"
             class="w-full h-full object-cover"
             controls

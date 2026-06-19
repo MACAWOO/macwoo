@@ -266,6 +266,7 @@ export type Database = {
           blog_hero_video: string | null
           careers_hero_image: string | null
           careers_hero_video: string | null
+          careers_middle_image: string | null
           contact_hero_image: string | null
           contact_hero_video: string | null
           id: string
@@ -284,6 +285,7 @@ export type Database = {
           blog_hero_video?: string | null
           careers_hero_image?: string | null
           careers_hero_video?: string | null
+          careers_middle_image?: string | null
           contact_hero_image?: string | null
           contact_hero_video?: string | null
           id?: string
@@ -302,6 +304,7 @@ export type Database = {
           blog_hero_video?: string | null
           careers_hero_image?: string | null
           careers_hero_video?: string | null
+          careers_middle_image?: string | null
           contact_hero_image?: string | null
           contact_hero_video?: string | null
           id?: string

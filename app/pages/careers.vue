@@ -118,9 +118,17 @@ const handleJobClick = (job: typeof jobs.value[number]) => {
             </div>
           </div>
 
-          <!-- Right side Placeholder Card (1/3 width on desktop) -->
+          <!-- Right side Image Card (1/3 width on desktop) -->
           <div class="lg:w-5/12 w-full flex justify-center lg:justify-end">
-            <div class="relative w-full max-w-[380px] aspect-[3/4] bg-zinc-200 rounded-[2.5rem] shadow-md border border-white/10" />
+            <div class="relative w-full max-w-[380px] aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-md border border-white/10 bg-zinc-200">
+              <NuxtImg
+                v-if="settings.careersMiddleImage"
+                :src="settings.careersMiddleImage"
+                alt="Careers Macawoo"
+                format="webp"
+                class="w-full h-full object-cover"
+              />
+            </div>
           </div>
         </div>
       </div>

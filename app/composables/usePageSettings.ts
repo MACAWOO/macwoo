@@ -14,6 +14,7 @@ export interface PageSettings {
   servicesVideoShowreel: string
   careersHeroImage: string
   careersHeroVideo: string
+  careersMiddleImage: string
   contactHeroImage: string
   contactHeroVideo: string
 }
@@ -31,6 +32,7 @@ const defaultSettings: PageSettings = {
   servicesVideoShowreel: '/Background_Videos/Portfolio.mp4',
   careersHeroImage: '/Images/Designing.jpeg',
   careersHeroVideo: '/Background_Videos/Careers.mp4',
+  careersMiddleImage: '/Images/Designing.jpeg',
   contactHeroImage: '/Images/Marketing.jpeg',
   contactHeroVideo: '/Background_Videos/Contact.mp4'
 }
@@ -51,6 +53,7 @@ function mapDbToSettings(db: DbPageSettings): PageSettings {
     servicesVideoShowreel: db.services_video_showreel || '/Background_Videos/Portfolio.mp4',
     careersHeroImage: db.careers_hero_image || '/Images/Designing.jpeg',
     careersHeroVideo: db.careers_hero_video || '/Background_Videos/Careers.mp4',
+    careersMiddleImage: db.careers_middle_image || '/Images/Designing.jpeg',
     contactHeroImage: db.contact_hero_image || '/Images/Marketing.jpeg',
     contactHeroVideo: db.contact_hero_video || '/Background_Videos/Contact.mp4'
   }
@@ -70,6 +73,7 @@ function mapSettingsToDb(settings: PageSettings): Omit<Database['public']['Table
     services_video_showreel: settings.servicesVideoShowreel,
     careers_hero_image: settings.careersHeroImage,
     careers_hero_video: settings.careersHeroVideo,
+    careers_middle_image: settings.careersMiddleImage,
     contact_hero_image: settings.contactHeroImage,
     contact_hero_video: settings.contactHeroVideo
   }
