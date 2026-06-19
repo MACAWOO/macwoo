@@ -334,7 +334,7 @@ const isVideoUrl = (url?: string) => {
         Design Highlights
       </h2>
 
-      <div class="relative rounded-[28px] overflow-hidden aspect-video w-full bg-zinc-900">
+      <div class="relative rounded-[28px] overflow-hidden aspect-video w-full max-w-[90%] mx-auto bg-zinc-900">
         <iframe
           v-if="isYouTubeUrl(project.galleryImages[galleryIndex])"
           :key="project.galleryImages[galleryIndex]"
