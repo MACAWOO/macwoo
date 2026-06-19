@@ -32,7 +32,7 @@ const defaultSettings: PageSettings = {
   servicesVideoShowreel: '/Background_Videos/Portfolio.mp4',
   careersHeroImage: '/Images/Designing.jpeg',
   careersHeroVideo: '/Background_Videos/Careers.mp4',
-  careersMiddleImage: '/Images/Designing.jpeg',
+  careersMiddleImage: '/Images/Take_My_Familt_-_1.png',
   contactHeroImage: '/Images/Marketing.jpeg',
   contactHeroVideo: '/Background_Videos/Contact.mp4'
 }
@@ -53,7 +53,7 @@ function mapDbToSettings(db: DbPageSettings): PageSettings {
     servicesVideoShowreel: db.services_video_showreel || '/Background_Videos/Portfolio.mp4',
     careersHeroImage: db.careers_hero_image || '/Images/Designing.jpeg',
     careersHeroVideo: db.careers_hero_video || '/Background_Videos/Careers.mp4',
-    careersMiddleImage: db.careers_middle_image || '/Images/Designing.jpeg',
+    careersMiddleImage: db.careers_middle_image || '/Images/Take_My_Familt_-_1.png',
     contactHeroImage: db.contact_hero_image || '/Images/Marketing.jpeg',
     contactHeroVideo: db.contact_hero_video || '/Background_Videos/Contact.mp4'
   }
@@ -132,7 +132,7 @@ export function usePageSettings() {
     fetchPromise = fetchSettings()
   }
 
-  const updateSettings = async (updated: Partial<PageSettings>) => {
+  const updateSettings = async (updated: Partial<PageSettings>): Promise<boolean> => {
     cachedSettings = null
     cacheTime = 0
     settings.value = { ...settings.value, ...updated }
@@ -156,8 +156,10 @@ export function usePageSettings() {
           .insert(payload)
         if (error) throw error
       }
+      return true
     } catch (e) {
       console.error('Failed to save page settings to Supabase:', e)
+      return false
     }
   }
 

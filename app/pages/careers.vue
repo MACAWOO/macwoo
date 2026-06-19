@@ -50,9 +50,8 @@ const handleJobClick = (job: typeof jobs.value[number]) => {
       to="/"
       class="absolute top-8 left-8 z-30 inline-flex items-center gap-2 px-5 py-2.5 bg-white text-brand-dark rounded-full text-sm font-bold shadow-md hover:scale-105 hover:bg-zinc-50 transition-all cursor-pointer border border-zinc-200/50"
     >
-      <UIcon
-        name="i-lucide-arrow-left"
-        class="w-4 h-4 text-brand-dark"
+      <LeftArrow
+        class="w-[11px] h-[11px] shrink-0 text-brand-dark"
       />
       Back
     </NuxtLink>
@@ -63,7 +62,7 @@ const handleJobClick = (job: typeof jobs.value[number]) => {
       :video="settings.careersHeroVideo"
       :image="settings.careersHeroImage"
       description="We are a collection of visionaries, builders, and storytellers. Join us in crafting digital experiences that demand attention and drive transformation."
-      :ctas="[{ label: 'View Open Roles ↓', to: '#open-roles', variant: 'white' }]"
+      :ctas="[{ label: 'View Open Roles ', to: '#open-roles', variant: 'white', showDownArrow: true }]"
       show-grid
       min-height=""
       class="custom-hero-ratio"
@@ -75,45 +74,37 @@ const handleJobClick = (job: typeof jobs.value[number]) => {
         <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
           <!-- Left side Content (2/3 width on desktop) -->
           <div class="lg:w-7/12 flex flex-col items-start">
-            <h2 class="text-3xl md:text-[46px] font-medium text-brand-yellow-500 mb-6 leading-tight font-sans uppercase tracking-wide">
+            <h2 class="text-[38px] md:text-[52px] font-medium text-[#F7EC12] mb-6 leading-[1.2] font-fredoka">
               We Engineer<br>Digital Excellence.
             </h2>
-            <p class="text-white text-base md:text-lg leading-relaxed mb-10 max-w-xl font-sans font-normal">
+            <p class="text-white text-base md:text-[20px] leading-[1.5] mb-8 font-normal max-w-2xl" style="font-family: 'Bricolage Grotesque', sans-serif;">
               At Macawoo, we don't just execute; we architect. We value raw creative energy paired with executive-level precision. Here, your work isn't just a project—it's a strategic asset for ambitious founders. We foster an environment where bold ideas are stress-tested and brilliant execution is the baseline.
             </p>
             <!-- Two yellow cards -->
-            <div class="grid sm:grid-cols-2 gap-6 w-full">
-              <div class="bg-brand-yellow-500 text-brand-dark rounded-2xl p-6 shadow-sm flex flex-col justify-between min-h-[140px]">
-                <div>
-                  <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mb-3">
-                    <UIcon
-                      name="i-lucide-rocket"
-                      class="w-6 h-6 text-brand-dark"
-                    />
-                  </div>
-                  <h3 class="font-medium text-brand-dark text-sm mb-1 uppercase tracking-wider">
-                    Accelerated Growth
-                  </h3>
-                  <p class="text-brand-dark/80 text-xs leading-relaxed font-medium">
-                    Continuous learning and opportunities to lead high-impact initiatives.
-                  </p>
-                </div>
+            <div class="grid sm:grid-cols-2 gap-5 w-full">
+              <div class="bg-[#F7EC12] text-black p-6 rounded-2xl flex flex-col items-start text-left">
+                <UIcon
+                  name="i-lucide-rocket"
+                  class="w-6 h-6 text-black mb-3 shrink-0"
+                />
+                <h3 class="font-bold text-[18px] text-black mb-1" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                  Accelerated Growth
+                </h3>
+                <p class="text-black text-xs md:text-[13px] leading-relaxed" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                  Continuous learning and opportunities to lead high-impact initiatives.
+                </p>
               </div>
-              <div class="bg-brand-yellow-500 text-brand-dark rounded-2xl p-6 shadow-sm flex flex-col justify-between min-h-[140px]">
-                <div>
-                  <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mb-3">
-                    <UIcon
-                      name="i-lucide-users"
-                      class="w-6 h-6 text-brand-dark"
-                    />
-                  </div>
-                  <h3 class="font-medium text-brand-dark text-sm mb-1 uppercase tracking-wider">
-                    Visionary Team
-                  </h3>
-                  <p class="text-brand-dark/80 text-xs leading-relaxed font-medium">
-                    Collaborate with top-tier talent pushing the boundaries of design and tech.
-                  </p>
-                </div>
+              <div class="bg-[#F7EC12] text-black p-6 rounded-2xl flex flex-col items-start text-left">
+                <UIcon
+                  name="i-lucide-users"
+                  class="w-6 h-6 text-black mb-3 shrink-0"
+                />
+                <h3 class="font-bold text-[18px] text-black mb-1" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                  Visionary Team
+                </h3>
+                <p class="text-black text-xs md:text-[13px] leading-relaxed" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                  Collaborate with top-tier talent pushing the boundaries of design and tech.
+                </p>
               </div>
             </div>
           </div>

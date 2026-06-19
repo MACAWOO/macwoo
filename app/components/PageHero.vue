@@ -3,6 +3,7 @@ interface Cta {
   label: string
   to: string
   variant?: 'primary' | 'outline' | 'white'
+  showDownArrow?: boolean
 }
 
 interface Props {
@@ -303,7 +304,12 @@ onUnmounted(() => {
             (!cta.variant || cta.variant === 'primary') && 'bg-brand-yellow-500 text-brand-dark hover:bg-brand-yellow-400'
           ]"
         >
-          {{ cta.label }}
+          <span>{{ cta.label }}</span>
+          <DownArrow
+            v-if="cta.showDownArrow"
+            class="w-3.5 h-3.5"
+            :fill="cta.variant === 'white' ? '#141111' : '#ffffff'"
+          />
         </NuxtLink>
       </div>
     </div>

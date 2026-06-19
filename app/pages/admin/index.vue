@@ -420,7 +420,11 @@ const handleSave = async (actionType: 'save' | 'save_and_add' | 'save_and_contin
   let loggedName = ''
 
   if (currentModel.value === 'page-settings') {
-    await updateSettings(settingsForm.value)
+    const ok = await updateSettings(settingsForm.value)
+    if (!ok) {
+      alert('Failed to save page settings. Check the console for details and verify the database schema.')
+      return
+    }
     logAction('change', 'Page Settings', 'Updated page backgrounds and assets')
     alert('Page settings updated successfully.')
     navigateTo('dashboard')
