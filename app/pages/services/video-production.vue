@@ -30,7 +30,7 @@ const getYouTubeEmbedUrl = (url?: string) => {
   }
   
   if (videoId) {
-    videoId = videoId.split(/[?&#]/)[0].trim()
+    videoId = (videoId.split(/[?&#]/)[0] || '').trim()
   }
   
   return videoId && videoId.length === 11 ? `https://www.youtube.com/embed/${videoId}?controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1` : url
@@ -303,7 +303,7 @@ const logos = [
         <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-zinc-300 shadow-lg">
           <iframe
             v-if="isYouTubeUrl(settings.servicesVideoShowreel)"
-            :key="settings.servicesVideoShowreel"
+            :key="'youtube-' + settings.servicesVideoShowreel"
             :src="getYouTubeEmbedUrl(settings.servicesVideoShowreel)"
             class="w-full h-full border-0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -311,7 +311,7 @@ const logos = [
           ></iframe>
           <video
             v-else
-            :key="settings.servicesVideoShowreel"
+            :key="'native-' + settings.servicesVideoShowreel"
             class="w-full h-full object-cover"
             controls
             poster="/Images/Video_Production.jpeg"
