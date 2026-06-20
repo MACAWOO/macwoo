@@ -592,7 +592,7 @@ onUnmounted(() => {
     </section>
 
     <!-- Client Logos Carousel (Positioned outside sticky container to prevent overlap) -->
-    <section class="py-10 md:py-14 bg-white border-b border-zinc-100">
+    <section class="site-exclude-reveal py-10 md:py-14 bg-white border-b border-zinc-100">
       <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8">
         <ClientLogos />
       </div>

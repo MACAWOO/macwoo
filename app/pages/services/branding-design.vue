@@ -116,7 +116,7 @@ const logos = [
     <!-- ═══════════════════════════════════════════
          HERO BANNER (386px)
          ═══════════════════════════════════════════ -->
-    <section class="relative h-[300px] md:h-[386px] overflow-hidden">
+    <section class="site-hero-section relative h-[300px] md:h-[386px] overflow-hidden">
       <!-- Background image + dark overlay -->
       <div class="absolute inset-0">
         <NuxtImg
@@ -242,7 +242,7 @@ const logos = [
     <!-- ═══════════════════════════════════════════
          CLIENT LOGO MARQUEE
          ═══════════════════════════════════════════ -->
-    <section class="py-3 bg-white overflow-hidden relative">
+    <section class="site-exclude-reveal py-3 bg-white overflow-hidden relative">
       <!-- Fade edges -->
       <div class="absolute left-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
       <div class="absolute right-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />

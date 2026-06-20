@@ -127,3 +127,202 @@
 .animate-success-arrow {
   animation: success-arrow-float 2s ease-in-out infinite;
 }
+
+/* ==========================================================================
+   Premium Mask Reveal Custom Cursor
+   ========================================================================== */
+
+body.custom-cursor-active,
+body.custom-cursor-active *,
+.site-exclude-reveal,
+.site-exclude-reveal * {
+  cursor: none !important;
+}
+
+.custom-cursor-wrapper {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+#reveal-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9998;
+  overflow: hidden;
+  user-select: none;
+  transform: translate3d(0, 0, 0);
+  will-change: mask-image, -webkit-mask-image;
+  
+  /* Redefine Tailwind v4 theme variables inside the overlay context */
+  --color-brand-yellow-500: #0596B8 !important;
+  --color-brand-yellow-400: #0596B8 !important;
+  --color-brand-yellow-600: #047E9B !important;
+  
+  --color-brand-teal-500: #F7EC12 !important;
+  --color-brand-teal-400: #FAE712 !important;
+  --color-brand-teal-600: #D8CE0B !important;
+
+  --color-white: #0596B8 !important;
+}
+
+#reveal-overlay .site-hero-section,
+#reveal-overlay header,
+#reveal-overlay .site-header-section {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.cloned-scroll-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#cloned-site {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.custom-cursor-dot-target {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  background-color: #0596B8; /* Teal target dot */
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  will-change: transform;
+}
+
+.custom-cursor-dot-lerp {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 60px; /* matched to reduced spotlight mask diameter */
+  height: 60px;
+  border: 1px solid rgba(255, 255, 255, 0.35); /* crisp white glassy border */
+  box-shadow: 
+    0 0 8px rgba(247, 236, 18, 0.35), /* soft brand yellow glow */
+    inset 0 0 6px rgba(255, 255, 255, 0.2); /* inner glass refraction */
+  background-color: rgba(255, 255, 255, 0.03); /* subtle translucent fill */
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  will-change: transform;
+  transition: transform 0.08s cubic-bezier(0.25, 1, 0.5, 1), scale 0.2s ease, opacity 0.2s ease;
+}
+
+/* Explicit class-based color swaps for custom hex definitions */
+
+/* 1. Yellow (#F7EC12) -> Blue/Teal (#0596B8) */
+#reveal-overlay .bg-brand-yellow-500,
+#reveal-overlay .bg-\[\#F7EC12\],
+#reveal-overlay .bg-brand-yellow-400,
+#reveal-overlay .bg-\[\#FAE712\] {
+  background-color: #0596B8 !important;
+}
+#reveal-overlay .text-brand-yellow-500,
+#reveal-overlay .text-\[\#F7EC12\],
+#reveal-overlay .text-brand-yellow-400,
+#reveal-overlay .text-\[\#FAE712\] {
+  color: #0596B8 !important;
+}
+#reveal-overlay .border-brand-yellow-500,
+#reveal-overlay .border-\[\#F7EC12\],
+#reveal-overlay .border-brand-yellow-400,
+#reveal-overlay .border-\[\#FAE712\] {
+  border-color: #0596B8 !important;
+}
+#reveal-overlay [fill="#F7EC12"],
+#reveal-overlay [fill="#f7ec12"],
+#reveal-overlay .fill-brand-yellow-500 {
+  fill: #0596B8 !important;
+}
+#reveal-overlay [stroke="#F7EC12"],
+#reveal-overlay [stroke="#f7ec12"],
+#reveal-overlay .stroke-brand-yellow-500 {
+  stroke: #0596B8 !important;
+}
+#reveal-overlay .bg-brand-yellow-500 *,
+#reveal-overlay .bg-\[\#F7EC12\] *,
+#reveal-overlay .bg-brand-yellow-400 *,
+#reveal-overlay .bg-\[\#FAE712\] * {
+  color: #FFFFFF !important;
+}
+
+/* 2. Blue/Teal (#0596B8) -> Yellow (#F7EC12) */
+#reveal-overlay .bg-brand-teal-500,
+#reveal-overlay .bg-\[\#0596B8\] {
+  background-color: #F7EC12 !important;
+}
+#reveal-overlay .text-brand-teal-500,
+#reveal-overlay .text-\[\#0596B8\] {
+  color: #F7EC12 !important;
+}
+#reveal-overlay .border-brand-teal-500,
+#reveal-overlay .border-\[\#0596B8\] {
+  border-color: #F7EC12 !important;
+}
+#reveal-overlay [fill="#0596B8"],
+#reveal-overlay [fill="#0596b8"],
+#reveal-overlay .fill-brand-teal-500 {
+  fill: #F7EC12 !important;
+}
+#reveal-overlay [stroke="#0596B8"],
+#reveal-overlay [stroke="#0596b8"],
+#reveal-overlay .stroke-brand-teal-500 {
+  stroke: #F7EC12 !important;
+}
+#reveal-overlay .bg-brand-teal-500 *,
+#reveal-overlay .bg-\[\#0596B8\] * {
+  color: #0A1628 !important;
+}
+
+/* 3. White (#FFFFFF) -> Blue/Teal (#0596B8) */
+#reveal-overlay .bg-white,
+#reveal-overlay .bg-\[\#FFFFFF\],
+#reveal-overlay .bg-\[\#ffffff\],
+#reveal-overlay .bg-neutral-50,
+#reveal-overlay .bg-neutral-100 {
+  background-color: #0596B8 !important;
+}
+#reveal-overlay .text-white,
+#reveal-overlay .text-\[\#FFFFFF\],
+#reveal-overlay .text-\[\#ffffff\] {
+  color: #0596B8 !important;
+}
+#reveal-overlay .border-white,
+#reveal-overlay .border-\[\#FFFFFF\],
+#reveal-overlay .border-\[\#ffffff\] {
+  border-color: #0596B8 !important;
+}
+#reveal-overlay [fill="#FFFFFF"],
+#reveal-overlay [fill="#ffffff"] {
+  fill: #0596B8 !important;
+}
+#reveal-overlay [stroke="#FFFFFF"],
+#reveal-overlay [stroke="#ffffff"] {
+  stroke: #0596B8 !important;
+}
+#reveal-overlay .bg-white *,
+#reveal-overlay .bg-\[\#FFFFFF\] *,
+#reveal-overlay .bg-\[\#ffffff\] *,
+#reveal-overlay .bg-neutral-50 *,
+#reveal-overlay .bg-neutral-100 * {
+  color: #FFFFFF !important;
+}
+

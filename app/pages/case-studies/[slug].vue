@@ -100,7 +100,7 @@ const approachParas = computed(() =>
     class="bg-white"
   >
     <!-- ── Hero ── -->
-    <div class="relative">
+    <div class="site-hero-section relative">
       <div
         class="absolute inset-0 z-10 pointer-events-none"
         style="background: linear-gradient(90deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 55%)"

@@ -171,7 +171,7 @@ onUnmounted(() => {
 
 <template>
   <section
-    class="relative w-full flex items-center overflow-hidden bg-[#141111]"
+    class="site-hero-section relative w-full flex items-center overflow-hidden bg-[#141111]"
     :class="[
       minHeight
     ]"

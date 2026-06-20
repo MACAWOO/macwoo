@@ -133,7 +133,7 @@ const isVideoUrl = (url?: string) => {
     class="bg-white"
   >
     <!-- ── Hero ── -->
-    <div class="relative">
+    <div class="site-hero-section relative">
       <!-- dark left-to-right gradient -->
       <div
         class="absolute inset-0 z-10 pointer-events-none"

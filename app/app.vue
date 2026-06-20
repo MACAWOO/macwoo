@@ -122,15 +122,18 @@ const isInnerPage = computed(() => {
 
 <template>
   <UApp>
-    <AppHeader v-if="route.path !== '/careers' && !isAdmin && !isInnerPage" />
-    <main>
-      <NuxtPage />
-    </main>
-    <AppFooter
-      v-if="!isAdmin"
-      :bg-color="footerBgColor"
-      :footer-color="footerColor"
-    />
-    <ChatWidget v-if="!isAdmin" />
+    <div id="original-site">
+      <AppHeader v-if="route.path !== '/careers' && !isAdmin && !isInnerPage" />
+      <main>
+        <NuxtPage />
+      </main>
+      <AppFooter
+        v-if="!isAdmin"
+        :bg-color="footerBgColor"
+        :footer-color="footerColor"
+      />
+      <ChatWidget v-if="!isAdmin" />
+    </div>
+    <MaskRevealCursor v-if="!isAdmin" />
   </UApp>
 </template>

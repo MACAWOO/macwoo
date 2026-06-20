@@ -104,7 +104,7 @@ function formatDate(dateStr: string) {
 <template>
   <div v-if="post">
     <!-- Hero image -->
-    <div class="relative w-full h-[500px] md:h-[698px] overflow-hidden">
+    <div class="site-hero-section relative w-full h-[500px] md:h-[698px] overflow-hidden">
       <NuxtImg
         :src="post.image"
         :alt="post.title"
