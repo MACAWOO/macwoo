@@ -133,9 +133,7 @@
    ========================================================================== */
 
 body.custom-cursor-active,
-body.custom-cursor-active *,
-.site-exclude-reveal,
-.site-exclude-reveal * {
+body.custom-cursor-active * {
   cursor: none !important;
 }
 
@@ -146,7 +144,7 @@ body.custom-cursor-active *,
   z-index: 9999;
 }
 
-#reveal-overlay {
+#reveal-overlay-wrapper {
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -155,24 +153,42 @@ body.custom-cursor-active *,
   z-index: 9998;
   overflow: hidden;
   user-select: none;
-  transform: translate3d(0, 0, 0);
-  will-change: mask-image, -webkit-mask-image;
-  
-  /* Redefine Tailwind v4 theme variables inside the overlay context */
-  --color-brand-yellow-500: #0596B8 !important;
-  --color-brand-yellow-400: #0596B8 !important;
-  --color-brand-yellow-600: #047E9B !important;
-  
-  --color-brand-teal-500: #F7EC12 !important;
-  --color-brand-teal-400: #FAE712 !important;
-  --color-brand-teal-600: #D8CE0B !important;
-
-  --color-white: #0596B8 !important;
 }
 
-#reveal-overlay .site-hero-section,
-#reveal-overlay header,
-#reveal-overlay .site-header-section {
+#reveal-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  user-select: none;
+  transform: translate3d(0, 0, 0);
+  will-change: mask-image, -webkit-mask-image;
+
+  /* Firefox fix: without no-repeat, Firefox tiles the radial-gradient
+     spotlight across the whole overlay, making it always fully visible.
+     mask-size: 100% 100% ensures the gradient fills the element exactly. */
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+
+  /* Redefine Tailwind v4 theme variables inside the overlay context */
+  --color-brand-yellow-500: #0596B8;
+  --color-brand-yellow-400: #0596B8;
+  --color-brand-yellow-600: #047E9B;
+  
+  --color-brand-teal-500: #F7EC12;
+  --color-brand-teal-400: #FAE712;
+  --color-brand-teal-600: #D8CE0B;
+
+  --color-white: #0596B8;
+}
+
+#reveal-overlay-wrapper .site-hero-section,
+#reveal-overlay-wrapper header,
+#reveal-overlay-wrapper .site-header-section {
   opacity: 0 !important;
   visibility: hidden !important;
 }
@@ -223,7 +239,10 @@ body.custom-cursor-active *,
   pointer-events: none;
   z-index: 10000;
   will-change: transform;
-  transition: transform 0.08s cubic-bezier(0.25, 1, 0.5, 1), scale 0.2s ease, opacity 0.2s ease;
+  /* Scale is baked into the JS-set `transform` (translate3d + scale); do NOT
+     also transition the standalone `scale` property or Firefox animates two
+     conflicting scale sources -> flicker/jank. Transition transform only. */
+  transition: transform 0.08s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease;
 }
 
 /* Explicit class-based color swaps for custom hex definitions */

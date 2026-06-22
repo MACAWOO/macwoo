@@ -5,6 +5,12 @@ const route = useRoute()
 
 const isMounted = ref(false)
 const isMobile = ref(false)
+// Firefox repaints CSS masks on the CPU every frame and gives no compositor
+// fast-path for a full-viewport masked layer. The DOM-clone + per-frame
+// radial-gradient mask reveal therefore tanks performance and flickers in FF.
+// Detect it and skip the whole overlay pipeline, keeping only the cheap
+// transform-based cursor dots.
+const isFirefox = ref(false)
 const isVisible = ref(false)
 const isHovering = ref(false)
 
@@ -38,8 +44,8 @@ const checkMobile = () => {
 
 // Clone and Sanitize DOM
 const syncDOM = () => {
-  if (typeof document === 'undefined') return
-  
+  if (typeof document === 'undefined' || isFirefox.value) return
+
   const original = document.getElementById('original-site')
   const clonedSite = document.getElementById('cloned-site')
   if (!original || !clonedSite) return
@@ -87,6 +93,7 @@ const queueSyncDOM = () => {
 
 // Scroll Syncing
 const syncScroll = () => {
+  if (isFirefox.value) return
   if (clonedScrollContainer.value) {
     clonedScrollContainer.value.scrollTop = window.scrollY
     clonedScrollContainer.value.scrollLeft = window.scrollX
@@ -157,9 +164,9 @@ const updateCursor = () => {
     currentX.value = lerp(currentX.value, mouseX.value, 0.12)
     currentY.value = lerp(currentY.value, mouseY.value, 0.12)
     currentRadius.value = lerp(currentRadius.value, targetRadius.value, 0.12)
-    
-    // Sync scroll in animation loop for smoothness
-    syncScroll()
+
+    // Sync scroll in animation loop for smoothness (overlay only; no-op on FF)
+    if (!isFirefox.value) syncScroll()
   }
   rafId = requestAnimationFrame(updateCursor)
 }
@@ -182,25 +189,30 @@ watch(
 onMounted(() => {
   isMounted.value = true
   isMobile.value = checkMobile()
-  
+  isFirefox.value = typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent)
+
   if (!isMobile.value) {
-    // Build initial clone
-    syncDOM()
-    
-    // Set up MutationObserver to sync content changes on the live site
-    const original = document.getElementById('original-site')
-    if (original) {
-      observer = new MutationObserver(() => {
-        queueSyncDOM()
-      })
-      observer.observe(original, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['class', 'style', 'src', 'href']
-      })
+    // The DOM-clone + MutationObserver only feed the masked reveal overlay,
+    // which is disabled on Firefox. Skip them there — they are pure overhead.
+    if (!isFirefox.value) {
+      // Build initial clone
+      syncDOM()
+
+      // Set up MutationObserver to sync content changes on the live site
+      const original = document.getElementById('original-site')
+      if (original) {
+        observer = new MutationObserver(() => {
+          queueSyncDOM()
+        })
+        observer.observe(original, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['class', 'style', 'src', 'href']
+        })
+      }
     }
-    
+
     // Listeners
     window.addEventListener('mousemove', handleMouseMove, { passive: true })
     document.addEventListener('mouseleave', handleMouseLeave)
@@ -240,9 +252,18 @@ const maskStyle = computed(() => {
   const x = currentX.value
   const y = currentY.value
   const r = currentRadius.value
+  const gradient = `radial-gradient(circle ${r}px at ${x}px ${y}px, black 0%, black 80%, transparent 100%)`
   return {
-    '-webkit-mask-image': `radial-gradient(circle ${r}px at ${x}px ${y}px, black 0%, black 80%, transparent 100%)`,
-    'mask-image': `radial-gradient(circle ${r}px at ${x}px ${y}px, black 0%, black 80%, transparent 100%)`
+    // mask-image + mask-repeat + mask-size are ALL required for Firefox.
+    // Firefox defaults mask-repeat to 'repeat', which tiles the small
+    // radial-gradient spotlight across the entire overlay, making it
+    // permanently visible instead of only at the cursor position.
+    '-webkit-mask-image': gradient,
+    '-webkit-mask-repeat': 'no-repeat',
+    '-webkit-mask-size': '100% 100%',
+    'mask-image': gradient,
+    'mask-repeat': 'no-repeat',
+    'mask-size': '100% 100%'
   }
 })
 
@@ -278,17 +299,23 @@ const zoomStyle = computed(() => {
 
 <template>
   <div v-if="isMounted && !isMobile" class="custom-cursor-wrapper">
-    <!-- Overlay Layer for Swapped Colors -->
-    <div 
-      id="reveal-overlay" 
-      :style="[maskStyle, overlayStyle]"
+    <!-- Overlay Layer for Swapped Colors (disabled on Firefox: CPU mask repaint) -->
+    <div
+      v-if="!isFirefox"
+      id="reveal-overlay-wrapper"
+      :style="overlayStyle"
     >
       <div 
-        ref="clonedScrollContainer" 
-        class="cloned-scroll-container"
-        :style="zoomStyle"
+        id="reveal-overlay" 
+        :style="maskStyle"
       >
-        <div id="cloned-site"></div>
+        <div 
+          ref="clonedScrollContainer" 
+          class="cloned-scroll-container"
+          :style="zoomStyle"
+        >
+          <div id="cloned-site"></div>
+        </div>
       </div>
     </div>
 
