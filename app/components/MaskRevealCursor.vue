@@ -5,12 +5,6 @@ const route = useRoute()
 
 const isMounted = ref(false)
 const isMobile = ref(false)
-// Firefox repaints CSS masks on the CPU every frame and gives no compositor
-// fast-path for a full-viewport masked layer. The DOM-clone + per-frame
-// radial-gradient mask reveal therefore tanks performance and flickers in FF.
-// Detect it and skip the whole overlay pipeline, keeping only the cheap
-// transform-based cursor dots.
-const isFirefox = ref(false)
 const isVisible = ref(false)
 const isHovering = ref(false)
 
@@ -44,7 +38,7 @@ const checkMobile = () => {
 
 // Clone and Sanitize DOM
 const syncDOM = () => {
-  if (typeof document === 'undefined' || isFirefox.value) return
+  if (typeof document === 'undefined') return
 
   const original = document.getElementById('original-site')
   const clonedSite = document.getElementById('cloned-site')
@@ -93,7 +87,6 @@ const queueSyncDOM = () => {
 
 // Scroll Syncing
 const syncScroll = () => {
-  if (isFirefox.value) return
   if (clonedScrollContainer.value) {
     clonedScrollContainer.value.scrollTop = window.scrollY
     clonedScrollContainer.value.scrollLeft = window.scrollX
@@ -165,8 +158,8 @@ const updateCursor = () => {
     currentY.value = lerp(currentY.value, mouseY.value, 0.12)
     currentRadius.value = lerp(currentRadius.value, targetRadius.value, 0.12)
 
-    // Sync scroll in animation loop for smoothness (overlay only; no-op on FF)
-    if (!isFirefox.value) syncScroll()
+    // Sync scroll in animation loop for smoothness
+    syncScroll()
   }
   rafId = requestAnimationFrame(updateCursor)
 }
@@ -189,28 +182,23 @@ watch(
 onMounted(() => {
   isMounted.value = true
   isMobile.value = checkMobile()
-  isFirefox.value = typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent)
 
   if (!isMobile.value) {
-    // The DOM-clone + MutationObserver only feed the masked reveal overlay,
-    // which is disabled on Firefox. Skip them there — they are pure overhead.
-    if (!isFirefox.value) {
-      // Build initial clone
-      syncDOM()
+    // Build initial clone
+    syncDOM()
 
-      // Set up MutationObserver to sync content changes on the live site
-      const original = document.getElementById('original-site')
-      if (original) {
-        observer = new MutationObserver(() => {
-          queueSyncDOM()
-        })
-        observer.observe(original, {
-          childList: true,
-          subtree: true,
-          attributes: true,
-          attributeFilter: ['class', 'style', 'src', 'href']
-        })
-      }
+    // Set up MutationObserver to sync content changes on the live site
+    const original = document.getElementById('original-site')
+    if (original) {
+      observer = new MutationObserver(() => {
+        queueSyncDOM()
+      })
+      observer.observe(original, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'style', 'src', 'href']
+      })
     }
 
     // Listeners
@@ -299,9 +287,8 @@ const zoomStyle = computed(() => {
 
 <template>
   <div v-if="isMounted && !isMobile" class="custom-cursor-wrapper">
-    <!-- Overlay Layer for Swapped Colors (disabled on Firefox: CPU mask repaint) -->
+    <!-- Overlay Layer for Swapped Colors -->
     <div
-      v-if="!isFirefox"
       id="reveal-overlay-wrapper"
       :style="overlayStyle"
     >

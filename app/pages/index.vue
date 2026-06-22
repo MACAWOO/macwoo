@@ -621,7 +621,7 @@ onUnmounted(() => {
           </div>
 
           <!-- Timeline Container -->
-          <div class="relative w-full max-w-4xl mx-auto py-4">
+          <div class="relative w-full max-w-5xl mx-auto py-4">
             <!-- Stretching Yellow Pill background -->
             <div
               class="absolute left-0 top-0 w-12 sm:w-14 md:w-24 bg-gradient-to-b from-[#FCFFC1] to-[#F7EC12] rounded-t-full rounded-b-full transition-all duration-75 ease-out z-0"
@@ -713,7 +713,7 @@ onUnmounted(() => {
                     Scale
                   </h3>
                   <p
-                    class="text-zinc-600 text-sm md:text-lg mt-3 max-w-2xl leading-relaxed"
+                    class="text-zinc-600 text-sm md:text-lg mt-3 max-w-3xl leading-relaxed"
                     style="font-family: 'Bricolage Grotesque', sans-serif;"
                   >
                     We accelerate growth through optimization, performance, and continuous innovation.
