@@ -334,7 +334,44 @@ const isVideoUrl = (url?: string) => {
         Design Highlights
       </h2>
 
-      <div class="relative rounded-[28px] overflow-hidden aspect-video w-full max-w-[90%] mx-auto bg-zinc-900">
+      <!-- Mobile: swipeable scroll-snap card carousel (no arrows) -->
+      <div class="md:hidden -mx-6 px-6">
+        <div class="gallery-scroll flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2">
+          <div
+            v-for="(media, i) in project.galleryImages"
+            :key="`gallery-card-${i}`"
+            class="snap-center shrink-0 w-[88%] relative rounded-[28px] overflow-hidden aspect-video bg-zinc-900"
+          >
+            <iframe
+              v-if="isYouTubeUrl(media)"
+              :src="getYouTubeEmbedUrl(media)"
+              loading="lazy"
+              class="w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+            <video
+              v-else-if="isVideoUrl(media)"
+              :src="media"
+              controls
+              playsinline
+              loop
+              class="w-full h-full object-cover rounded-[28px]"
+            />
+            <NuxtImg
+              v-else
+              :src="media"
+              :alt="`${project.title} design highlight ${i + 1}`"
+              format="webp"
+              loading="lazy"
+              class="w-full h-full object-cover rounded-[28px]"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Desktop: single media + prev/next arrows -->
+      <div class="hidden md:block relative rounded-[28px] overflow-hidden aspect-video w-full max-w-[90%] mx-auto bg-zinc-900">
         <iframe
           v-if="isYouTubeUrl(project.galleryImages[galleryIndex])"
           :key="project.galleryImages[galleryIndex]"
@@ -380,3 +417,15 @@ const isVideoUrl = (url?: string) => {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Hide scrollbar on the mobile swipe carousel (snap still works) */
+.gallery-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+.gallery-scroll::-webkit-scrollbar {
+  display: none;
+}
+</style>

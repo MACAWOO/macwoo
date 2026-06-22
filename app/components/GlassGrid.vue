@@ -39,9 +39,9 @@ onUnmounted(() => {
 
 <template>
   <div class="absolute inset-0 pointer-events-none overflow-hidden select-none z-[4]">
-    <!-- Single Backdrop Blur Overlay for high-performance scrolling -->
+    <!-- Single Backdrop Blur Overlay for high-performance scrolling. -->
     <div
-      class="absolute inset-0 pointer-events-none z-[4]"
+      class="glass-blur absolute inset-0 pointer-events-none z-[4]"
       style="backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);"
       aria-hidden="true"
     />
@@ -84,6 +84,17 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+/* Firefox does not apply backdrop-filter over a <video> backdrop (the blur
+   no-ops), which left the glass overlay fully transparent in FF only. The
+   `-moz-appearance` feature query matches Firefox exclusively, so this adds a
+   fallback tint there to keep the glass visible. Chromium (where blur works)
+   is untouched. */
+@supports (-moz-appearance: none) {
+  .glass-blur {
+    background-color: rgba(20, 20, 20, 0.22);
+  }
+}
+
 /* ── Premium Glassmorphism Vertical Panels ── */
 .glass-panel {
   position: relative;
