@@ -631,7 +631,7 @@ onUnmounted(() => {
             <!-- Steps -->
             <div class="relative z-10 flex flex-col gap-12 md:gap-20 py-4">
               <!-- Step 1: Think -->
-              <div class="flex items-center min-h-[64px] md:min-h-[80px] gap-4 sm:gap-6 md:gap-8">
+              <div class="flex items-start min-h-[64px] md:min-h-[80px] gap-4 sm:gap-6 md:gap-8">
                 <div class="shrink-0 w-12 sm:w-14 md:w-24 flex justify-center">
                   <div
                     class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center font-fredoka font-semibold text-sm sm:text-base md:text-xl bg-[#201F1F] text-white transition-all duration-300 shadow-md"
@@ -639,7 +639,7 @@ onUnmounted(() => {
                     01
                   </div>
                 </div>
-                <div class="min-w-0 flex-1">
+                <div class="min-w-0 flex-1 pt-[11px] sm:pt-[14px] md:pt-[18px]">
                   <h3
                     class="text-lg sm:text-xl md:text-[28px] font-medium text-zinc-950 leading-none"
                     style="font-family: 'Fredoka', sans-serif;"
@@ -657,7 +657,7 @@ onUnmounted(() => {
 
               <!-- Step 2: Create -->
               <div
-                class="flex items-center min-h-[64px] md:min-h-[80px] gap-4 sm:gap-6 md:gap-8 transition-all duration-700 ease-out"
+                class="flex items-start min-h-[64px] md:min-h-[80px] gap-4 sm:gap-6 md:gap-8 transition-all duration-700 ease-out"
                 :class="isMobile || approachProgress >= 0.35 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'"
               >
                 <div class="shrink-0 w-12 sm:w-14 md:w-24 flex justify-center">
@@ -672,7 +672,7 @@ onUnmounted(() => {
                     02
                   </div>
                 </div>
-                <div class="min-w-0 flex-1">
+                <div class="min-w-0 flex-1 pt-[11px] sm:pt-[14px] md:pt-[18px]">
                   <h3
                     class="text-lg sm:text-xl md:text-[28px] font-medium text-zinc-950 leading-none"
                     style="font-family: 'Fredoka', sans-serif;"
@@ -690,7 +690,7 @@ onUnmounted(() => {
 
               <!-- Step 3: Scale -->
               <div
-                class="flex items-center min-h-[64px] md:min-h-[80px] gap-4 sm:gap-6 md:gap-8 transition-all duration-700 ease-out"
+                class="flex items-start min-h-[64px] md:min-h-[80px] gap-4 sm:gap-6 md:gap-8 transition-all duration-700 ease-out"
                 :class="isMobile || approachProgress >= 0.70 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'"
               >
                 <div class="shrink-0 w-12 sm:w-14 md:w-24 flex justify-center">
@@ -705,7 +705,7 @@ onUnmounted(() => {
                     03
                   </div>
                 </div>
-                <div class="min-w-0 flex-1">
+                <div class="min-w-0 flex-1 pt-[11px] sm:pt-[14px] md:pt-[18px]">
                   <h3
                     class="text-lg sm:text-xl md:text-[28px] font-medium text-zinc-950 leading-none"
                     style="font-family: 'Fredoka', sans-serif;"
