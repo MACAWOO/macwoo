@@ -83,6 +83,68 @@ useHead({
 
 const galleryIndex = ref(0)
 
+// ── Mobile stacked-card swipe gallery ──
+const stackIndex = ref(0)
+const dragX = ref(0)
+const isDragging = ref(false)
+let dragStartX = 0
+
+const galleryCount = computed(() => project.value?.galleryImages?.length ?? 0)
+
+const onStackDown = (e: PointerEvent) => {
+  isDragging.value = true
+  dragStartX = e.clientX
+  ;(e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId)
+}
+const onStackMove = (e: PointerEvent) => {
+  if (!isDragging.value) return
+  dragX.value = e.clientX - dragStartX
+}
+const onStackUp = () => {
+  if (!isDragging.value) return
+  isDragging.value = false
+  const threshold = 70
+  if (dragX.value <= -threshold && stackIndex.value < galleryCount.value - 1) {
+    stackIndex.value++
+  } else if (dragX.value >= threshold && stackIndex.value > 0) {
+    stackIndex.value--
+  }
+  dragX.value = 0
+}
+
+// Per-card transform building the stacked-deck look
+const stackCardStyle = (i: number) => {
+  const offset = i - stackIndex.value
+  if (offset === 0) {
+    const x = dragX.value
+    return {
+      transform: `translateX(${x}px) rotate(${x * 0.025}deg)`,
+      transition: isDragging.value ? 'none' : 'transform 0.4s cubic-bezier(0.25,1,0.5,1)',
+      zIndex: 30,
+      opacity: 1
+    }
+  }
+  if (offset < 0) {
+    // already swiped away — fly off to the left
+    return {
+      transform: 'translateX(-130%) rotate(-10deg)',
+      transition: 'transform 0.4s ease, opacity 0.4s ease',
+      zIndex: 0,
+      opacity: 0,
+      pointerEvents: 'none' as const
+    }
+  }
+  // cards behind the top one: nudge down + scale to form the deck
+  const depth = Math.min(offset, 3)
+  return {
+    transform: `translateY(${depth * 16}px) scale(${1 - depth * 0.05})`,
+    transition: 'transform 0.4s ease, opacity 0.4s ease',
+    zIndex: 30 - depth,
+    opacity: offset > 3 ? 0 : 1,
+    pointerEvents: 'none' as const
+  }
+}
+
 const paragraphs = computed(() =>
   project.value?.storyParagraphs?.length
     ? project.value.storyParagraphs
@@ -334,29 +396,37 @@ const isVideoUrl = (url?: string) => {
         Design Highlights
       </h2>
 
-      <!-- Mobile: swipeable scroll-snap card carousel (no arrows) -->
-      <div class="md:hidden -mx-6 px-6">
-        <div class="gallery-scroll flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2">
+      <!-- Mobile: swipeable stacked-card deck (no arrows) -->
+      <div class="md:hidden">
+        <div
+          class="gallery-stack relative w-full aspect-video select-none touch-pan-y"
+          style="padding-bottom: 16px;"
+          @pointerdown="onStackDown"
+          @pointermove="onStackMove"
+          @pointerup="onStackUp"
+          @pointercancel="onStackUp"
+        >
           <div
             v-for="(media, i) in project.galleryImages"
             :key="`gallery-card-${i}`"
-            class="snap-center shrink-0 w-[88%] relative rounded-[28px] overflow-hidden aspect-video bg-zinc-900"
+            class="absolute inset-0 rounded-[28px] overflow-hidden bg-zinc-900 shadow-xl will-change-transform"
+            :style="stackCardStyle(i)"
           >
             <iframe
               v-if="isYouTubeUrl(media)"
               :src="getYouTubeEmbedUrl(media)"
               loading="lazy"
-              class="w-full h-full border-0"
+              class="w-full h-full border-0 pointer-events-none"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowfullscreen
             ></iframe>
             <video
               v-else-if="isVideoUrl(media)"
               :src="media"
-              controls
               playsinline
               loop
-              class="w-full h-full object-cover rounded-[28px]"
+              muted
+              class="w-full h-full object-cover rounded-[28px] pointer-events-none"
             />
             <NuxtImg
               v-else
@@ -364,14 +434,30 @@ const isVideoUrl = (url?: string) => {
               :alt="`${project.title} design highlight ${i + 1}`"
               format="webp"
               loading="lazy"
-              class="w-full h-full object-cover rounded-[28px]"
+              draggable="false"
+              class="w-full h-full object-cover rounded-[28px] pointer-events-none"
             />
           </div>
+        </div>
+
+        <!-- Dots -->
+        <div
+          v-if="project.galleryImages.length > 1"
+          class="flex justify-center gap-2 mt-4"
+        >
+          <button
+            v-for="(_, i) in project.galleryImages"
+            :key="`dot-${i}`"
+            class="h-2 rounded-full transition-all"
+            :class="stackIndex === i ? 'w-6 bg-[#0596B8]' : 'w-2 bg-[#0596B8]/30'"
+            :aria-label="`Go to highlight ${i + 1}`"
+            @click="stackIndex = i"
+          />
         </div>
       </div>
 
       <!-- Desktop: single media + prev/next arrows -->
-      <div class="hidden md:block relative rounded-[28px] overflow-hidden aspect-video w-full max-w-[90%] mx-auto bg-zinc-900">
+      <div class="hidden md:block relative rounded-[28px] overflow-hidden aspect-video w-full max-w-full mx-auto bg-zinc-900">
         <iframe
           v-if="isYouTubeUrl(project.galleryImages[galleryIndex])"
           :key="project.galleryImages[galleryIndex]"
@@ -419,13 +505,12 @@ const isVideoUrl = (url?: string) => {
 </template>
 
 <style scoped>
-/* Hide scrollbar on the mobile swipe carousel (snap still works) */
-.gallery-scroll {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  -webkit-overflow-scrolling: touch;
+/* Mobile stacked-card swipe deck: cards are absolutely stacked; touch-pan-y
+   lets the page scroll vertically while we capture horizontal drag. */
+.gallery-stack {
+  cursor: grab;
 }
-.gallery-scroll::-webkit-scrollbar {
-  display: none;
+.gallery-stack:active {
+  cursor: grabbing;
 }
 </style>
