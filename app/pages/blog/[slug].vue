@@ -115,7 +115,7 @@ function formatDate(dateStr: string) {
       <div class="absolute inset-0 bg-black/20" />
       <button
         type="button"
-        class="absolute top-[90px] left-6 md:left-[120px] bg-white flex items-center gap-[3px] px-5 py-[10px] rounded-full font-extrabold text-[16px] text-[#201f1f] leading-[28px] hover:bg-zinc-100 transition-colors z-10 cursor-pointer"
+        class="absolute top-8 md:top-[90px] left-6 md:left-[120px] bg-white flex items-center gap-[3px] px-5 py-[10px] rounded-full font-extrabold text-[16px] text-[#201f1f] leading-[28px] hover:bg-zinc-100 transition-colors z-10 cursor-pointer"
         @click="$router.back()"
       >
         <LeftArrow

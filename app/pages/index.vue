@@ -231,6 +231,59 @@ const approachProgress = ref(0)
 const whatWeDoTrackRef = ref<HTMLElement | null>(null)
 const whatWeDoProgress = ref(0)
 
+// Scroll-bound staggered card reveal. Each card eases in over its own window so
+// the grid builds up continuously as you scroll (matches the About/Approach motion
+// language) instead of snapping in via binary class toggles.
+const getWhatWeDoCardStyle = (index: number) => {
+  if (isMobile.value) {
+    return { opacity: 1, transform: 'none', transition: 'none' }
+  }
+  const stagger = 0.18
+  const span = 0.42
+  const start = index * stagger
+  const t = Math.max(0, Math.min(1, (whatWeDoProgress.value - start) / span))
+  // Cubic ease-out
+  const eased = 1 - Math.pow(1 - t, 3)
+  return {
+    opacity: eased,
+    transform: `translate3d(0, ${(1 - eased) * 64}px, 0) scale(${0.92 + eased * 0.08})`,
+    transition: 'none' as const,
+    pointerEvents: (eased > 0.05 ? 'auto' : 'none') as 'auto' | 'none'
+  }
+}
+
+// Header drifts up slightly and fades as the cards take over the viewport.
+const whatWeDoHeaderStyle = computed<import('vue').StyleValue>(() => {
+  if (isMobile.value) return {}
+  const t = Math.max(0, Math.min(1, whatWeDoProgress.value / 0.6))
+  return { transform: `translate3d(0, ${-t * 24}px, 0)` }
+})
+
+// "Scroll" hint at the bottom of the pinned panel. The section pins on entry, so
+// the viewport looks static and users think the page ended — this cues that more
+// is revealed by scrolling. Fades out once they start moving through the track.
+const whatWeDoHintStyle = computed<import('vue').StyleValue>(() => {
+  if (isMobile.value) return { opacity: 0, pointerEvents: 'none' }
+  // Stay visible the whole time the panel is pinned; only fade out at the very end
+  // as the section scrolls away so it doesn't clip into the next section.
+  const opacity = whatWeDoProgress.value < 0.9
+    ? 1
+    : Math.max(0, 1 - (whatWeDoProgress.value - 0.9) / 0.1)
+  return {
+    opacity,
+    pointerEvents: (opacity > 0.05 ? 'auto' : 'none') as 'auto' | 'none'
+  }
+})
+
+const scrollPastWhatWeDo = () => {
+  const el = whatWeDoTrackRef.value
+  if (!el) return
+  window.scrollTo({
+    top: window.scrollY + el.getBoundingClientRect().top + window.innerHeight * 0.9,
+    behavior: 'smooth'
+  })
+}
+
 const trackProgressOf = (el: HTMLElement | null) => {
   if (!el) return 0
   const rect = el.getBoundingClientRect()
@@ -467,12 +520,15 @@ onUnmounted(() => {
     <!-- What We Do -->
     <section
       ref="whatWeDoTrackRef"
-      :class="isMobile ? 'relative h-auto bg-white' : 'relative h-[220vh] bg-white'"
+      :class="isMobile ? 'relative h-auto bg-white' : 'relative h-[300vh] bg-white'"
     >
       <div :class="isMobile ? 'relative h-auto w-full flex flex-col justify-between py-16 bg-white' : 'sticky top-0 h-screen w-full flex flex-col justify-between py-16 bg-white overflow-hidden'">
         <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8 flex-1 flex flex-col justify-between gap-8">
           <!-- Header (Centered) -->
-          <div class="text-center shrink-0">
+          <div
+            class="text-center shrink-0 will-change-transform"
+            :style="whatWeDoHeaderStyle"
+          >
             <h2
               class="text-[#0596B8] text-3xl md:text-[48px] font-medium font-fredoka leading-tight"
             >
@@ -491,10 +547,8 @@ onUnmounted(() => {
             <!-- Card 1: Branding & Design -->
             <NuxtLink
               to="/services/branding-design"
-              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg transition-all duration-700 ease-out"
-              :class="[
-                isMobile || whatWeDoProgress >= 0 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              ]"
+              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg will-change-transform"
+              :style="getWhatWeDoCardStyle(0)"
             >
               <NuxtImg
                 :src="settings.servicesBrandingImage"
@@ -524,10 +578,8 @@ onUnmounted(() => {
             <!-- Card 2: Digital Marketing -->
             <NuxtLink
               to="/services/digital-marketing"
-              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg transition-all duration-700 ease-out"
-              :class="[
-                isMobile || whatWeDoProgress >= 0.33 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
-              ]"
+              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg will-change-transform"
+              :style="getWhatWeDoCardStyle(1)"
             >
               <NuxtImg
                 :src="settings.servicesMarketingImage"
@@ -557,10 +609,8 @@ onUnmounted(() => {
             <!-- Card 3: Video Production -->
             <NuxtLink
               to="/services/video-production"
-              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg transition-all duration-700 ease-out"
-              :class="[
-                isMobile || whatWeDoProgress >= 0.66 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
-              ]"
+              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg will-change-transform"
+              :style="getWhatWeDoCardStyle(2)"
             >
               <NuxtImg
                 :src="settings.servicesVideoImage"
@@ -587,6 +637,21 @@ onUnmounted(() => {
               </div>
             </NuxtLink>
           </div>
+        </div>
+
+        <!-- Scroll-more hint (desktop only) -->
+        <div
+          v-if="!isMobile"
+          class="absolute bottom-7 left-0 right-0 flex justify-center z-20 cursor-pointer select-none transition-opacity duration-300 wwd-hint-float"
+          :style="whatWeDoHintStyle"
+          @click="scrollPastWhatWeDo"
+        >
+          <span
+            class="block text-xs md:text-sm font-semibold uppercase tracking-[0.28em] bg-gradient-to-b from-[#0596B8] to-[#0596B8]/40 bg-clip-text text-transparent"
+            style="font-family: 'Bricolage Grotesque', sans-serif; filter: drop-shadow(0 2px 6px rgba(5,150,184,0.18));"
+          >
+            Scroll to explore
+          </span>
         </div>
       </div>
     </section>
@@ -953,3 +1018,24 @@ onUnmounted(() => {
     </svg>
   </div>
 </template>
+
+<style scoped>
+@keyframes wwd-hint-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+.wwd-hint-float {
+  animation: wwd-hint-float 2.2s infinite ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wwd-hint-float {
+    animation: none;
+  }
+}
+</style>
