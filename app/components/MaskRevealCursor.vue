@@ -19,6 +19,22 @@ const hasMoved = ref(false)
 const targetRadius = ref(30) // default 30px radius = 60px diameter
 const currentRadius = ref(30)
 
+// Click / press feedback
+const isPressed = ref(false)
+
+// Velocity (for directional squash-stretch + speed-reactive scale)
+const velX = ref(0)
+const velY = ref(0)
+let lastMouseX = 0
+let lastMouseY = 0
+
+// Idle auto-fade
+const isIdle = ref(false)
+let idleTimeout = null
+
+// Respect reduced-motion preference
+const reducedMotion = ref(false)
+
 const clonedScrollContainer = ref(null)
 
 // Animation Frame ID
@@ -109,7 +125,18 @@ const handleMouseMove = (e) => {
   mouseX.value = e.clientX
   mouseY.value = e.clientY
   isVisible.value = true
-  
+
+  // Track velocity for squash-stretch / speed reactivity
+  velX.value = e.clientX - lastMouseX
+  velY.value = e.clientY - lastMouseY
+  lastMouseX = e.clientX
+  lastMouseY = e.clientY
+
+  // Wake from idle, re-arm idle timer
+  isIdle.value = false
+  if (idleTimeout) clearTimeout(idleTimeout)
+  idleTimeout = setTimeout(() => { isIdle.value = true }, 2500)
+
   const target = e.target
   if (target) {
     // Check if hovering over interactive elements
@@ -133,8 +160,18 @@ const handleMouseMove = (e) => {
   }
 }
 
+const handleMouseDown = () => {
+  if (isMobile.value) return
+  isPressed.value = true
+}
+
+const handleMouseUp = () => {
+  isPressed.value = false
+}
+
 const handleMouseLeave = () => {
   isVisible.value = false
+  isPressed.value = false
   document.body.classList.remove('custom-cursor-active')
 }
 
@@ -153,10 +190,16 @@ const lerp = (start, end, factor) => start + (end - start) * factor
 // Animation Loop
 const updateCursor = () => {
   if (!isMobile.value) {
-    // Smooth follow with lerp
-    currentX.value = lerp(currentX.value, mouseX.value, 0.12)
-    currentY.value = lerp(currentY.value, mouseY.value, 0.12)
-    currentRadius.value = lerp(currentRadius.value, targetRadius.value, 0.12)
+    // Snappier follow when hovering interactive targets so the ring feels
+    // "locked on"; reduced-motion users get an instant snap.
+    const follow = reducedMotion.value ? 1 : (isHovering.value ? 0.2 : 0.14)
+    currentX.value = lerp(currentX.value, mouseX.value, follow)
+    currentY.value = lerp(currentY.value, mouseY.value, follow)
+    currentRadius.value = lerp(currentRadius.value, targetRadius.value, follow)
+
+    // Ease velocity toward 0 so squash-stretch relaxes when the mouse stops
+    velX.value = lerp(velX.value, 0, 0.2)
+    velY.value = lerp(velY.value, 0, 0.2)
 
     // Sync scroll in animation loop for smoothness
     syncScroll()
@@ -182,6 +225,7 @@ watch(
 onMounted(() => {
   isMounted.value = true
   isMobile.value = checkMobile()
+  reducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   if (!isMobile.value) {
     // Build initial clone
@@ -203,6 +247,8 @@ onMounted(() => {
 
     // Listeners
     window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    window.addEventListener('mousedown', handleMouseDown, { passive: true })
+    window.addEventListener('mouseup', handleMouseUp, { passive: true })
     document.addEventListener('mouseleave', handleMouseLeave)
     document.addEventListener('mouseenter', handleMouseEnter)
     window.addEventListener('scroll', syncScroll, { passive: true })
@@ -224,9 +270,12 @@ onBeforeUnmount(() => {
   if (rafId) cancelAnimationFrame(rafId)
   if (observer) observer.disconnect()
   if (debounceTimeout) clearTimeout(debounceTimeout)
-  
+  if (idleTimeout) clearTimeout(idleTimeout)
+
   if (typeof window !== 'undefined') {
     window.removeEventListener('mousemove', handleMouseMove)
+    window.removeEventListener('mousedown', handleMouseDown)
+    window.removeEventListener('mouseup', handleMouseUp)
     document.removeEventListener('mouseleave', handleMouseLeave)
     document.removeEventListener('mouseenter', handleMouseEnter)
     window.removeEventListener('scroll', syncScroll)
@@ -264,9 +313,28 @@ const targetDotStyle = computed(() => {
 
 const lerpDotStyle = computed(() => {
   if (!isVisible.value || !hasMoved.value || isCursorHidden.value) return { display: 'none' }
-  const scale = currentRadius.value / 30
+
+  const base = currentRadius.value / 30
+  const press = isPressed.value ? 0.8 : 1 // compress on click
+  const scale = base * press
+
+  // Directional squash-stretch: ring elongates along travel direction,
+  // proportional to speed (capped so fast flicks don't distort wildly).
+  let rotate = ''
+  let axis = 'scale(1)'
+  if (!reducedMotion.value) {
+    const speed = Math.hypot(velX.value, velY.value)
+    const stretch = Math.min(speed / 200, 0.4) // 0 → 0.4
+    if (speed > 0.5) {
+      const angle = (Math.atan2(velY.value, velX.value) * 180) / Math.PI
+      rotate = ` rotate(${angle}deg)`
+      axis = ` scale(${1 + stretch}, ${1 - stretch * 0.6})`
+    }
+  }
+
   return {
-    transform: `translate3d(-50%, -50%, 0) translate3d(${currentX.value}px, ${currentY.value}px, 0) scale(${scale})`
+    transform: `translate3d(-50%, -50%, 0) translate3d(${currentX.value}px, ${currentY.value}px, 0) scale(${scale})${rotate}${axis}`,
+    opacity: isIdle.value ? 0.35 : 1
   }
 })
 
@@ -308,6 +376,10 @@ const zoomStyle = computed(() => {
 
     <!-- Premium Custom Cursor Indicators -->
     <div class="custom-cursor-dot-target" :style="targetDotStyle"></div>
-    <div class="custom-cursor-dot-lerp" :style="lerpDotStyle"></div>
+    <div
+      class="custom-cursor-dot-lerp"
+      :class="{ 'is-interactive': isHovering, 'is-pressed': isPressed }"
+      :style="lerpDotStyle"
+    ></div>
   </div>
 </template>

@@ -353,7 +353,7 @@ const approachParas = computed(() =>
             class="bg-[#0596B8] border border-white/5 rounded-lg p-6 flex flex-col gap-2"
           >
             <span class="font-bold text-brand-yellow-500 text-[48px] md:text-[64px] leading-[64px]">
-              {{ result.metric }}
+              <CountUpMetric :value="result.metric" />
             </span>
             <span class="font-semibold text-white text-xl md:text-2xl leading-[36px]">
               {{ result.label }}

@@ -82,7 +82,7 @@ const subServices = [
   { icon: '/Icons/Film_Strip@4x.png', title: 'Content Marketing', description: 'Create valuable content that attracts, educates, and converts your target audience across multiple digital channels.' },
   { icon: '/Icons/Chart_Spline@4x.png', title: 'Performance Marketing', description: 'Run data-driven advertising campaigns across Google, Meta, LinkedIn, and other platforms to maximize ROI.' },
   { icon: '/Icons/File_Search@4x.png', title: 'Organic Marketing', description: 'Improve your website\'s visibility on search engines and attract high-intent organic traffic that drives long-term growth.' },
-  { icon: '/Icons/Megaphone@4x.png', title: 'Social Media Marketing', description: 'Build brand awareness, engage your audience, and create meaningful connections through strategic content and campaigns across leading social media platforms.' }
+  { icon: '/Icons/Megaphone@4x.png', title: 'Social Media Marketing', description: 'Build awareness, engage audiences, and grow your brand through strategic social media marketing.' }
 ]
 
 const logos = [

@@ -242,7 +242,35 @@ body.custom-cursor-active * {
   /* Scale is baked into the JS-set `transform` (translate3d + scale); do NOT
      also transition the standalone `scale` property or Firefox animates two
      conflicting scale sources -> flicker/jank. Transition transform only. */
-  transition: transform 0.08s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease;
+  transition:
+    transform 0.08s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Hovering an interactive element: warm yellow accent + stronger glow */
+.custom-cursor-dot-lerp.is-interactive {
+  border-color: rgba(247, 236, 18, 0.85);
+  background-color: rgba(247, 236, 18, 0.08);
+  box-shadow:
+    0 0 14px rgba(247, 236, 18, 0.5),
+    inset 0 0 8px rgba(247, 236, 18, 0.25);
+}
+
+/* Pressed: tighter, brighter ring for tactile click feedback */
+.custom-cursor-dot-lerp.is-pressed {
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow:
+    0 0 18px rgba(247, 236, 18, 0.6),
+    inset 0 0 10px rgba(255, 255, 255, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .custom-cursor-dot-lerp {
+    transition: opacity 0.2s ease;
+  }
 }
 
 /* Explicit class-based color swaps for custom hex definitions */

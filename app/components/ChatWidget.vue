@@ -235,7 +235,7 @@ watch(isOpen, async (val) => {
 </script>
 
 <template>
-  <div class="chat-widget-container site-exclude-reveal fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2">
+  <div class="chat-widget-container site-exclude-reveal fixed bottom-4 right-4 z-[9999] flex flex-col items-end gap-2">
     <!-- Chat panel -->
     <transition
       enter-active-class="transition duration-300 ease-out"
