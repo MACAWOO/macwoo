@@ -509,6 +509,12 @@ const isVideoUrl = (url?: string) => {
    lets the page scroll vertically while we capture horizontal drag. */
 .gallery-stack {
   cursor: grab;
+  /* Clip the off-screen swipe (cards fly to translateX(-130%) + drag delta).
+     Without this the flying card widens the page horizontally on mobile,
+     expanding the layout viewport and shoving the fixed chat widget out of
+     place. `clip` on the x-axis only -> vertical deck offset stays visible
+     and page scroll is unaffected. */
+  overflow-x: clip;
 }
 .gallery-stack:active {
   cursor: grabbing;
