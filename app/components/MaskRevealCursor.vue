@@ -8,6 +8,14 @@ const isMobile = ref(false)
 const isVisible = ref(false)
 const isHovering = ref(false)
 
+// Firefox cannot reliably composite the full-DOM mask-reveal overlay: the
+// radial mask fails to clip when a scaled/composited clone is inside it, and
+// scrollTop on a transformed overflow container drifts -> doubled/offset
+// "ghost" text. We keep the custom cursor RING in Firefox (renders fine) but
+// disable the heavy clone-reveal overlay there. Chromium/WebKit composite it
+// correctly, so they keep the full effect.
+const supportsReveal = ref(true)
+
 // Mouse coordinates
 const mouseX = ref(0)
 const mouseY = ref(0)
@@ -135,7 +143,9 @@ const handleMouseMove = (e) => {
   // Wake from idle, re-arm idle timer
   isIdle.value = false
   if (idleTimeout) clearTimeout(idleTimeout)
-  idleTimeout = setTimeout(() => { isIdle.value = true }, 2500)
+  idleTimeout = setTimeout(() => {
+    isIdle.value = true
+  }, 2500)
 
   const target = e.target
   if (target) {
@@ -211,7 +221,7 @@ const updateCursor = () => {
 watch(
   () => route.fullPath,
   () => {
-    if (isMobile.value) return
+    if (isMobile.value || !supportsReveal.value) return
     nextTick(() => {
       syncDOM()
       // Multiple fallbacks for dynamic content loads or route transition durations
@@ -226,23 +236,27 @@ onMounted(() => {
   isMounted.value = true
   isMobile.value = checkMobile()
   reducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  supportsReveal.value = !/firefox/i.test(navigator.userAgent)
 
   if (!isMobile.value) {
-    // Build initial clone
-    syncDOM()
+    // Only build/sync the DOM clone where the mask-reveal overlay is reliable.
+    if (supportsReveal.value) {
+      // Build initial clone
+      syncDOM()
 
-    // Set up MutationObserver to sync content changes on the live site
-    const original = document.getElementById('original-site')
-    if (original) {
-      observer = new MutationObserver(() => {
-        queueSyncDOM()
-      })
-      observer.observe(original, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['class', 'style', 'src', 'href']
-      })
+      // Set up MutationObserver to sync content changes on the live site
+      const original = document.getElementById('original-site')
+      if (original) {
+        observer = new MutationObserver(() => {
+          queueSyncDOM()
+        })
+        observer.observe(original, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['class', 'style', 'src', 'href']
+        })
+      }
     }
 
     // Listeners
@@ -355,8 +369,11 @@ const zoomStyle = computed(() => {
 
 <template>
   <div v-if="isMounted && !isMobile" class="custom-cursor-wrapper">
-    <!-- Overlay Layer for Swapped Colors -->
+    <!-- Overlay Layer for Swapped Colors (Chromium/WebKit only — Firefox
+         cannot composite the masked clone without ghosting, so it falls back
+         to just the cursor ring below) -->
     <div
+      v-if="supportsReveal"
       id="reveal-overlay-wrapper"
       :style="overlayStyle"
     >

@@ -84,14 +84,36 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* Firefox does not apply backdrop-filter over a <video> backdrop (the blur
-   no-ops), which left the glass overlay fully transparent in FF only. The
-   `-moz-appearance` feature query matches Firefox exclusively, so this adds a
-   fallback tint there to keep the glass visible. Chromium (where blur works)
-   is untouched. */
+/* The blur layer relied SOLELY on backdrop-filter. Firefox composites
+   backdrop-filter over a <video> backdrop intermittently — when it doesn't
+   promote the video to its own layer that frame, the blur no-ops and the
+   panel renders fully transparent (the random "transparent grid" flicker).
+   Two-part fix: */
+
+/* 1. Force the blur layer onto its own compositor layer so Firefox applies
+      backdrop-filter consistently instead of flickering. */
+.glass-blur {
+  transform: translateZ(0);
+  will-change: transform;
+  /* Base frosted tint present in EVERY browser. Guarantees the glass never
+     reads as fully transparent even when backdrop-filter silently no-ops.
+     Subtle enough to layer cleanly under a working blur in Chromium. */
+  background-color: rgba(20, 20, 20, 0.12);
+}
+
+/* 2a. Firefox: stronger tint so the frosted look survives a failed blur. The
+       `-moz-appearance` feature query matches Firefox exclusively. */
 @supports (-moz-appearance: none) {
   .glass-blur {
-    background-color: rgba(20, 20, 20, 0.22);
+    background-color: rgba(20, 20, 20, 0.28);
+  }
+}
+
+/* 2b. Browsers with no backdrop-filter at all (older Safari/embedded WebViews):
+       fall back to a near-solid frosted tint instead of a transparent grid. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-blur {
+    background-color: rgba(20, 20, 20, 0.38);
   }
 }
 
