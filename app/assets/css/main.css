@@ -193,22 +193,13 @@ body.custom-cursor-active * {
   visibility: hidden !important;
 }
 
-.cloned-scroll-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  pointer-events: none;
-}
-
 #cloned-site {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   pointer-events: none;
+  will-change: transform;
 }
 
 .custom-cursor-dot-target {

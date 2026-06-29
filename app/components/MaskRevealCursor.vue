@@ -43,7 +43,8 @@ let idleTimeout = null
 // Respect reduced-motion preference
 const reducedMotion = ref(false)
 
-const clonedScrollContainer = ref(null)
+const scrollX = ref(0)
+const scrollY = ref(0)
 
 // Animation Frame ID
 let rafId = null
@@ -106,14 +107,14 @@ const syncDOM = () => {
 // Debounced sync helper
 const queueSyncDOM = () => {
   if (debounceTimeout) clearTimeout(debounceTimeout)
-  debounceTimeout = setTimeout(syncDOM, 150)
+  debounceTimeout = setTimeout(syncDOM, 400)
 }
 
 // Scroll Syncing
 const syncScroll = () => {
-  if (clonedScrollContainer.value) {
-    clonedScrollContainer.value.scrollTop = window.scrollY
-    clonedScrollContainer.value.scrollLeft = window.scrollX
+  if (typeof window !== 'undefined') {
+    scrollX.value = window.scrollX
+    scrollY.value = window.scrollY
   }
 }
 
@@ -236,7 +237,7 @@ onMounted(() => {
   isMounted.value = true
   isMobile.value = checkMobile()
   reducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  supportsReveal.value = !/firefox/i.test(navigator.userAgent)
+  supportsReveal.value = true
 
   if (!isMobile.value) {
     // Only build/sync the DOM clone where the mask-reveal overlay is reliable.
@@ -252,9 +253,7 @@ onMounted(() => {
         })
         observer.observe(original, {
           childList: true,
-          subtree: true,
-          attributes: true,
-          attributeFilter: ['class', 'style', 'src', 'href']
+          subtree: true
         })
       }
     }
@@ -357,12 +356,12 @@ const overlayStyle = computed(() => ({
   transition: 'opacity 0.25s ease'
 }))
 
-const zoomStyle = computed(() => {
+const cloneStyle = computed(() => {
   const x = currentX.value
   const y = currentY.value
   return {
     'transform-origin': `${x}px ${y}px`,
-    'transform': `scale(1.08) translate3d(0, 0, 0)`
+    'transform': `scale(1.08) translate3d(-${scrollX.value}px, -${scrollY.value}px, 0)`
   }
 })
 </script>
@@ -382,12 +381,9 @@ const zoomStyle = computed(() => {
         :style="maskStyle"
       >
         <div 
-          ref="clonedScrollContainer" 
-          class="cloned-scroll-container"
-          :style="zoomStyle"
-        >
-          <div id="cloned-site"></div>
-        </div>
+          id="cloned-site"
+          :style="cloneStyle"
+        ></div>
       </div>
     </div>
 
