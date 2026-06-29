@@ -302,7 +302,7 @@ const maskStyle = computed(() => {
   const x = currentX.value
   const y = currentY.value
   const r = currentRadius.value
-  const gradient = `radial-gradient(circle ${r}px at ${x}px ${y}px, black 0%, black 80%, transparent 100%)`
+  const gradient = `radial-gradient(circle ${r}px at 150px 150px, black 0%, black 80%, transparent 100%)`
   return {
     // mask-image + mask-repeat + mask-size are ALL required for Firefox.
     // Firefox defaults mask-repeat to 'repeat', which tiles the small
@@ -313,7 +313,8 @@ const maskStyle = computed(() => {
     '-webkit-mask-size': '100% 100%',
     'mask-image': gradient,
     'mask-repeat': 'no-repeat',
-    'mask-size': '100% 100%'
+    'mask-size': '100% 100%',
+    'transform': `translate3d(${x - 150}px, ${y - 150}px, 0)`
   }
 })
 
@@ -361,7 +362,7 @@ const cloneStyle = computed(() => {
   const y = currentY.value
   return {
     'transform-origin': `${x}px ${y}px`,
-    'transform': `scale(1.08) translate3d(-${scrollX.value}px, -${scrollY.value}px, 0)`
+    'transform': `translate3d(${- (x - 150)}px, ${- (y - 150)}px, 0) scale(1.08) translate3d(-${scrollX.value}px, -${scrollY.value}px, 0)`
   }
 })
 </script>

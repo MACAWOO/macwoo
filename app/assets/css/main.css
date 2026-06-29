@@ -157,14 +157,14 @@ body.custom-cursor-active * {
 
 #reveal-overlay {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 300px;
   pointer-events: none;
   overflow: hidden;
   user-select: none;
-  transform: translate3d(0, 0, 0);
-  will-change: mask-image, -webkit-mask-image;
+  will-change: transform;
 
   /* Firefox fix: without no-repeat, Firefox tiles the radial-gradient
      spotlight across the whole overlay, making it always fully visible.
@@ -197,7 +197,7 @@ body.custom-cursor-active * {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 100vw;
   pointer-events: none;
   will-change: transform;
 }
@@ -234,7 +234,6 @@ body.custom-cursor-active * {
      also transition the standalone `scale` property or Firefox animates two
      conflicting scale sources -> flicker/jank. Transition transform only. */
   transition:
-    transform 0.08s cubic-bezier(0.25, 1, 0.5, 1),
     opacity 0.2s ease,
     border-color 0.2s ease,
     background-color 0.2s ease,
