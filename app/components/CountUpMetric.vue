@@ -8,9 +8,12 @@ const props = defineProps<{
 const parsed = computed(() => {
   const match = props.value.match(/^([^\d.]*)([\d.,]+)(.*)$/)
   if (!match) return { prefix: '', target: 0, decimals: 0, suffix: props.value }
-  const [, prefix, numStr, suffix] = match
+  const prefix = match[1] || ''
+  const numStr = match[2] || '0'
+  const suffix = match[3] || ''
   const clean = numStr.replace(/,/g, '')
-  const decimals = clean.includes('.') ? clean.split('.')[1].length : 0
+  const parts = clean.split('.')
+  const decimals = parts.length > 1 && parts[1] ? parts[1].length : 0
   return { prefix, target: parseFloat(clean), decimals, suffix }
 })
 

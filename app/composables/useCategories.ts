@@ -39,9 +39,10 @@ export function useCategories() {
           .order('sort_order', { ascending: true })
         if (error) throw error
         if (data) {
-          cachedCategories = data
+          const categoriesData: Category[] = data
+          cachedCategories = categoriesData
           cacheTime = Date.now()
-          dbCategories.value = cachedCategories
+          dbCategories.value = categoriesData
         }
       } catch (e) {
         console.error('Error fetching categories:', e)

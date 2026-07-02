@@ -36,7 +36,7 @@ export function useCareers() {
 
         if (error) throw error
         if (data) {
-          cachedJobs = data.map((d: any) => ({
+          const mappedJobs: JobListing[] = data.map((d: any) => ({
             id: d.id,
             title: d.title,
             department: d.department,
@@ -45,8 +45,9 @@ export function useCareers() {
             experience: d.experience,
             applyUrl: d.apply_url || ''
           }))
+          cachedJobs = mappedJobs
           cacheTime = Date.now()
-          jobs.value = cachedJobs
+          jobs.value = mappedJobs
         }
       } catch (e) {
         console.error('Error fetching careers:', e)

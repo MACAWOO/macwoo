@@ -237,7 +237,10 @@ onMounted(() => {
   isMounted.value = true
   isMobile.value = checkMobile()
   reducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  supportsReveal.value = true
+  // Firefox ghosts/doubles the masked clone (see note above). Detect it and
+  // fall back to the cursor ring only. Chromium/WebKit keep the full reveal.
+  const isFirefox = typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('firefox')
+  supportsReveal.value = !isFirefox
 
   if (!isMobile.value) {
     // Only build/sync the DOM clone where the mask-reveal overlay is reliable.
@@ -262,6 +265,7 @@ onMounted(() => {
     window.addEventListener('mousemove', handleMouseMove, { passive: true })
     window.addEventListener('mousedown', handleMouseDown, { passive: true })
     window.addEventListener('mouseup', handleMouseUp, { passive: true })
+    window.addEventListener('sync-reveal-cursor', syncDOM, { passive: true })
     document.addEventListener('mouseleave', handleMouseLeave)
     document.addEventListener('mouseenter', handleMouseEnter)
     window.addEventListener('scroll', syncScroll, { passive: true })
@@ -289,6 +293,7 @@ onBeforeUnmount(() => {
     window.removeEventListener('mousemove', handleMouseMove)
     window.removeEventListener('mousedown', handleMouseDown)
     window.removeEventListener('mouseup', handleMouseUp)
+    window.removeEventListener('sync-reveal-cursor', syncDOM)
     document.removeEventListener('mouseleave', handleMouseLeave)
     document.removeEventListener('mouseenter', handleMouseEnter)
     window.removeEventListener('scroll', syncScroll)

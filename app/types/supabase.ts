@@ -260,6 +260,7 @@ export type Database = {
       }
       page_settings: {
         Row: {
+          about_believe_image: string | null
           about_hero_image: string | null
           about_hero_video: string | null
           blog_hero_image: string | null
@@ -279,6 +280,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          about_believe_image?: string | null
           about_hero_image?: string | null
           about_hero_video?: string | null
           blog_hero_image?: string | null
@@ -298,6 +300,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          about_believe_image?: string | null
           about_hero_image?: string | null
           about_hero_video?: string | null
           blog_hero_image?: string | null

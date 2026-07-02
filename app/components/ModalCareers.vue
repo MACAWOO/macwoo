@@ -38,7 +38,7 @@ const handleFileChange = (event: Event) => {
   reader.onload = (e) => {
     const result = e.target?.result as string
     // Extract base64 content
-    const base64Data = result.split(',')[1]
+    const base64Data = result.split(',')[1] || ''
     resumeBase64.value = base64Data
   }
   reader.readAsDataURL(file)

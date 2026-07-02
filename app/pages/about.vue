@@ -141,7 +141,7 @@ onUnmounted(() => {
           <!-- Left column: Visual rounded box -->
           <div class="rounded-[2.5rem] overflow-hidden w-full h-[320px] md:h-[450px]">
             <NuxtImg
-              src="/Images/what_we_believe.png"
+              :src="settings.aboutBelieveImage"
               alt="What We Believe"
               loading="lazy"
               format="webp"

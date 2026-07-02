@@ -83,6 +83,12 @@ useHead({
 
 const galleryIndex = ref(0)
 
+watch(galleryIndex, () => {
+  nextTick(() => {
+    window.dispatchEvent(new CustomEvent('sync-reveal-cursor'))
+  })
+})
+
 // ── Mobile stacked-card swipe gallery ──
 const stackIndex = ref(0)
 const dragX = ref(0)

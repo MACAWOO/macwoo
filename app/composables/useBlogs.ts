@@ -35,7 +35,7 @@ export function useBlogs() {
 
         if (error) throw error
         if (data) {
-          cachedPosts = data.map((d: any) => ({
+          const mappedPosts: BlogPost[] = data.map((d: any) => ({
             slug: d.slug,
             title: d.title,
             excerpt: d.excerpt,
@@ -45,8 +45,9 @@ export function useBlogs() {
             body: (d.body as any) || [],
             category: d.categories?.name || undefined
           }))
+          cachedPosts = mappedPosts
           cacheTime = Date.now()
-          posts.value = cachedPosts
+          posts.value = mappedPosts
         }
       } catch (e) {
         console.error('Error fetching blogs:', e)

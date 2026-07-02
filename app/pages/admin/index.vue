@@ -148,6 +148,7 @@ const settingsForm = ref({
   indexHeroVideo: '',
   aboutHeroImage: '',
   aboutHeroVideo: '',
+  aboutBelieveImage: '',
   blogHeroImage: '',
   blogHeroVideo: '',
   servicesBrandingImage: '',
@@ -1941,6 +1942,50 @@ const filteredCareers = computed(() => {
                       >
                         Pick Media
                       </button>
+                    </div>
+                  </div>
+                </div>
+                <!-- Row: About What We Believe Image -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">What We Believe Image Path/URL:</label>
+                  <div class="flex-1 w-full space-y-2">
+                    <div class="flex gap-2 max-w-xl">
+                      <input
+                        v-model="settingsForm.aboutBelieveImage"
+                        type="text"
+                        required
+                        placeholder="e.g. /Images/what_we_believe.png"
+                        class="flex-1 px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8] font-mono text-[11px]"
+                      >
+                      <button
+                        type="button"
+                        class="px-3 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-semibold rounded cursor-pointer shrink-0 transition-colors"
+                        @click="openMediaPicker(settingsForm, 'aboutBelieveImage')"
+                      >
+                        Pick Media
+                      </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <label class="text-[10px] text-zinc-400">Template Images Choice:</label>
+                      <select
+                        class="px-2 py-0.5 border border-zinc-200 rounded text-[10px] bg-zinc-50 text-zinc-700 focus:outline-none"
+                        @change="settingsForm.aboutBelieveImage = ($event.target as HTMLSelectElement).value"
+                      >
+                        <option
+                          value=""
+                          disabled
+                          selected
+                        >
+                          -- select template image --
+                        </option>
+                        <option
+                          v-for="img in templateImages"
+                          :key="img.value"
+                          :value="img.value"
+                        >
+                          {{ img.label }}
+                        </option>
+                      </select>
                     </div>
                   </div>
                 </div>

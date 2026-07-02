@@ -35,7 +35,7 @@ export function useCaseStudies() {
 
         if (error) throw error
         if (data) {
-          cachedCaseStudies = data.map((d: any) => ({
+          const mappedCaseStudies: CaseStudy[] = data.map((d: any) => ({
             slug: d.slug,
             title: d.title,
             client: d.client,
@@ -55,8 +55,9 @@ export function useCaseStudies() {
             results: (d.results as any) || [],
             resultsSummary: d.results_summary || undefined
           }))
+          cachedCaseStudies = mappedCaseStudies
           cacheTime = Date.now()
-          caseStudies.value = cachedCaseStudies
+          caseStudies.value = mappedCaseStudies
         }
       } catch (e) {
         console.error('Error fetching case studies:', e)

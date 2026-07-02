@@ -46,7 +46,7 @@ export function usePortfolio() {
 
         if (error) throw error
         if (data) {
-          cachedProjects = data.map((d: any) => ({
+          const mappedProjects: AdminPortfolioProject[] = data.map((d: any) => ({
             slug: d.slug,
             title: d.title,
             subtitle: d.subtitle,
@@ -61,11 +61,12 @@ export function usePortfolio() {
             industry: d.industry || undefined,
             date: d.date || undefined,
             storyParagraphs: d.story_paragraphs || [],
-            featured: true,
+            featured: d.published !== false,
             displayOrder: d.sort_order
           }))
+          cachedProjects = mappedProjects
           cacheTime = Date.now()
-          projects.value = cachedProjects
+          projects.value = mappedProjects
         }
       } catch (e) {
         console.error('Error fetching portfolio projects:', e)
@@ -113,7 +114,7 @@ export function usePortfolio() {
       date: project.date || null,
       story_paragraphs: project.storyParagraphs || [],
       sort_order: project.displayOrder || (projects.value.length + 1),
-      published: true
+      published: project.featured !== false
     }
 
     try {
@@ -147,7 +148,7 @@ export function usePortfolio() {
       date: updated.date || null,
       story_paragraphs: updated.storyParagraphs || [],
       sort_order: updated.displayOrder || 1,
-      published: true
+      published: updated.featured !== false
     }
 
     try {
@@ -205,7 +206,7 @@ export function usePortfolio() {
         date: p.date || null,
         story_paragraphs: p.storyParagraphs || [],
         sort_order: i + 1,
-        published: true
+        published: p.featured !== false
       }))
 
       const { error } = await supabase

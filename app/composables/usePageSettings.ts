@@ -6,6 +6,7 @@ export interface PageSettings {
   indexHeroVideo: string
   aboutHeroImage: string
   aboutHeroVideo: string
+  aboutBelieveImage: string
   blogHeroImage: string
   blogHeroVideo: string
   servicesBrandingImage: string
@@ -24,6 +25,7 @@ const defaultSettings: PageSettings = {
   indexHeroVideo: '',
   aboutHeroImage: '/Images/Branding.jpeg',
   aboutHeroVideo: '/Background_Videos/About.mp4',
+  aboutBelieveImage: '/Images/what_we_believe.png',
   blogHeroImage: '/Images/Branding.jpeg',
   blogHeroVideo: '/Background_Videos/Blog.mp4',
   servicesBrandingImage: '/Images/Branding.jpeg',
@@ -45,6 +47,7 @@ function mapDbToSettings(db: DbPageSettings): PageSettings {
     indexHeroVideo: db.index_hero_video || '',
     aboutHeroImage: db.about_hero_image || '/Images/Branding.jpeg',
     aboutHeroVideo: db.about_hero_video || '/Background_Videos/About.mp4',
+    aboutBelieveImage: db.about_believe_image || '/Images/what_we_believe.png',
     blogHeroImage: db.blog_hero_image || '/Images/Branding.jpeg',
     blogHeroVideo: db.blog_hero_video || '/Background_Videos/Blog.mp4',
     servicesBrandingImage: db.services_branding_image || '/Images/Branding.jpeg',
@@ -65,6 +68,7 @@ function mapSettingsToDb(settings: PageSettings): Omit<Database['public']['Table
     index_hero_video: settings.indexHeroVideo,
     about_hero_image: settings.aboutHeroImage,
     about_hero_video: settings.aboutHeroVideo,
+    about_believe_image: settings.aboutBelieveImage,
     blog_hero_image: settings.blogHeroImage,
     blog_hero_video: settings.blogHeroVideo,
     services_branding_image: settings.servicesBrandingImage,
