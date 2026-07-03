@@ -1,12 +1,6 @@
 <script setup lang="ts">
-const logos = [
-  { src: '/Images/Client_Logo/le_crown_brown-01_1@2x.png', alt: 'Le Crown Hotel' },
-  { src: '/Images/Client_Logo/COLOR_2_1@2x.png', alt: 'Take My Family' },
-  { src: '/Images/Client_Logo/IMG_3097_1@2x.png', alt: 'TAB' },
-  { src: '/Images/Client_Logo/Pink_Label_logo_1@2x.png', alt: 'Pinklabel' },
-  { src: '/Images/Client_Logo/Asset_1@500x_1@2x.png', alt: 'Piok English' },
-  { src: '/Images/Client_Logo/Asset_1@500x_2@2x.png', alt: 'Go German' }
-]
+const { logos, fetchPromise } = useClientLogos()
+await fetchPromise
 </script>
 
 <template>
@@ -21,7 +15,7 @@ const logos = [
         <NuxtImg
           v-for="(logo, idx) in logos"
           :key="`first-${idx}`"
-          :src="logo.src"
+          :src="logo.image_url"
           :alt="logo.alt"
           loading="lazy"
           format="webp"
@@ -36,7 +30,7 @@ const logos = [
         <NuxtImg
           v-for="(logo, idx) in logos"
           :key="`second-${idx}`"
-          :src="logo.src"
+          :src="logo.image_url"
           :alt="logo.alt"
           loading="lazy"
           format="webp"

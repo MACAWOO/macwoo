@@ -23,6 +23,7 @@ const { jobs: careers, addJob, updateJob, deleteJob, resetCareers } = useCareers
 const { caseStudies, addCaseStudy, updateCaseStudy, deleteCaseStudy, resetCaseStudies } = useCaseStudies()
 const { settings, updateSettings, resetSettings } = usePageSettings()
 const { categories, addCategory, deleteCategory, resetCategories } = useCategories()
+const { logos: clientLogos, addLogo, updateLogo, deleteLogo } = useClientLogos()
 
 const newCategory = ref('')
 function submitCategory() {
@@ -33,6 +34,16 @@ function submitCategory() {
   newCategory.value = ''
 }
 
+// Client logo (carousel) add form
+const newLogo = ref({ image_url: '', alt: '' })
+function submitLogo() {
+  const url = newLogo.value.image_url.trim()
+  if (!url) return
+  addLogo(url, newLogo.value.alt)
+  logAction('add', 'Client Logo', newLogo.value.alt || url)
+  newLogo.value = { image_url: '', alt: '' }
+}
+
 useSeoMeta({
   title: 'Site Administration — Macawoo',
   description: 'Control center for updating Macawoo content.',
@@ -41,7 +52,7 @@ useSeoMeta({
 
 // Navigation & SPA view states
 type View = 'dashboard' | 'list' | 'change'
-type ModelType = 'blog' | 'portfolio' | 'case-study' | 'career' | 'page-settings' | 'uploads' | 'categories'
+type ModelType = 'blog' | 'portfolio' | 'case-study' | 'career' | 'page-settings' | 'uploads' | 'categories' | 'client-logos'
 
 const currentView = ref<View>('dashboard')
 const currentModel = ref<ModelType>('blog')
@@ -62,7 +73,8 @@ const searchQueries = reactive({
   'career': '',
   'page-settings': '',
   'uploads': '',
-  'categories': ''
+  'categories': '',
+  'client-logos': ''
 })
 
 const activeFilters = reactive({
@@ -80,7 +92,8 @@ const sortKeys = reactive({
   'career': 'title',
   'page-settings': '',
   'uploads': '',
-  'categories': ''
+  'categories': '',
+  'client-logos': ''
 })
 
 const sortOrders = reactive({
@@ -90,7 +103,8 @@ const sortOrders = reactive({
   'career': 'asc',
   'page-settings': 'asc',
   'uploads': 'asc',
-  'categories': 'asc'
+  'categories': 'asc',
+  'client-logos': 'asc'
 })
 
 // Recent actions log
@@ -238,6 +252,11 @@ const handleMediaSelect = (url: string) => {
   if (activeFieldRef.value) {
     const { obj, key } = activeFieldRef.value
     obj[key] = url
+    // Persist immediately when replacing an existing client logo row
+    if (key === 'image_url' && obj.id && clientLogos.value.some(l => l.id === obj.id)) {
+      updateLogo(obj.id, { image_url: url })
+      logAction('change', 'Client Logo', obj.alt || url)
+    }
   }
   isMediaPickerOpen.value = false
   activeFieldRef.value = null
@@ -649,7 +668,8 @@ const breadcrumbs = computed(() => {
     'career': 'Careers',
     'page-settings': 'Page Settings',
     'uploads': 'Media Library',
-    'categories': 'Categories'
+    'categories': 'Categories',
+    'client-logos': 'Client Logos'
   }
 
   crumbs.push({
@@ -1002,6 +1022,22 @@ const filteredCareers = computed(() => {
                   </button>
                 </div>
               </div>
+              <div class="flex items-center justify-between px-2.5 py-1 text-xs hover:bg-zinc-50 rounded">
+                <button
+                  class="text-zinc-700 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left"
+                  @click="navigateTo('list', 'client-logos')"
+                >
+                  Client Logos
+                </button>
+                <div class="flex gap-2">
+                  <button
+                    class="text-[10px] text-zinc-400 hover:text-zinc-700 cursor-pointer bg-transparent border-0"
+                    @click="navigateTo('list', 'client-logos')"
+                  >
+                    View
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1316,6 +1352,119 @@ const filteredCareers = computed(() => {
                         class="p-4 text-center text-zinc-400 italic"
                       >
                         No categories created yet.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </template>
+          <template v-else-if="currentModel === 'client-logos'">
+            <!-- Client Logos Carousel Management View -->
+            <div class="space-y-6 bg-white border border-[#e0e0e0] p-6 rounded shadow-sm">
+              <div class="border-b border-[#e0e0e0] pb-3 flex items-center justify-between">
+                <h2 class="text-base font-bold text-zinc-700">
+                  Manage Client Logos
+                </h2>
+                <span class="text-xs text-zinc-400">Logos shown in the homepage scrolling carousel.</span>
+              </div>
+
+              <!-- Add logo inline form -->
+              <form
+                class="flex flex-wrap gap-3 items-end bg-zinc-50 p-4 border border-zinc-200 rounded-lg"
+                @submit.prevent="submitLogo"
+              >
+                <div class="flex flex-col gap-1">
+                  <label class="text-xs font-bold text-zinc-700">Logo Image</label>
+                  <div class="flex items-center gap-2">
+                    <img
+                      v-if="newLogo.image_url"
+                      :src="newLogo.image_url"
+                      alt="preview"
+                      class="h-9 w-auto max-w-24 object-contain border border-zinc-200 rounded bg-white p-1"
+                    >
+                    <button
+                      type="button"
+                      class="px-3 py-1.5 bg-zinc-700 hover:bg-zinc-800 text-white text-xs font-bold rounded shadow-sm cursor-pointer"
+                      @click="openMediaPicker(newLogo, 'image_url')"
+                    >
+                      {{ newLogo.image_url ? 'Change Image' : 'Select Image' }}
+                    </button>
+                  </div>
+                </div>
+                <div class="flex flex-col gap-1 flex-1 min-w-40">
+                  <label class="text-xs font-bold text-zinc-700">Alt / Client Name</label>
+                  <input
+                    v-model="newLogo.alt"
+                    name="logoAlt"
+                    type="text"
+                    placeholder="e.g. Le Crown Hotel"
+                    class="px-3 py-1.5 border border-zinc-300 rounded text-xs bg-white focus:outline-none focus:border-[#0596B8]"
+                  >
+                </div>
+                <button
+                  type="submit"
+                  class="px-4 py-1.5 bg-[#0596B8] hover:bg-[#15809c] text-white text-xs font-bold rounded shadow-sm cursor-pointer"
+                >
+                  + Add Logo
+                </button>
+              </form>
+
+              <!-- Logos List -->
+              <div class="border border-[#e0e0e0] rounded overflow-hidden">
+                <table class="w-full text-xs text-left border-collapse bg-white">
+                  <thead>
+                    <tr class="bg-[#141111] text-white font-bold border-b border-[#e0e0e0]">
+                      <th class="p-3 w-28">
+                        Preview
+                      </th>
+                      <th class="p-3">
+                        Alt / Client Name
+                      </th>
+                      <th class="p-3 text-right w-36">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="logo in clientLogos"
+                      :key="logo.id"
+                      class="border-b border-[#e0e0e0] hover:bg-zinc-50"
+                    >
+                      <td class="p-3">
+                        <img
+                          :src="logo.image_url"
+                          :alt="logo.alt"
+                          class="h-8 w-auto max-w-24 object-contain"
+                        >
+                      </td>
+                      <td class="p-3 font-semibold text-zinc-800">
+                        {{ logo.alt || '—' }}
+                      </td>
+                      <td class="p-3 text-right space-x-3">
+                        <button
+                          type="button"
+                          class="text-[#0596B8] hover:underline cursor-pointer bg-transparent border-0 p-0 font-semibold"
+                          @click="openMediaPicker(logo, 'image_url')"
+                        >
+                          Replace
+                        </button>
+                        <button
+                          type="button"
+                          class="text-red-600 hover:underline cursor-pointer bg-transparent border-0 p-0 font-semibold"
+                          @click="deleteLogo(logo.id); logAction('delete', 'Client Logo', logo.alt || logo.image_url)"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                    <tr v-if="clientLogos.length === 0">
+                      <td
+                        colspan="3"
+                        class="p-4 text-center text-zinc-400 italic"
+                      >
+                        No client logos added yet.
                       </td>
                     </tr>
                   </tbody>

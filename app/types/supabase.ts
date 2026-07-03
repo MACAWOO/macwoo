@@ -225,6 +225,30 @@ export type Database = {
         }
         Relationships: []
       }
+      client_logos: {
+        Row: {
+          alt: string
+          created_at: string
+          id: string
+          image_url: string
+          sort_order: number
+        }
+        Insert: {
+          alt?: string
+          created_at?: string
+          id?: string
+          image_url: string
+          sort_order?: number
+        }
+        Update: {
+          alt?: string
+          created_at?: string
+          id?: string
+          image_url?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
       contact_submissions: {
         Row: {
           email: string
