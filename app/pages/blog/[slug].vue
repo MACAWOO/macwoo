@@ -22,13 +22,23 @@ const absoluteImageUrl = computed(() => {
   return `${siteUrl}${img.startsWith('/') ? '' : '/'}${img}`
 })
 
+const publishedIso = computed(() => post.value?.date ? new Date(post.value.date).toISOString() : undefined)
+const articleBody = computed(() =>
+  (post.value?.body || []).map(s => [s.heading, s.content].filter(Boolean).join(' ')).join('\n\n')
+)
+const wordCount = computed(() => articleBody.value ? articleBody.value.trim().split(/\s+/).length : 0)
+const category = computed(() => (post.value as { category?: string } | undefined)?.category)
+
 useSeoMeta({
   title: () => post.value ? `${post.value.title} — Macawoo Blog` : 'Macawoo Blog',
   description: () => post.value ? post.value.excerpt : '',
+  keywords: () => [post.value?.title, category.value, 'Macawoo blog', 'branding', 'digital marketing'].filter(Boolean).join(', '),
   ogTitle: () => post.value ? `${post.value.title} — Macawoo Blog` : 'Macawoo Blog',
   ogDescription: () => post.value ? post.value.excerpt : '',
   ogType: 'article',
   ogImage: absoluteImageUrl,
+  articlePublishedTime: publishedIso,
+  articleSection: category,
   twitterCard: 'summary_large_image',
   twitterImage: absoluteImageUrl
 })
@@ -46,9 +56,15 @@ useHead({
               '@type': 'BlogPosting',
               '@id': `${siteUrl}/blog/${slug}#blogposting`,
               'url': `${siteUrl}/blog/${slug}`,
+              'mainEntityOfPage': `${siteUrl}/blog/${slug}`,
               'headline': post.value.title,
               'description': post.value.excerpt,
-              'datePublished': post.value.date ? new Date(post.value.date).toISOString() : undefined,
+              'inLanguage': 'en',
+              'datePublished': publishedIso.value,
+              'dateModified': publishedIso.value,
+              'articleSection': category.value || undefined,
+              'keywords': [post.value.title, category.value].filter(Boolean).join(', '),
+              'wordCount': wordCount.value || undefined,
               'image': absoluteImageUrl.value,
               'author': {
                 '@type': 'Organization',

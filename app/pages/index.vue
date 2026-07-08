@@ -4,6 +4,7 @@
 useSeoMeta({
   title: 'Macawoo — Creative & Strategy Branding Agency in Kochi',
   description: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
+  keywords: 'digital marketing agency India, online marketing company in india, top 10 digital marketing company in india, advertising agency in india, influencer marketing agency Kerala',
   ogTitle: 'Macawoo — Creative & Strategy Branding Agency in Kochi',
   ogDescription: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.'
 })

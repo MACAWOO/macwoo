@@ -2,6 +2,7 @@
 useSeoMeta({
   title: 'Digital Marketing & Growth Campaigns — Macawoo Kochi',
   description: 'Data-driven campaigns that reach the right audience, tell the right story, and deliver measurable results.',
+  keywords: 'digital marketing agency India, online marketing company in india, top 10 digital marketing company in india, advertising agency in india, influencer marketing agency Kerala',
   ogTitle: 'Digital Marketing & Growth Campaigns — Macawoo Kochi',
   ogDescription: 'Data-driven campaigns that reach the right audience, tell the right story, and deliver measurable results.'
 })

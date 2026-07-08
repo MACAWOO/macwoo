@@ -10,6 +10,7 @@ await Promise.all([
 useSeoMeta({
   title: 'Macawoo Blog — Insights on Branding, Design & Marketing',
   description: 'Ideas, insights & stories that drive brands. The Macawoo journal on branding, marketing, and creative strategy.',
+  keywords: 'branding blog, digital marketing insights, design strategy, creative agency blog, marketing tips India',
   ogTitle: 'Macawoo Blog — Insights on Branding, Design & Marketing',
   ogDescription: 'Ideas, insights & stories that drive brands. The Macawoo journal on branding, marketing, and creative strategy.'
 })
@@ -19,16 +20,37 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      innerHTML: JSON.stringify({
+      innerHTML: computed(() => JSON.stringify({
         '@context': 'https://schema.org',
         '@graph': [
           {
-            '@type': 'CollectionPage',
+            '@type': 'Blog',
             '@id': `${siteUrl}/blog#webpage`,
             'url': `${siteUrl}/blog`,
             'name': 'Macawoo Blog — Insights on Branding, Design & Marketing',
             'description': 'Ideas, insights & stories that drive brands. The Macawoo journal on branding, marketing, and creative strategy.',
-            'isPartOf': { '@id': `${siteUrl}/#website` }
+            'inLanguage': 'en',
+            'isPartOf': { '@id': `${siteUrl}/#website` },
+            'publisher': { '@id': `${siteUrl}/#organization` },
+            'blogPost': posts.value.map(p => ({
+              '@type': 'BlogPosting',
+              'headline': p.title,
+              'description': p.excerpt,
+              'url': `${siteUrl}/blog/${p.slug}`,
+              'datePublished': p.date ? new Date(p.date).toISOString() : undefined,
+              'image': p.image?.startsWith('http') ? p.image : `${siteUrl}${p.image?.startsWith('/') ? '' : '/'}${p.image}`,
+              'author': { '@id': `${siteUrl}/#organization` }
+            }))
+          },
+          {
+            '@type': 'ItemList',
+            '@id': `${siteUrl}/blog#postlist`,
+            'itemListElement': posts.value.map((p, i) => ({
+              '@type': 'ListItem',
+              'position': i + 1,
+              'url': `${siteUrl}/blog/${p.slug}`,
+              'name': p.title
+            }))
           },
           {
             '@type': 'BreadcrumbList',
@@ -49,7 +71,7 @@ useHead({
             ]
           }
         ]
-      })
+      }))
     }
   ]
 })
