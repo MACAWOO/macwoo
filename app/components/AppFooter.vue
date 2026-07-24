@@ -131,7 +131,12 @@ const isYellowMode = computed(() => {
               :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               class="text-sm md:text-base font-semibold"
             >
-              +91 9747477502
+              <a
+                href="tel:+919747477502"
+                class="hover:underline transition-all"
+              >
+                +91 9747477502
+              </a>
             </li>
             <li
               :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
@@ -143,7 +148,12 @@ const isYellowMode = computed(() => {
               :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
               class="text-sm md:text-base break-all"
             >
-              info@macawoo.co
+              <a
+                href="mailto:info@macawoo.co"
+                class="hover:underline transition-all"
+              >
+                info@macawoo.co
+              </a>
             </li>
           </ul>
         </div>

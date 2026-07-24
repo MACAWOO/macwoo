@@ -311,14 +311,16 @@ const logos = [
           <video
             v-else
             :key="'native-' + settings.servicesVideoShowreel"
+            :src="settings.servicesVideoShowreel"
             class="w-full h-full object-cover"
             controls
+            playsinline
+            webkit-playsinline="true"
+            preload="metadata"
+            crossorigin="anonymous"
             poster="/Images/Video_Production.jpeg"
           >
-            <source
-              :src="settings.servicesVideoShowreel"
-              type="video/mp4"
-            >
+            <source :src="settings.servicesVideoShowreel">
           </video>
         </div>
       </div>

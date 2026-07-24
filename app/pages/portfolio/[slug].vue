@@ -429,9 +429,13 @@ const isVideoUrl = (url?: string) => {
             <video
               v-else-if="isVideoUrl(media)"
               :src="media"
-              playsinline
-              loop
+              autoplay
               muted
+              playsinline
+              webkit-playsinline="true"
+              loop
+              preload="auto"
+              crossorigin="anonymous"
               class="w-full h-full object-cover rounded-[28px] pointer-events-none"
             />
             <NuxtImg
@@ -477,7 +481,10 @@ const isVideoUrl = (url?: string) => {
           :src="project.galleryImages[galleryIndex]"
           controls
           playsinline
+          webkit-playsinline="true"
           loop
+          preload="metadata"
+          crossorigin="anonymous"
           class="w-full h-full object-cover rounded-[28px]"
         />
         <NuxtImg

@@ -523,8 +523,8 @@ onUnmounted(() => {
       ref="whatWeDoTrackRef"
       :class="isMobile ? 'relative h-auto bg-white' : 'relative h-[300vh] bg-white'"
     >
-      <div :class="isMobile ? 'relative h-auto w-full flex flex-col justify-between py-16 bg-white' : 'sticky top-0 h-screen w-full flex flex-col justify-between py-16 bg-white overflow-hidden'">
-        <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8 flex-1 flex flex-col justify-between gap-8">
+      <div :class="isMobile ? 'relative h-auto w-full flex flex-col justify-between py-16 bg-white' : 'sticky top-0 h-screen w-full flex flex-col justify-between pt-[115px] pb-10 bg-white overflow-hidden'">
+        <div class="max-w-[1266px] w-full mx-auto px-6 md:px-8 flex-1 flex flex-col justify-between gap-4 md:gap-5">
           <!-- Header (Centered) -->
           <div
             class="text-center shrink-0 will-change-transform"

@@ -577,6 +577,10 @@ const filteredFiles = computed(() => {
                   v-else-if="selectedFile.isVideo"
                   :src="selectedFile.publicUrl"
                   controls
+                  playsinline
+                  webkit-playsinline="true"
+                  preload="metadata"
+                  crossorigin="anonymous"
                   class="w-full h-full object-contain"
                 />
                 <div

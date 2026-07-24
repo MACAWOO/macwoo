@@ -48,6 +48,22 @@ const bPreloaded = ref(false)
 
 const handleVideoPlayable = () => {
   videoLoaded.value = true
+  tryPlayVideoA()
+}
+
+const tryPlayVideoA = () => {
+  const elA = videoARef.value
+  if (!elA) return
+  elA.muted = true
+  elA.playsInline = true
+  const playPromise = elA.play()
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      videoLoaded.value = true
+    }).catch(err => {
+      console.warn('Video A play prevented by browser/Opera autoplay policy:', err)
+    })
+  }
 }
 
 // Video B starts with preload="none" so the hero video isn't downloaded twice
@@ -74,6 +90,8 @@ const handleTimeUpdateA = () => {
   if (activeVideo.value === 'A' && elA.currentTime >= duration - crossfadeTime) {
     switching.value = true
     elB.currentTime = 0
+    elB.muted = true
+    elB.playsInline = true
     elB.play().then(() => {
       activeVideo.value = 'B'
       opacityA.value = 0
@@ -102,6 +120,8 @@ const handleTimeUpdateB = () => {
   if (activeVideo.value === 'B' && elB.currentTime >= duration - crossfadeTime) {
     switching.value = true
     elA.currentTime = 0
+    elA.muted = true
+    elA.playsInline = true
     elA.play().then(() => {
       activeVideo.value = 'A'
       opacityB.value = 0
@@ -124,6 +144,9 @@ watch(() => props.video, () => {
   switching.value = false
   videoLoaded.value = false
   bPreloaded.value = false
+  nextTick(() => {
+    tryPlayVideoA()
+  })
 })
 
 useHead({
@@ -157,7 +180,18 @@ const scrollToNext = () => {
   })
 }
 
+const handleFirstUserInteraction = () => {
+  if (videoARef.value && videoARef.value.paused) {
+    tryPlayVideoA()
+  }
+}
+
 onMounted(() => {
+  tryPlayVideoA()
+  window.addEventListener('pointerdown', handleFirstUserInteraction, { passive: true, once: true })
+  window.addEventListener('touchstart', handleFirstUserInteraction, { passive: true, once: true })
+  window.addEventListener('click', handleFirstUserInteraction, { passive: true, once: true })
+
   if (props.showScrollIndicator) {
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll()
@@ -166,6 +200,9 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('pointerdown', handleFirstUserInteraction)
+  window.removeEventListener('touchstart', handleFirstUserInteraction)
+  window.removeEventListener('click', handleFirstUserInteraction)
 })
 </script>
 
@@ -186,35 +223,36 @@ onUnmounted(() => {
       <!-- Video A -->
       <video
         ref="videoARef"
+        :src="video"
         autoplay
         muted
         playsinline
+        webkit-playsinline="true"
         preload="auto"
+        crossorigin="anonymous"
         class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
         :style="{ opacity: opacityA }"
         @timeupdate="handleTimeUpdateA"
         @loadeddata="handleVideoPlayable"
+        @canplay="handleVideoPlayable"
       >
-        <source
-          :src="video"
-          type="video/mp4"
-        >
+        <source :src="video">
       </video>
 
       <!-- Video B -->
       <video
         ref="videoBRef"
+        :src="video"
         muted
         playsinline
-        preload="none"
+        webkit-playsinline="true"
+        preload="auto"
+        crossorigin="anonymous"
         class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
         :style="{ opacity: opacityB }"
         @timeupdate="handleTimeUpdateB"
       >
-        <source
-          :src="video"
-          type="video/mp4"
-        >
+        <source :src="video">
       </video>
     </div>
 
