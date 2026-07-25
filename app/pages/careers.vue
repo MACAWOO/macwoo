@@ -77,7 +77,10 @@ const handleJobClick = (job: typeof jobs.value[number]) => {
             <h2 class="text-[38px] md:text-[52px] font-medium text-[#F7EC12] mb-6 leading-[1.2] font-fredoka">
               We Engineer<br>Digital Excellence.
             </h2>
-            <p class="text-white text-base md:text-[20px] leading-[1.5] mb-8 font-normal max-w-2xl" style="font-family: 'Bricolage Grotesque', sans-serif;">
+            <p
+              class="text-white text-base md:text-[20px] leading-[1.5] mb-8 font-normal max-w-2xl"
+              style="font-family: 'Bricolage Grotesque', sans-serif;"
+            >
               At Macawoo, we don't just execute; we architect. We value raw creative energy paired with executive-level precision. Here, your work isn't just a project—it's a strategic asset for ambitious founders. We foster an environment where bold ideas are stress-tested and brilliant execution is the baseline.
             </p>
             <!-- Two yellow cards -->
@@ -87,10 +90,16 @@ const handleJobClick = (job: typeof jobs.value[number]) => {
                   name="i-lucide-rocket"
                   class="w-6 h-6 text-black mb-3 shrink-0"
                 />
-                <h3 class="font-bold text-[18px] text-black mb-1" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                <h3
+                  class="font-bold text-[18px] text-black mb-1"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >
                   Accelerated Growth
                 </h3>
-                <p class="text-black text-xs md:text-[13px] leading-relaxed" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                <p
+                  class="text-black text-xs md:text-[13px] leading-relaxed"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >
                   Continuous learning and opportunities to lead high-impact initiatives.
                 </p>
               </div>
@@ -99,10 +108,16 @@ const handleJobClick = (job: typeof jobs.value[number]) => {
                   name="i-lucide-users"
                   class="w-6 h-6 text-black mb-3 shrink-0"
                 />
-                <h3 class="font-bold text-[18px] text-black mb-1" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                <h3
+                  class="font-bold text-[18px] text-black mb-1"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >
                   Visionary Team
                 </h3>
-                <p class="text-black text-xs md:text-[13px] leading-relaxed" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                <p
+                  class="text-black text-xs md:text-[13px] leading-relaxed"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >
                   Collaborate with top-tier talent pushing the boundaries of design and tech.
                 </p>
               </div>
@@ -142,31 +157,30 @@ const handleJobClick = (job: typeof jobs.value[number]) => {
           <div
             v-for="job in jobs"
             :key="job.id"
-            class="border-b border-brand-yellow-500 py-8 flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer group transition-colors duration-200"
+            class="border-b border-brand-yellow-500 py-8 px-6 md:px-8 flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer group transition-all duration-300 ease-out hover:bg-[#F7EC12] hover:rounded-[12px] hover:border-b-transparent"
             @click="handleJobClick(job)"
           >
             <!-- Left Side: Dept/Loc + Job Title -->
             <div class="flex-1">
-              <p class="text-white/70 text-xs font-semibold uppercase tracking-wider mb-2">
+              <p class="text-white/70 group-hover:text-[#0596B8]/70 text-xs font-semibold uppercase tracking-wider mb-2 transition-colors duration-300">
                 {{ job.department }} · {{ job.location }}
               </p>
-              <h3 class="text-2xl md:text-3xl lg:text-[36px] font-medium text-brand-yellow-500 uppercase tracking-wide group-hover:text-white transition-colors duration-200">
+              <h3 class="text-2xl md:text-3xl lg:text-[36px] font-semibold text-brand-yellow-500 group-hover:text-[#0596B8] uppercase tracking-wide transition-colors duration-300">
                 {{ job.title }}
               </h3>
             </div>
 
             <!-- Right Side: Experience + Type Pill + Yellow Arrow -->
             <div class="flex items-center gap-6 md:gap-8 shrink-0 flex-wrap sm:flex-nowrap">
-              <span class="text-white text-sm md:text-base font-semibold tracking-wide">
+              <span class="text-white group-hover:text-[#0596B8] text-sm md:text-base font-semibold tracking-wide transition-colors duration-300">
                 {{ job.experience }}
               </span>
-              <span class="text-white text-xs font-bold border border-white px-5 py-2 rounded-full tracking-wider uppercase">
+              <span class="text-white group-hover:text-[#0596B8] text-xs font-bold border border-white group-hover:border-[#0596B8] px-5 py-2 rounded-full tracking-wider uppercase transition-colors duration-300">
                 {{ job.type }}
               </span>
               <!-- Arrow icon -->
-              <UIcon
-                name="i-lucide-arrow-up-right"
-                class="w-8 h-8 md:w-10 md:h-10 text-brand-yellow-500 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 duration-200"
+              <UpRightArrow
+                class="w-8 h-8 md:w-10 md:h-10 text-brand-yellow-500 group-hover:text-[#0596B8] transition-all group-hover:rotate-90 group-hover:translate-x-1 group-hover:translate-y-1 duration-300"
               />
             </div>
           </div>
