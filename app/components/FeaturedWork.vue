@@ -121,7 +121,7 @@ onUnmounted(() => {
       <div class="mt-14 md:mt-16">
         <NuxtLink
           to="/portfolio"
-          class="group/btn w-full flex items-center justify-center gap-2.5 py-4 bg-[#F7EC12] hover:bg-[#dce400] text-black text-[15px] md:text-[16px] font-bold rounded-full transition-all duration-300 ease-out hover:-translate-y-[1px]"
+          class="group/btn w-full flex items-center justify-center gap-2.5 py-4 bg-[#F7EC12] text-black text-[15px] md:text-[16px] font-bold rounded-full transition-all duration-300 ease-out hover:-translate-y-[1px] hover:shadow-[0_0_20px_rgba(247,236,18,0.65)]"
           style="font-family: 'Bricolage Grotesque', sans-serif;"
         >
           <span>View All Projects</span>

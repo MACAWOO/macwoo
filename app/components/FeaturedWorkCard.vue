@@ -31,14 +31,14 @@ defineProps<Props>()
     <!-- Title + category pill -->
     <div class="mt-3">
       <h3
-        class="text-white text-[20px] md:text-[22px] font-medium leading-tight mb-2"
+        class="text-white text-[20px] md:text-[22px] font-medium leading-tight mb-2 transition-colors duration-300 ease-out group-hover:text-[#F7EC12]"
         style="font-family: 'Bricolage Grotesque', sans-serif;"
       >
         {{ project.title }}
       </h3>
       <span
-        class="inline-block px-4 py-1.5 rounded-full text-white text-[13px] md:text-[14px] font-normal leading-none select-none"
-        style="font-family: 'Bricolage Grotesque', sans-serif; border: 1.2px solid rgba(255, 255, 255, 0.45);"
+        class="inline-block px-4 py-1.5 rounded-full text-white text-[13px] md:text-[14px] font-normal leading-none select-none border-[1.2px] border-white/45 transition-all duration-300 ease-out delay-75 group-hover:bg-[#F7EC12] group-hover:text-[#0596B8] group-hover:border-[#F7EC12]"
+        style="font-family: 'Bricolage Grotesque', sans-serif;"
       >
         {{ project.category }}
       </span>

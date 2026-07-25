@@ -24,8 +24,11 @@ const currentY = ref(0)
 const hasMoved = ref(false)
 
 // Spotlight radius (lerped for fluid feel)
-const targetRadius = ref(30) // default 30px radius = 60px diameter
-const currentRadius = ref(30)
+const targetRadius = ref(20) // default 20px radius = 40px diameter
+const currentRadius = ref(20)
+
+// Hover state stabilisation timer
+let hoverTimeout = null
 
 // Click / press feedback
 const isPressed = ref(false)
@@ -45,6 +48,9 @@ const reducedMotion = ref(false)
 
 const scrollX = ref(0)
 const scrollY = ref(0)
+
+const isScrolling = ref(false)
+let scrollStopTimeout = null
 
 // Animation Frame ID
 let rafId = null
@@ -68,38 +74,38 @@ const syncDOM = () => {
   const original = document.getElementById('original-site')
   const clonedSite = document.getElementById('cloned-site')
   if (!original || !clonedSite) return
-  
+
   // Clone the node tree
   const clone = original.cloneNode(true)
-  
+
   // Clean up interactive/resource-heavy elements
   const selectorsToStrip = [
-    'iframe', 
-    'video', 
-    'audio', 
-    'script', 
-    'object', 
+    'iframe',
+    'video',
+    'audio',
+    'script',
+    'object',
     'embed',
-    '.chat-widget-container', 
-    '.drift-frame-controller', 
+    '.chat-widget-container',
+    '.drift-frame-controller',
     '#hubspot-messages-iframe-container',
     '#drift-widget'
   ]
-  selectorsToStrip.forEach(selector => {
+  selectorsToStrip.forEach((selector) => {
     clone.querySelectorAll(selector).forEach(el => el.remove())
   })
-  
+
   // Remove IDs to avoid duplicates in the DOM
   clone.removeAttribute('id')
   clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'))
-  
+
   // Make the entire clone inert so it doesn't accept tab focus or screen reader announcements
   clone.setAttribute('inert', '')
-  
+
   // Swap the contents
   clonedSite.innerHTML = ''
   clonedSite.appendChild(clone)
-  
+
   // Immediate scroll sync after appending
   syncScroll()
 }
@@ -113,8 +119,22 @@ const queueSyncDOM = () => {
 // Scroll Syncing
 const syncScroll = () => {
   if (typeof window !== 'undefined') {
-    scrollX.value = window.scrollX
-    scrollY.value = window.scrollY
+    const newX = window.scrollX
+    const newY = window.scrollY
+
+    // If scroll position changed, set isScrolling state
+    if (newX !== scrollX.value || newY !== scrollY.value) {
+      isScrolling.value = true
+      if (scrollStopTimeout) clearTimeout(scrollStopTimeout)
+      scrollStopTimeout = setTimeout(() => {
+        isScrolling.value = false
+        // Update DOM clone once scrolling has completely stopped
+        queueSyncDOM()
+      }, 150)
+    }
+
+    scrollX.value = newX
+    scrollY.value = newY
   }
 }
 
@@ -124,13 +144,13 @@ const isCursorHidden = ref(false)
 // Main Mouse Move Handler
 const handleMouseMove = (e) => {
   if (isMobile.value) return
-  
+
   if (!hasMoved.value) {
     hasMoved.value = true
     currentX.value = e.clientX
     currentY.value = e.clientY
   }
-  
+
   mouseX.value = e.clientX
   mouseY.value = e.clientY
   isVisible.value = true
@@ -151,16 +171,33 @@ const handleMouseMove = (e) => {
   const target = e.target
   if (target) {
     // Check if hovering over interactive elements
-    const isInteractive = target.closest('a, button, [role="button"], input, textarea, select, .cursor-pointer, .interactive-cursor') !== null
-    isHovering.value = isInteractive
-    targetRadius.value = isInteractive ? 45 : 30
+    const interactiveEl = target.closest('a, button, [role="button"], input, textarea, select, .cursor-pointer, .interactive-cursor')
+    const isInteractive = interactiveEl !== null
+
+    if (isInteractive) {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout)
+        hoverTimeout = null
+      }
+      isHovering.value = true
+      targetRadius.value = 32 // reduced size from 45
+    } else {
+      if (!hoverTimeout) {
+        hoverTimeout = setTimeout(() => {
+          isHovering.value = false
+          targetRadius.value = 20 // reduced size from 30
+          hoverTimeout = null
+        }, 80) // 80ms hysteresis buffer prevents rapid flickering on borders
+      }
+    }
 
     // Check if hovering over hero section or navbar header
     const insideHero = target.closest('.site-hero-section') !== null
     const insideHeader = target.closest('header, .site-header-section') !== null
     const insideExclude = target.closest('.site-exclude-reveal') !== null
-    
-    isExcludedSection.value = insideHero || insideHeader || insideExclude
+    const insideNoReveal = target.closest('.no-reveal-spotlight') !== null
+
+    isExcludedSection.value = insideHero || insideHeader || insideExclude || insideNoReveal
     isCursorHidden.value = insideExclude
 
     if (isCursorHidden.value) {
@@ -201,12 +238,15 @@ const lerp = (start, end, factor) => start + (end - start) * factor
 // Animation Loop
 const updateCursor = () => {
   if (!isMobile.value) {
-    // Snappier follow when hovering interactive targets so the ring feels
-    // "locked on"; reduced-motion users get an instant snap.
-    const follow = reducedMotion.value ? 1 : (isHovering.value ? 0.2 : 0.14)
+    // Snappier follow factor (0.32 on hover, 0.24 default) to minimize lag
+    const follow = reducedMotion.value ? 1 : (isHovering.value ? 0.32 : 0.24)
+
     currentX.value = lerp(currentX.value, mouseX.value, follow)
     currentY.value = lerp(currentY.value, mouseY.value, follow)
-    currentRadius.value = lerp(currentRadius.value, targetRadius.value, follow)
+
+    // Smooth Radius Transitions: Dedicated slower lerp factor for radius (0.10) to make it smooth and soft
+    const radiusFollow = reducedMotion.value ? 1 : 0.10
+    currentRadius.value = lerp(currentRadius.value, targetRadius.value, radiusFollow)
 
     // Ease velocity toward 0 so squash-stretch relaxes when the mouse stops
     velX.value = lerp(velX.value, 0, 0.2)
@@ -223,6 +263,8 @@ watch(
   () => route.fullPath,
   () => {
     if (isMobile.value || !supportsReveal.value) return
+    // Position Jump Fix: Sync scroll immediately on route change to prevent coordinate jumps
+    syncScroll()
     nextTick(() => {
       syncDOM()
       // Multiple fallbacks for dynamic content loads or route transition durations
@@ -277,7 +319,7 @@ onMounted(() => {
         document.body.classList.remove('custom-cursor-active')
       }
     }, { passive: true })
-    
+
     // Start animation loop
     updateCursor()
   }
@@ -288,6 +330,8 @@ onBeforeUnmount(() => {
   if (observer) observer.disconnect()
   if (debounceTimeout) clearTimeout(debounceTimeout)
   if (idleTimeout) clearTimeout(idleTimeout)
+  if (hoverTimeout) clearTimeout(hoverTimeout)
+  if (scrollStopTimeout) clearTimeout(scrollStopTimeout)
 
   if (typeof window !== 'undefined') {
     window.removeEventListener('mousemove', handleMouseMove)
@@ -333,7 +377,7 @@ const targetDotStyle = computed(() => {
 const lerpDotStyle = computed(() => {
   if (!isVisible.value || !hasMoved.value || isCursorHidden.value) return { display: 'none' }
 
-  const base = currentRadius.value / 30
+  const base = currentRadius.value / 20
   const press = isPressed.value ? 0.8 : 1 // compress on click
   const scale = base * press
 
@@ -358,7 +402,7 @@ const lerpDotStyle = computed(() => {
 })
 
 const overlayStyle = computed(() => ({
-  opacity: isExcludedSection.value ? 0 : 1,
+  opacity: (isExcludedSection.value || isScrolling.value) ? 0 : 1,
   transition: 'opacity 0.25s ease'
 }))
 
@@ -367,13 +411,16 @@ const cloneStyle = computed(() => {
   const y = currentY.value
   return {
     'transform-origin': `${x}px ${y}px`,
-    'transform': `translate3d(${- (x - 150)}px, ${- (y - 150)}px, 0) scale(1.08) translate3d(-${scrollX.value}px, -${scrollY.value}px, 0)`
+    'transform': `translate3d(${-(x - 150)}px, ${-(y - 150)}px, 0) scale(1.0) translate3d(-${scrollX.value}px, -${scrollY.value}px, 0)`
   }
 })
 </script>
 
 <template>
-  <div v-if="isMounted && !isMobile" class="custom-cursor-wrapper">
+  <div
+    v-if="isMounted && !isMobile"
+    class="custom-cursor-wrapper"
+  >
     <!-- Overlay Layer for Swapped Colors (Chromium/WebKit only — Firefox
          cannot composite the masked clone without ghosting, so it falls back
          to just the cursor ring below) -->
@@ -382,23 +429,26 @@ const cloneStyle = computed(() => {
       id="reveal-overlay-wrapper"
       :style="overlayStyle"
     >
-      <div 
-        id="reveal-overlay" 
+      <div
+        id="reveal-overlay"
         :style="maskStyle"
       >
-        <div 
+        <div
           id="cloned-site"
           :style="cloneStyle"
-        ></div>
+        />
       </div>
     </div>
 
     <!-- Premium Custom Cursor Indicators -->
-    <div class="custom-cursor-dot-target" :style="targetDotStyle"></div>
+    <div
+      class="custom-cursor-dot-target"
+      :style="targetDotStyle"
+    />
     <div
       class="custom-cursor-dot-lerp"
       :class="{ 'is-interactive': isHovering, 'is-pressed': isPressed }"
       :style="lerpDotStyle"
-    ></div>
+    />
   </div>
 </template>

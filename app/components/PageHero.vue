@@ -246,7 +246,7 @@ onUnmounted(() => {
         muted
         playsinline
         webkit-playsinline="true"
-        preload="auto"
+        preload="none"
         crossorigin="anonymous"
         class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
         :style="{ opacity: opacityB }"
@@ -258,7 +258,7 @@ onUnmounted(() => {
 
     <!-- Static image background -->
     <NuxtImg
-      v-else-if="image"
+      v-if="image"
       :src="image"
       :alt="alt || titleHtml?.replace(/<[^>]*>/g, '') || 'Macawoo hero background'"
       class="absolute inset-0 w-full h-full object-cover opacity-30"

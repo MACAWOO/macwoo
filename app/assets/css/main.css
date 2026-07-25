@@ -141,7 +141,7 @@ body.custom-cursor-active * {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 999999;
 }
 
 #reveal-overlay-wrapper {
@@ -150,7 +150,7 @@ body.custom-cursor-active * {
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  z-index: 9998;
+  z-index: 999998;
   overflow: hidden;
   user-select: none;
 }
@@ -165,6 +165,12 @@ body.custom-cursor-active * {
   overflow: hidden;
   user-select: none;
   will-change: transform;
+
+  /* Flatten rendering layers to prevent children from bleeding through parent mask */
+  isolation: isolate;
+  transform-style: flat;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 
   /* Firefox fix: without no-repeat, Firefox tiles the radial-gradient
      spotlight across the whole overlay, making it always fully visible.
@@ -200,18 +206,19 @@ body.custom-cursor-active * {
   width: 100vw;
   pointer-events: none;
   will-change: transform;
+  transform-style: flat;
 }
 
 .custom-cursor-dot-target {
   position: fixed;
   top: 0;
   left: 0;
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
   background-color: #0596B8; /* Teal target dot */
   border-radius: 50%;
   pointer-events: none;
-  z-index: 10000;
+  z-index: 999999;
   will-change: transform;
 }
 
@@ -219,8 +226,8 @@ body.custom-cursor-active * {
   position: fixed;
   top: 0;
   left: 0;
-  width: 60px; /* matched to reduced spotlight mask diameter */
-  height: 60px;
+  width: 40px; /* matched to reduced spotlight mask diameter */
+  height: 40px;
   border: 1px solid rgba(255, 255, 255, 0.35); /* crisp white glassy border */
   box-shadow: 
     0 0 8px rgba(247, 236, 18, 0.35), /* soft brand yellow glow */
@@ -228,7 +235,7 @@ body.custom-cursor-active * {
   background-color: rgba(255, 255, 255, 0.03); /* subtle translucent fill */
   border-radius: 50%;
   pointer-events: none;
-  z-index: 10000;
+  z-index: 999999;
   will-change: transform;
   /* Scale is baked into the JS-set `transform` (translate3d + scale); do NOT
      also transition the standalone `scale` property or Firefox animates two
@@ -361,5 +368,15 @@ body.custom-cursor-active * {
 #reveal-overlay .bg-neutral-50 *,
 #reveal-overlay .bg-neutral-100 * {
   color: #FFFFFF !important;
+}
+
+#reveal-overlay .wwd-title,
+#reveal-overlay .bg-white .wwd-title {
+  color: #000000 !important;
+}
+
+/* Consistent icon inversion inside the reveal spotlight */
+#reveal-overlay svg {
+  filter: invert(1) hue-rotate(180deg) !important;
 }
 

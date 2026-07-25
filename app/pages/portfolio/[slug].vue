@@ -480,6 +480,7 @@ const isVideoUrl = (url?: string) => {
           v-else-if="isVideoUrl(project.galleryImages[galleryIndex])"
           :src="project.galleryImages[galleryIndex]"
           controls
+          muted
           playsinline
           webkit-playsinline="true"
           loop

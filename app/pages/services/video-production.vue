@@ -314,6 +314,7 @@ const logos = [
             :src="settings.servicesVideoShowreel"
             class="w-full h-full object-cover"
             controls
+            muted
             playsinline
             webkit-playsinline="true"
             preload="metadata"

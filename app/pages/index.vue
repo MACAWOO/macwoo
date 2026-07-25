@@ -232,6 +232,43 @@ const approachProgress = ref(0)
 const whatWeDoTrackRef = ref<HTMLElement | null>(null)
 const whatWeDoProgress = ref(0)
 
+const carouselRef = ref<HTMLElement | null>(null)
+const activeSlide = ref(0)
+
+const onCarouselScroll = () => {
+  if (!carouselRef.value) return
+  const container = carouselRef.value
+  const cards = container.querySelectorAll('.snap-center')
+  let closestIndex = 0
+  let minDiff = Infinity
+  const containerCenter = container.scrollLeft + container.clientWidth / 2
+
+  cards.forEach((card, i) => {
+    const el = card as HTMLElement
+    const cardCenter = el.offsetLeft + el.clientWidth / 2
+    const diff = Math.abs(containerCenter - cardCenter)
+    if (diff < minDiff) {
+      minDiff = diff
+      closestIndex = i
+    }
+  })
+  activeSlide.value = closestIndex
+}
+
+const scrollToSlide = (index: number) => {
+  if (!carouselRef.value) return
+  const cards = carouselRef.value.querySelectorAll('.snap-center')
+  const targetCard = cards[index] as HTMLElement
+  if (targetCard) {
+    const container = carouselRef.value
+    const targetScrollLeft = targetCard.offsetLeft - (container.clientWidth - targetCard.clientWidth) / 2
+    container.scrollTo({
+      left: targetScrollLeft,
+      behavior: 'smooth'
+    })
+  }
+}
+
 // Scroll-bound staggered card reveal. Each card eases in over its own window so
 // the grid builds up continuously as you scroll (matches the About/Approach motion
 // language) instead of snapping in via binary class toggles.
@@ -531,24 +568,22 @@ onUnmounted(() => {
             :style="whatWeDoHeaderStyle"
           >
             <h2
-              class="text-[#0596B8] text-3xl md:text-[48px] font-medium font-fredoka leading-tight"
+              class="text-[#0596B8] text-3xl md:text-[48px] font-medium font-fredoka leading-tight wwd-title"
             >
               What We Do
             </h2>
-            <p
-              class="text-zinc-600 mt-4 text-base md:text-xl font-normal leading-relaxed"
-              style="font-family: 'Bricolage Grotesque', sans-serif;"
-            >
-              We blend raw creative energy with executive precision to craft brands that command attention and drive growth.
-            </p>
           </div>
 
           <!-- Cards Grid (Horizontal Alignment restored) -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-[13px] my-auto">
+          <div
+            ref="carouselRef"
+            class="flex md:grid overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none md:grid-cols-3 gap-6 md:gap-8 my-auto max-w-[1000px] w-full mx-auto px-4 md:px-0 no-scrollbar scroll-smooth no-reveal-spotlight"
+            @scroll="onCarouselScroll"
+          >
             <!-- Card 1: Branding & Design -->
             <NuxtLink
               to="/services/branding-design"
-              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg will-change-transform"
+              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg will-change-transform w-[85vw] md:w-full shrink-0 snap-center"
               :style="getWhatWeDoCardStyle(0)"
             >
               <NuxtImg
@@ -579,7 +614,7 @@ onUnmounted(() => {
             <!-- Card 2: Digital Marketing -->
             <NuxtLink
               to="/services/digital-marketing"
-              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg will-change-transform"
+              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg will-change-transform w-[85vw] md:w-full shrink-0 snap-center"
               :style="getWhatWeDoCardStyle(1)"
             >
               <NuxtImg
@@ -610,7 +645,7 @@ onUnmounted(() => {
             <!-- Card 3: Video Production -->
             <NuxtLink
               to="/services/video-production"
-              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg will-change-transform"
+              class="relative rounded-[10px] overflow-hidden group block h-[280px] md:h-[420px] shadow-lg will-change-transform w-[85vw] md:w-full shrink-0 snap-center"
               :style="getWhatWeDoCardStyle(2)"
             >
               <NuxtImg
@@ -637,6 +672,18 @@ onUnmounted(() => {
                 </h3>
               </div>
             </NuxtLink>
+          </div>
+
+          <!-- Mobile Carousel Indicators -->
+          <div v-if="isMobile" class="flex justify-center gap-2 mt-6 shrink-0">
+            <button
+              v-for="i in 3"
+              :key="i"
+              class="w-2.5 h-2.5 rounded-full transition-all duration-300"
+              :class="activeSlide === i - 1 ? 'bg-[#0596B8] w-6' : 'bg-zinc-300'"
+              @click="scrollToSlide(i - 1)"
+              aria-label="Go to slide"
+            />
           </div>
         </div>
 
@@ -1038,5 +1085,15 @@ onUnmounted(() => {
   .wwd-hint-float {
     animation: none;
   }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 </style>
