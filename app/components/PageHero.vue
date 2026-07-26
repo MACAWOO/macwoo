@@ -258,7 +258,7 @@ onUnmounted(() => {
 
     <!-- Static image background -->
     <NuxtImg
-      v-if="image"
+      v-if="image && !video"
       :src="image"
       :alt="alt || titleHtml?.replace(/<[^>]*>/g, '') || 'Macawoo hero background'"
       class="absolute inset-0 w-full h-full object-cover opacity-30"
