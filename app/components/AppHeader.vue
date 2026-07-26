@@ -279,9 +279,18 @@ watch(() => route.path, () => {
             class="shrink-0 flex items-center justify-between pl-5 pr-4 h-[32px] rounded-full bg-white text-black transition-all duration-300 ease-out group/cta ml-1 hover:-translate-y-[1px]"
           >
             <span
-              class="font-bold text-[16px] leading-none whitespace-nowrap select-none mr-3"
+              class="relative block overflow-hidden h-[18px] mr-3"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
-            >Get in Touch</span>
+            >
+              <span class="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover/cta:-translate-y-1/2">
+                <span class="font-bold text-[16px] h-[18px] leading-[18px] whitespace-nowrap select-none">
+                  Get in Touch
+                </span>
+                <span class="font-bold text-[16px] h-[18px] leading-[18px] whitespace-nowrap select-none">
+                  Get in Touch
+                </span>
+              </span>
+            </span>
             <UpRightArrow
               class="w-[12px] h-[12px] shrink-0 transition-transform duration-300 ease-out group-hover/cta:translate-x-[2px] group-hover/cta:-translate-y-[2px]"
             />
