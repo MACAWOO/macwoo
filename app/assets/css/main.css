@@ -272,7 +272,69 @@ body.custom-cursor-active * {
 
 /* Explicit class-based color swaps for custom hex definitions */
 
-/* 1. Yellow (#F7EC12) -> Blue/Teal (#0596B8) */
+/* 1. White (#FFFFFF) -> Blue/Teal (#0596B8) */
+#reveal-overlay .bg-white,
+#reveal-overlay .bg-\[\#FFFFFF\],
+#reveal-overlay .bg-\[\#ffffff\],
+#reveal-overlay .bg-neutral-50,
+#reveal-overlay .bg-neutral-100 {
+  background-color: #0596B8 !important;
+}
+#reveal-overlay .text-white,
+#reveal-overlay .text-\[\#FFFFFF\],
+#reveal-overlay .text-\[\#ffffff\] {
+  color: #0596B8 !important;
+}
+#reveal-overlay .border-white,
+#reveal-overlay .border-\[\#FFFFFF\],
+#reveal-overlay .border-\[\#ffffff\] {
+  border-color: #0596B8 !important;
+}
+#reveal-overlay [fill="#FFFFFF"],
+#reveal-overlay [fill="#ffffff"] {
+  fill: #0596B8 !important;
+}
+#reveal-overlay [stroke="#FFFFFF"],
+#reveal-overlay [stroke="#ffffff"] {
+  stroke: #0596B8 !important;
+}
+#reveal-overlay .bg-white *,
+#reveal-overlay .bg-\[\#FFFFFF\] *,
+#reveal-overlay .bg-\[\#ffffff\] *,
+#reveal-overlay .bg-neutral-50 *,
+#reveal-overlay .bg-neutral-100 * {
+  color: #FFFFFF !important;
+}
+
+/* 2. Blue/Teal (#0596B8) -> Yellow (#F7EC12) */
+#reveal-overlay .bg-brand-teal-500,
+#reveal-overlay .bg-\[\#0596B8\] {
+  background-color: #F7EC12 !important;
+}
+#reveal-overlay .text-brand-teal-500,
+#reveal-overlay .text-\[\#0596B8\] {
+  color: #F7EC12 !important;
+}
+#reveal-overlay .border-brand-teal-500,
+#reveal-overlay .border-\[\#0596B8\] {
+  border-color: #F7EC12 !important;
+}
+#reveal-overlay [fill="#0596B8"],
+#reveal-overlay [fill="#0596b8"],
+#reveal-overlay .fill-brand-teal-500 {
+  fill: #F7EC12 !important;
+}
+#reveal-overlay [stroke="#0596B8"],
+#reveal-overlay [stroke="#0596b8"],
+#reveal-overlay .stroke-brand-teal-500 {
+  stroke: #F7EC12 !important;
+}
+#reveal-overlay .bg-brand-teal-500 *,
+#reveal-overlay .bg-\[\#0596B8\] * {
+  color: #0A1628 !important;
+}
+
+/* 3. Yellow (#F7EC12) -> Blue/Teal (#0596B8) */
 #reveal-overlay .bg-brand-yellow-500,
 #reveal-overlay .bg-\[\#F7EC12\],
 #reveal-overlay .bg-brand-yellow-400,
@@ -305,68 +367,6 @@ body.custom-cursor-active * {
 #reveal-overlay .bg-\[\#F7EC12\] *,
 #reveal-overlay .bg-brand-yellow-400 *,
 #reveal-overlay .bg-\[\#FAE712\] * {
-  color: #FFFFFF !important;
-}
-
-/* 2. Blue/Teal (#0596B8) -> Yellow (#F7EC12) */
-#reveal-overlay .bg-brand-teal-500,
-#reveal-overlay .bg-\[\#0596B8\] {
-  background-color: #F7EC12 !important;
-}
-#reveal-overlay .text-brand-teal-500,
-#reveal-overlay .text-\[\#0596B8\] {
-  color: #F7EC12 !important;
-}
-#reveal-overlay .border-brand-teal-500,
-#reveal-overlay .border-\[\#0596B8\] {
-  border-color: #F7EC12 !important;
-}
-#reveal-overlay [fill="#0596B8"],
-#reveal-overlay [fill="#0596b8"],
-#reveal-overlay .fill-brand-teal-500 {
-  fill: #F7EC12 !important;
-}
-#reveal-overlay [stroke="#0596B8"],
-#reveal-overlay [stroke="#0596b8"],
-#reveal-overlay .stroke-brand-teal-500 {
-  stroke: #F7EC12 !important;
-}
-#reveal-overlay .bg-brand-teal-500 *,
-#reveal-overlay .bg-\[\#0596B8\] * {
-  color: #0A1628 !important;
-}
-
-/* 3. White (#FFFFFF) -> Blue/Teal (#0596B8) */
-#reveal-overlay .bg-white,
-#reveal-overlay .bg-\[\#FFFFFF\],
-#reveal-overlay .bg-\[\#ffffff\],
-#reveal-overlay .bg-neutral-50,
-#reveal-overlay .bg-neutral-100 {
-  background-color: #0596B8 !important;
-}
-#reveal-overlay .text-white,
-#reveal-overlay .text-\[\#FFFFFF\],
-#reveal-overlay .text-\[\#ffffff\] {
-  color: #0596B8 !important;
-}
-#reveal-overlay .border-white,
-#reveal-overlay .border-\[\#FFFFFF\],
-#reveal-overlay .border-\[\#ffffff\] {
-  border-color: #0596B8 !important;
-}
-#reveal-overlay [fill="#FFFFFF"],
-#reveal-overlay [fill="#ffffff"] {
-  fill: #0596B8 !important;
-}
-#reveal-overlay [stroke="#FFFFFF"],
-#reveal-overlay [stroke="#ffffff"] {
-  stroke: #0596B8 !important;
-}
-#reveal-overlay .bg-white *,
-#reveal-overlay .bg-\[\#FFFFFF\] *,
-#reveal-overlay .bg-\[\#ffffff\] *,
-#reveal-overlay .bg-neutral-50 *,
-#reveal-overlay .bg-neutral-100 * {
   color: #FFFFFF !important;
 }
 
