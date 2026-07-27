@@ -250,7 +250,7 @@ const isYellowMode = computed(() => {
       >
         <p>
           All right Reserved @ <NuxtLink
-            to="/admin"
+            to="/"
             class="hover:underline transition-all"
             :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
           >Macawoo</NuxtLink>
