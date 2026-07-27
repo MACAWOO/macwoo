@@ -256,17 +256,17 @@ const isYellowMode = computed(() => {
           >Macawoo</NuxtLink>
         </p>
         <div class="flex items-center gap-2">
-          <a
-            href="#"
+          <NuxtLink
+            to="/privacy"
             class="hover:underline"
             :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
-          >Privacy</a>
+          >Privacy</NuxtLink>
           <span :class="isYellowMode ? 'text-brand-dark/50' : 'text-white/50'">|</span>
-          <a
-            href="#"
+          <NuxtLink
+            to="/terms"
             class="hover:underline"
             :class="isYellowMode ? 'text-brand-dark' : 'text-white'"
-          >Terms & Conditions</a>
+          >Terms & Conditions</NuxtLink>
         </div>
       </div>
     </div>
