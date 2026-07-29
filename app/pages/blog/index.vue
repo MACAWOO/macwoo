@@ -111,7 +111,7 @@ function formatDate(dateStr: string) {
             v-for="post in paginatedPosts"
             :key="post.slug"
             :to="`/blog/${post.slug}`"
-            class="group flex flex-row md:flex-col items-center md:items-stretch bg-white rounded-[24px] md:rounded-[34px] p-3.5 md:p-0 gap-4 md:gap-0 overflow-hidden shadow-sm md:shadow-none"
+            class="group blog-card flex flex-row md:flex-col items-center md:items-stretch bg-white rounded-[24px] md:rounded-[34px] p-3.5 md:p-0 gap-4 md:gap-0 overflow-hidden"
           >
             <div class="w-[100px] h-[100px] md:w-full md:h-[337px] overflow-hidden rounded-[16px] md:rounded-none md:rounded-t-[34px] bg-zinc-200 shrink-0">
               <NuxtImg
@@ -177,7 +177,7 @@ function formatDate(dateStr: string) {
         >
           <button
             :disabled="currentPage === 1"
-            class="w-[41px] h-[41px] rounded-full border border-white flex items-center justify-center text-white disabled:opacity-40 hover:bg-white/10 transition-colors"
+            class="w-[41px] h-[41px] rounded-full border border-[#F7EC12] flex items-center justify-center text-[#F7EC12] disabled:opacity-40 hover:bg-[#F7EC12]/10 transition-colors cursor-pointer"
             @click="currentPage = Math.max(1, currentPage - 1)"
           >
             <svg
@@ -200,7 +200,7 @@ function formatDate(dateStr: string) {
           </span>
           <button
             :disabled="currentPage === totalPages"
-            class="w-[41px] h-[41px] rounded-full border border-white flex items-center justify-center text-white disabled:opacity-40 hover:bg-white/10 transition-colors"
+            class="w-[41px] h-[41px] rounded-full border border-[#F7EC12] flex items-center justify-center text-[#F7EC12] disabled:opacity-40 hover:bg-[#F7EC12]/10 transition-colors cursor-pointer"
             @click="currentPage = Math.min(totalPages, currentPage + 1)"
           >
             <svg

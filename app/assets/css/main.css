@@ -380,3 +380,21 @@ body.custom-cursor-active * {
   filter: invert(1) hue-rotate(180deg) !important;
 }
 
+/* ==========================================================================
+   Blog Card Premium Glow Hover Effect
+   ========================================================================== */
+.blog-card {
+  box-shadow: 0px 4px 12px rgba(10, 22, 40, 0.04);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+              box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform, box-shadow;
+}
+
+.blog-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 
+    0 20px 40px -12px rgba(10, 22, 40, 0.35), /* Soft Dark Base Shadow */
+    0 0 30px 8px rgba(247, 236, 18, 0.5);      /* Brand Yellow Outer Aura Glow */
+}
+
+
