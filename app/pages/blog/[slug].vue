@@ -266,7 +266,7 @@ function formatDate(dateStr: string) {
                 </span>
               </div>
               <h3
-                class="text-[18px] md:text-[24px] font-medium text-[#201f1f] leading-tight mt-2.5 md:mt-10"
+                class="text-[18px] md:text-[24px] font-medium text-[#201f1f] leading-tight mt-1 md:mt-2.5"
                 style="font-family: 'Bricolage Grotesque', sans-serif;"
               >
                 {{ rec.title }}

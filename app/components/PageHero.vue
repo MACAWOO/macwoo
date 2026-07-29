@@ -39,23 +39,36 @@ const props = withDefaults(defineProps<Props>(), {
 const videoLoaded = ref(false)
 const videoRef = ref<HTMLVideoElement | null>(null)
 
+// Reveal the video as soon as it has decodable frames. Deliberately NOT gated
+// on play() resolving: a rejected play() — autoplay policy, or an AbortError
+// from a competing load() — would otherwise leave the wrapper pinned at
+// opacity 0.01 forever even though the element itself is playing fine.
+const markVideoReady = () => {
+  const el = videoRef.value
+  if (el && el.readyState >= 2) {
+    videoLoaded.value = true
+  }
+}
+
 const tryPlayVideo = () => {
   const el = videoRef.value
   if (!el) return
   el.muted = true
   el.playsInline = true
+  markVideoReady()
   if (el.paused) {
     const playPromise = el.play()
     if (playPromise !== undefined) {
-      playPromise.then(() => {  
-        videoLoaded.value = true
-      }).catch(err => {
+      playPromise.then(markVideoReady).catch((err) => {
         console.warn('Video play prevented by browser/Opera autoplay policy:', err)
       })
     }
-  } else {
-    videoLoaded.value = true
   }
+}
+
+// Unsupported codec or network failure — fall back to the static image.
+const onVideoError = () => {
+  videoLoaded.value = false
 }
 
 watch(() => props.video, () => {
@@ -106,9 +119,11 @@ const handleFirstUserInteraction = () => {
 }
 
 onMounted(() => {
-  if (videoRef.value) {
-    videoRef.value.load()
-  }
+  // No load() here. The SSR markup already carries autoplay/preload, so the
+  // browser starts fetching before hydration; calling load() at this point
+  // resets the element, aborts that fetch, and re-downloads the whole file.
+  // tryPlayVideo() also covers the case where loadeddata/canplay/playing all
+  // fired before hydration attached their listeners.
   tryPlayVideo()
   window.addEventListener('pointerdown', handleFirstUserInteraction, { passive: true, once: true })
   window.addEventListener('touchstart', handleFirstUserInteraction, { passive: true, once: true })
@@ -152,9 +167,12 @@ onUnmounted(() => {
         webkit-playsinline="true"
         preload="auto"
         class="absolute inset-0 w-full h-full object-cover"
+        @loadedmetadata="tryPlayVideo"
         @loadeddata="tryPlayVideo"
         @canplay="tryPlayVideo"
         @playing="videoLoaded = true"
+        @timeupdate="markVideoReady"
+        @error="onVideoError"
       />
     </div>
 
