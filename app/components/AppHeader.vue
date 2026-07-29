@@ -112,13 +112,11 @@ watch(() => route.path, () => {
         <!-- ═══════════════════════ DESKTOP NAV PILL ═══════════════════════ -->
         <nav
           class="hidden md:flex items-center gap-1 px-2.5 h-[46px] rounded-full shrink-0"
-          style="
-            background: linear-gradient(90deg, #2094BA 0%, #2AA4C9 50%, #2095BB 100%);
-            border: 1px solid rgba(255,255,255,0.18);
-            box-shadow:
-              inset 0 1px 0 rgba(255,255,255,0.20),
-              0 4px 24px rgba(0,0,0,0.10);
-          "
+          :style="{
+            background: 'linear-gradient(90deg, #2094BA 0%, #2AA4C9 50%, #2095BB 100%)',
+            border: '1px solid rgba(255,255,255,0.18)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.20), 0 4px 24px rgba(0,0,0,0.10)'
+          }"
         >
           <!-- ── Nav links wrapper (relative for glass pill) ── -->
           <div

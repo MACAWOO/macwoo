@@ -37,115 +37,34 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const videoLoaded = ref(false)
-const activeVideo = ref<'A' | 'B'>('A')
-const videoARef = ref<HTMLVideoElement | null>(null)
-const videoBRef = ref<HTMLVideoElement | null>(null)
+const videoRef = ref<HTMLVideoElement | null>(null)
 
-const opacityA = ref(1)
-const opacityB = ref(0)
-const switching = ref(false)
-const bPreloaded = ref(false)
-
-const handleVideoPlayable = () => {
-  videoLoaded.value = true
-  tryPlayVideoA()
-}
-
-const tryPlayVideoA = () => {
-  const elA = videoARef.value
-  if (!elA) return
-  elA.muted = true
-  elA.playsInline = true
-  const playPromise = elA.play()
-  if (playPromise !== undefined) {
-    playPromise.then(() => {
-      videoLoaded.value = true
-    }).catch(err => {
-      console.warn('Video A play prevented by browser/Opera autoplay policy:', err)
-    })
-  }
-}
-
-// Video B starts with preload="none" so the hero video isn't downloaded twice
-// on first paint. Once A is half-way through, warm B so the crossfade is ready.
-const ensureBPreloaded = (elB: HTMLVideoElement) => {
-  if (bPreloaded.value) return
-  bPreloaded.value = true
-  elB.preload = 'auto'
-  elB.load()
-}
-
-const handleTimeUpdateA = () => {
-  const elA = videoARef.value
-  const elB = videoBRef.value
-  if (!elA || !elB || switching.value) return
-
-  const duration = elA.duration
-  if (!duration || isNaN(duration)) return
-
-  if (elA.currentTime >= duration * 0.5) ensureBPreloaded(elB)
-
-  const crossfadeTime = Math.min(1.2, duration * 0.1)
-
-  if (activeVideo.value === 'A' && elA.currentTime >= duration - crossfadeTime) {
-    switching.value = true
-    elB.currentTime = 0
-    elB.muted = true
-    elB.playsInline = true
-    elB.play().then(() => {
-      activeVideo.value = 'B'
-      opacityA.value = 0
-      opacityB.value = 1
-      setTimeout(() => {
-        elA.pause()
-        switching.value = false
-      }, 1000)
-    }).catch((err) => {
-      console.error('Play B failed:', err)
-      switching.value = false
-    })
-  }
-}
-
-const handleTimeUpdateB = () => {
-  const elA = videoARef.value
-  const elB = videoBRef.value
-  if (!elA || !elB || switching.value) return
-
-  const duration = elB.duration
-  if (!duration || isNaN(duration)) return
-
-  const crossfadeTime = Math.min(1.2, duration * 0.1)
-
-  if (activeVideo.value === 'B' && elB.currentTime >= duration - crossfadeTime) {
-    switching.value = true
-    elA.currentTime = 0
-    elA.muted = true
-    elA.playsInline = true
-    elA.play().then(() => {
-      activeVideo.value = 'A'
-      opacityB.value = 0
-      opacityA.value = 1
-      setTimeout(() => {
-        elB.pause()
-        switching.value = false
-      }, 1000)
-    }).catch((err) => {
-      console.error('Play A failed:', err)
-      switching.value = false
-    })
+const tryPlayVideo = () => {
+  const el = videoRef.value
+  if (!el) return
+  el.muted = true
+  el.playsInline = true
+  if (el.paused) {
+    const playPromise = el.play()
+    if (playPromise !== undefined) {
+      playPromise.then(() => {  
+        videoLoaded.value = true
+      }).catch(err => {
+        console.warn('Video play prevented by browser/Opera autoplay policy:', err)
+      })
+    }
+  } else {
+    videoLoaded.value = true
   }
 }
 
 watch(() => props.video, () => {
-  activeVideo.value = 'A'
-  opacityA.value = 1
-  opacityB.value = 0
-  switching.value = false
   videoLoaded.value = false
-  bPreloaded.value = false
   nextTick(() => {
-    tryPlayVideoA()
+    if (videoRef.value) {
+      videoRef.value.load()
+    }
+    tryPlayVideo()
   })
 })
 
@@ -181,13 +100,16 @@ const scrollToNext = () => {
 }
 
 const handleFirstUserInteraction = () => {
-  if (videoARef.value && videoARef.value.paused) {
-    tryPlayVideoA()
+  if (videoRef.value && videoRef.value.paused) {
+    tryPlayVideo()
   }
 }
 
 onMounted(() => {
-  tryPlayVideoA()
+  if (videoRef.value) {
+    videoRef.value.load()
+  }
+  tryPlayVideo()
   window.addEventListener('pointerdown', handleFirstUserInteraction, { passive: true, once: true })
   window.addEventListener('touchstart', handleFirstUserInteraction, { passive: true, once: true })
   window.addEventListener('click', handleFirstUserInteraction, { passive: true, once: true })
@@ -217,48 +139,28 @@ onUnmounted(() => {
     <div
       v-if="video"
       class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
-      :class="[videoLoaded ? 'opacity-100' : 'opacity-0']"
+      :class="[videoLoaded ? 'opacity-100' : 'opacity-[0.01]']"
       :style="imageStyle"
     >
-      <!-- Video A -->
       <video
-        ref="videoARef"
+        ref="videoRef"
         :src="video"
         autoplay
         muted
+        loop
         playsinline
         webkit-playsinline="true"
         preload="auto"
-        crossorigin="anonymous"
-        class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
-        :style="{ opacity: opacityA }"
-        @timeupdate="handleTimeUpdateA"
-        @loadeddata="handleVideoPlayable"
-        @canplay="handleVideoPlayable"
-      >
-        <source :src="video">
-      </video>
-
-      <!-- Video B -->
-      <video
-        ref="videoBRef"
-        :src="video"
-        muted
-        playsinline
-        webkit-playsinline="true"
-        preload="none"
-        crossorigin="anonymous"
-        class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
-        :style="{ opacity: opacityB }"
-        @timeupdate="handleTimeUpdateB"
-      >
-        <source :src="video">
-      </video>
+        class="absolute inset-0 w-full h-full object-cover"
+        @loadeddata="tryPlayVideo"
+        @canplay="tryPlayVideo"
+        @playing="videoLoaded = true"
+      />
     </div>
 
     <!-- Static image background -->
     <NuxtImg
-      v-if="image && !video"
+      v-if="image && (!video || !videoLoaded)"
       :src="image"
       :alt="alt || titleHtml?.replace(/<[^>]*>/g, '') || 'Macawoo hero background'"
       class="absolute inset-0 w-full h-full object-cover opacity-30"

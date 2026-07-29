@@ -27,3 +27,4 @@ logs
 *.md
 !README.md
 .mcp.*
+.hevc-originals
