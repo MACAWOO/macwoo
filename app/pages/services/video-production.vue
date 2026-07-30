@@ -37,13 +37,13 @@ const getYouTubeEmbedUrl = (url?: string) => {
 }
 
 useSeoMeta({
-  title: 'Video Production & Narrative Storytelling — Macawoo',
-  description: 'From concept to final cut, we produce video content that commands attention and drives meaningful engagement.',
-  ogTitle: 'Video Production & Narrative Storytelling — Macawoo',
-  ogDescription: 'From concept to final cut, we produce video content that commands attention and drives meaningful engagement.'
+  title: 'Video Production & Commercial Visuals — Creative Branding Agency | Macawoo',
+  description: 'As a creative and strategic branding agency, Macawoo produces high-impact videos and brand films that captivate audiences and drive results.',
+  ogTitle: 'Video Production & Commercial Visuals — Creative Branding Agency | Macawoo',
+  ogDescription: 'As a creative and strategic branding agency, Macawoo produces high-impact videos and brand films that captivate audiences and drive results.'
 })
 
-const siteUrl = 'https://www.macawoo.in'
+const siteUrl = 'https://www.macawoo.co'
 useHead({
   script: [
     {

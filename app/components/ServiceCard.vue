@@ -15,11 +15,15 @@ defineProps<Props>()
     :to="to"
     class="bg-white rounded-2xl p-6 flex flex-col gap-4 hover:shadow-lg transition-shadow"
   >
-    <img
+    <NuxtImg
       :src="icon"
       :alt="title"
       class="w-10 h-10 object-contain"
-    >
+      format="webp"
+      loading="lazy"
+      width="40"
+      height="40"
+    />
     <h3 class="text-brand-teal-500 font-bold text-lg leading-snug">
       {{ title }}
     </h3>

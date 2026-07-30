@@ -49,9 +49,9 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   site: {
-    url: process.env.NUXT_PUBLIC_SITE_URL || 'https://www.macawoo.in',
+    url: process.env.NUXT_PUBLIC_SITE_URL || 'https://www.macawoo.co',
     name: 'Macawoo',
-    description: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
+    description: 'Macawoo is a leading creative and strategic branding agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
     defaultLocale: 'en'
   },
 
@@ -72,10 +72,26 @@ export default defineNuxtConfig({
     }
   },
 
+  image: {
+    format: ['webp', 'avif', 'png', 'jpg'],
+    quality: 80,
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      '2xl': 1536
+    }
+  },
+
   routeRules: {
     // Homepage hero/featured content comes from Supabase at request time.
-    // Prerendering froze the hero image at build, so render it dynamically (SSR).
-    '/': { prerender: false },
+    '/': { prerender: false, headers: { 'cache-control': 's-maxage=60, stale-while-revalidate=300' } },
+    // Cache static assets aggressively
+    '/_nuxt/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
+    '/Images/**': { headers: { 'cache-control': 'public, max-age=86400, stale-while-revalidate=604800' } },
+    '/Icons/**': { headers: { 'cache-control': 'public, max-age=86400, stale-while-revalidate=604800' } },
     // Admin area is client-rendered SPA. Prerendering the SPA shells ensures
     // Cloudflare Pages serves them directly, avoiding 404s.
     '/admin': { ssr: false },

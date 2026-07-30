@@ -6,7 +6,7 @@ useSeoMeta({
   ogDescription: 'At Macawoo, we value your trust and are committed to protecting your personal information. Read our Privacy Policy to understand how we collect, use, and protect your data.'
 })
 
-const siteUrl = 'https://www.macawoo.in'
+const siteUrl = 'https://www.macawoo.co'
 useHead({
   script: [
     {

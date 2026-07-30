@@ -5,13 +5,13 @@ if (settingsPromise) {
 }
 
 useSeoMeta({
-  title: 'About Macawoo — Creative Strategy & Branding Agency',
-  description: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
-  ogTitle: 'About Macawoo — Creative Strategy & Branding Agency',
-  ogDescription: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.'
+  title: 'About Macawoo — Creative and Strategic Branding Agency',
+  description: 'Macawoo is a full-service creative and strategic branding agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
+  ogTitle: 'About Macawoo — Creative and Strategic Branding Agency',
+  ogDescription: 'Macawoo is a full-service creative and strategic branding agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.'
 })
 
-const siteUrl = 'https://www.macawoo.in'
+const siteUrl = 'https://www.macawoo.co'
 useHead({
   script: [
     {
@@ -21,8 +21,8 @@ useHead({
         '@type': 'AboutPage',
         '@id': `${siteUrl}/about#webpage`,
         'url': `${siteUrl}/about`,
-        'name': 'About Macawoo — Creative Strategy & Branding Agency',
-        'description': 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
+        'name': 'About Macawoo — Creative and Strategic Branding Agency',
+        'description': 'Macawoo is a full-service creative and strategic branding agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
         'isPartOf': { '@id': `${siteUrl}/#website` }
       })
     }

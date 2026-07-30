@@ -12,7 +12,7 @@ if (!project.value) {
   throw createError({ statusCode: 404, statusMessage: 'Project not found', fatal: true })
 }
 
-const siteUrl = 'https://www.macawoo.in'
+const siteUrl = 'https://www.macawoo.co'
 const absoluteImageUrl = computed(() => {
   const img = project.value?.image
   if (!img) return `${siteUrl}/og-image.png`

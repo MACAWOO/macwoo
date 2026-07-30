@@ -5,13 +5,13 @@ if (caseStudiesPromise) {
 }
 
 useSeoMeta({
-  title: 'Macawoo Case Studies — Brand Transformation Results',
-  description: 'Not just work. Proven impact. Detailed case studies demonstrating our results-driven approach for ambitious founders.',
-  ogTitle: 'Macawoo Case Studies — Brand Transformation Results',
-  ogDescription: 'Not just work. Proven impact. Detailed case studies demonstrating our results-driven approach for ambitious founders.'
+  title: 'Case Studies — Strategic Branding Agency Transformations | Macawoo',
+  description: 'Explore brand transformations and case studies by Macawoo, a leading creative and strategic branding agency delivering measurable market impact.',
+  ogTitle: 'Case Studies — Strategic Branding Agency Transformations | Macawoo',
+  ogDescription: 'Explore brand transformations and case studies by Macawoo, a leading creative and strategic branding agency delivering measurable market impact.'
 })
 
-const siteUrl = 'https://www.macawoo.in'
+const siteUrl = 'https://www.macawoo.co'
 useHead({
   script: [
     {

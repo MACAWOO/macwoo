@@ -1,12 +1,12 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Branding & Design Services — Macawoo Agency Kochi',
-  description: 'We Don\'t Just Design. We Build Brands. Define your brand positioning, messaging, and direction.',
-  ogTitle: 'Branding & Design Services — Macawoo Agency Kochi',
-  ogDescription: 'We Don\'t Just Design. We Build Brands. Define your brand positioning, messaging, and direction.'
+  title: 'Branding & Design Services — Creative and Strategic Branding Agency | Macawoo',
+  description: 'As a leading creative and strategic branding agency, Macawoo crafts powerful brand identity, strategic positioning, visual design, and market positioning that drives growth.',
+  ogTitle: 'Branding & Design Services — Creative and Strategic Branding Agency | Macawoo',
+  ogDescription: 'As a leading creative and strategic branding agency, Macawoo crafts powerful brand identity, strategic positioning, visual design, and market positioning that drives growth.'
 })
 
-const siteUrl = 'https://www.macawoo.in'
+const siteUrl = 'https://www.macawoo.co'
 useHead({
   script: [
     {
@@ -15,12 +15,12 @@ useHead({
         '@context': 'https://schema.org',
         '@graph': [
           {
-            '@type': 'WebPage',
+            '@type': 'Service',
             '@id': `${siteUrl}/services/branding-design#webpage`,
             'url': `${siteUrl}/services/branding-design`,
-            'name': 'Branding & Design Services — Macawoo Agency Kochi',
-            'description': 'We Don\'t Just Design. We Build Brands. Define your brand positioning, messaging, and direction.',
-            'isPartOf': { '@id': `${siteUrl}/#website` }
+            'name': 'Branding & Design Services — Creative and Strategic Branding Agency | Macawoo',
+            'description': 'Macawoo is a creative and strategic branding agency delivering brand strategy, identity design, and visual positioning.',
+            'provider': { '@id': `${siteUrl}/#organization` }
           },
           {
             '@type': 'Service',

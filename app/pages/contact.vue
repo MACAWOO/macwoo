@@ -4,13 +4,13 @@ import { ref, reactive } from 'vue'
 const { settings } = usePageSettings()
 
 useSeoMeta({
-  title: 'Contact Macawoo — Creative & Strategy Agency Kochi',
-  description: 'Ready to elevate your brand? Drop us a line and let\'s start crafting a narrative that commands attention and drives results.',
-  ogTitle: 'Contact Macawoo — Creative & Strategy Agency Kochi',
-  ogDescription: 'Ready to elevate your brand? Drop us a line and let\'s start crafting a narrative that commands attention and drives results.'
+  title: 'Contact Macawoo — Creative & Strategic Branding Agency',
+  description: 'Connect with Macawoo, a leading creative and strategic branding agency. Let\'s partner to craft brand strategies that command attention and drive exponential growth.',
+  ogTitle: 'Contact Macawoo — Creative & Strategic Branding Agency',
+  ogDescription: 'Connect with Macawoo, a leading creative and strategic branding agency. Let\'s partner to craft brand strategies that command attention and drive exponential growth.'
 })
 
-const siteUrl = 'https://www.macawoo.in'
+const siteUrl = 'https://www.macawoo.co'
 useHead({
   script: [
     {
@@ -20,8 +20,8 @@ useHead({
         '@type': 'ContactPage',
         '@id': `${siteUrl}/contact#webpage`,
         'url': `${siteUrl}/contact`,
-        'name': 'Contact Macawoo — Creative & Strategy Agency Kochi',
-        'description': 'Ready to elevate your brand? Drop us a line and let\'s start crafting a narrative that commands attention and drives results.',
+        'name': 'Contact Macawoo — Creative & Strategic Branding Agency',
+        'description': 'Connect with Macawoo, a leading creative and strategic branding agency.',
         'isPartOf': { '@id': `${siteUrl}/#website` }
       })
     }

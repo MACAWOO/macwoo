@@ -1,13 +1,13 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Digital Marketing & Growth Campaigns — Macawoo Kochi',
-  description: 'Data-driven campaigns that reach the right audience, tell the right story, and deliver measurable results.',
-  keywords: 'digital marketing agency India, online marketing company in india, top 10 digital marketing company in india, advertising agency in india, influencer marketing agency Kerala',
-  ogTitle: 'Digital Marketing & Growth Campaigns — Macawoo Kochi',
-  ogDescription: 'Data-driven campaigns that reach the right audience, tell the right story, and deliver measurable results.'
+  title: 'Digital Marketing & Performance Growth — Strategic Branding Agency | Macawoo',
+  description: 'Macawoo is a creative and strategic branding agency delivering data-driven digital marketing campaigns that reach the right audience and deliver high ROI.',
+  keywords: 'creative and strategic branding agency, digital marketing agency, strategic brand marketing, performance marketing',
+  ogTitle: 'Digital Marketing & Performance Growth — Strategic Branding Agency | Macawoo',
+  ogDescription: 'Macawoo is a creative and strategic branding agency delivering data-driven digital marketing campaigns that reach the right audience and deliver high ROI.'
 })
 
-const siteUrl = 'https://www.macawoo.in'
+const siteUrl = 'https://www.macawoo.co'
 useHead({
   script: [
     {

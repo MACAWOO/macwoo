@@ -8,14 +8,14 @@ await Promise.all([
 ])
 
 useSeoMeta({
-  title: 'Macawoo Blog — Insights on Branding, Design & Marketing',
-  description: 'Ideas, insights & stories that drive brands. The Macawoo journal on branding, marketing, and creative strategy.',
-  keywords: 'branding blog, digital marketing insights, design strategy, creative agency blog, marketing tips India',
-  ogTitle: 'Macawoo Blog — Insights on Branding, Design & Marketing',
-  ogDescription: 'Ideas, insights & stories that drive brands. The Macawoo journal on branding, marketing, and creative strategy.'
+  title: 'Blog & Insights — Creative and Strategic Branding Agency | Macawoo',
+  description: 'Ideas, insights, and expert perspectives on branding strategy, creative direction, and digital marketing from Macawoo.',
+  keywords: 'creative and strategic branding agency, brand strategy blog, design strategy, creative agency journal',
+  ogTitle: 'Blog & Insights — Creative and Strategic Branding Agency | Macawoo',
+  ogDescription: 'Ideas, insights, and expert perspectives on branding strategy, creative direction, and digital marketing from Macawoo.'
 })
 
-const siteUrl = 'https://www.macawoo.in'
+const siteUrl = 'https://www.macawoo.co'
 useHead({
   script: [
     {

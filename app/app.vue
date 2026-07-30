@@ -1,6 +1,6 @@
 <script setup>
 const route = useRoute()
-const siteUrl = 'https://www.macawoo.in'
+const siteUrl = 'https://www.macawoo.co'
 
 useHead({
   meta: [
@@ -13,11 +13,6 @@ useHead({
     { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
     { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
     { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-    {
-      rel: 'preload',
-      as: 'style',
-      href: 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Fredoka:wght@400;500;600&display=swap'
-    },
     {
       rel: 'stylesheet',
       href: 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Fredoka:wght@400;500;600&display=swap',
@@ -37,17 +32,14 @@ useHead({
   }
 })
 
-// Site-wide defaults. Per-page useSeoMeta() supplies title/description (and via
-// nuxt-seo-utils, their og: equivalents). We intentionally do NOT set title or
-// description here, otherwise the app-level og:title/og:description would pin the
-// global value on every route. titleTemplate brands any page title lacking it.
+// Site-wide defaults.
 useHead({
-  titleTemplate: title => (title && title.includes('Macawoo')) ? title : (title ? `${title} — Macawoo` : 'Macawoo — Feel The Woo')
+  titleTemplate: title => (title && title.includes('Macawoo')) ? title : (title ? `${title} — Macawoo` : 'Macawoo — Creative and Strategic Branding Agency')
 })
 
 useSeoMeta({
   ogType: 'website',
-  ogSiteName: 'Macawoo',
+  ogSiteName: 'Macawoo — Creative and Strategic Branding Agency',
   ogImage: `${siteUrl}/og-image.png`,
   ogImageWidth: 1200,
   ogImageHeight: 630,
@@ -61,8 +53,7 @@ useSeoMeta({
   twitterImage: `${siteUrl}/og-image.png`
 })
 
-// Organization + WebSite structured data (JSON-LD). Injected manually because the
-// bundled nuxt-schema-org module is disabled (broken UnheadSchemaOrg import).
+// Organization + ProfessionalService + WebSite structured data (JSON-LD)
 useHead({
   script: [
     {
@@ -71,13 +62,21 @@ useHead({
         '@context': 'https://schema.org',
         '@graph': [
           {
-            '@type': 'Organization',
+            '@type': ['Organization', 'ProfessionalService'],
             '@id': `${siteUrl}/#organization`,
             'name': 'Macawoo',
             'url': siteUrl,
             'logo': `${siteUrl}/icon-512.png`,
             'email': 'info@macawoo.co',
-            'description': 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
+            'description': 'Macawoo is a full-service creative and strategic branding agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
+            'knowsAbout': [
+              'Creative and Strategic Branding Agency',
+              'Brand Strategy',
+              'Creative Direction',
+              'Visual Identity Design',
+              'Digital Marketing',
+              'Video Production'
+            ],
             'sameAs': [
               'https://www.linkedin.com/company/macawoo',
               'https://twitter.com/macawoo',
@@ -88,7 +87,7 @@ useHead({
             '@type': 'WebSite',
             '@id': `${siteUrl}/#website`,
             'url': siteUrl,
-            'name': 'Macawoo',
+            'name': 'Macawoo — Creative and Strategic Branding Agency',
             'publisher': { '@id': `${siteUrl}/#organization` }
           }
         ]
@@ -114,7 +113,6 @@ const isAdmin = computed(() => route.path.startsWith('/admin'))
 // Hide navbar on detail/inner pages (blog, portfolio, case-studies slug pages)
 const isInnerPage = computed(() => {
   const segments = route.path.replace(/\/$/, '').split('/').filter(Boolean)
-  // Inner pages have exactly 2 segments, e.g. /blog/some-slug, /portfolio/some-slug, /case-studies/some-slug
   const innerSections = ['blog', 'portfolio', 'case-studies']
   return segments.length >= 2 && innerSections.includes(segments[0])
 })
@@ -132,8 +130,8 @@ const isInnerPage = computed(() => {
         :bg-color="footerBgColor"
         :footer-color="footerColor"
       />
-      <ChatWidget v-if="!isAdmin" />
+      <LazyChatWidget v-if="!isAdmin" />
     </div>
-    <MaskRevealCursor v-if="!isAdmin" />
+    <LazyMaskRevealCursor v-if="!isAdmin" />
   </UApp>
 </template>

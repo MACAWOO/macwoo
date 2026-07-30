@@ -5,13 +5,13 @@ if (portfolioPromise) {
 }
 
 useSeoMeta({
-  title: 'Macawoo Portfolio — Selected Branding & Design Work',
-  description: 'Work that speaks. Results that matter. A curated showcase of our finest projects.',
-  ogTitle: 'Macawoo Portfolio — Selected Branding & Design Work',
-  ogDescription: 'Work that speaks. Results that matter. A curated showcase of our finest projects.'
+  title: 'Portfolio Showcase — Creative and Strategic Branding Agency | Macawoo',
+  description: 'Explore selected works by Macawoo, a creative and strategic branding agency. A curated showcase of brand identities, campaigns, and visual design.',
+  ogTitle: 'Portfolio Showcase — Creative and Strategic Branding Agency | Macawoo',
+  ogDescription: 'Explore selected works by Macawoo, a creative and strategic branding agency. A curated showcase of brand identities, campaigns, and visual design.'
 })
 
-const siteUrl = 'https://www.macawoo.in'
+const siteUrl = 'https://www.macawoo.co'
 useHead({
   script: [
     {
