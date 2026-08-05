@@ -291,7 +291,7 @@ const logos = [
     <!-- ═══════════════════════════════════════════
          AGENCY SHOWREEL 2026 (Yellow Background)
          ═══════════════════════════════════════════ -->
-    <section class="py-16 md:py-20 bg-[#F7EC12] text-center">
+    <section class="py-16 md:py-20 bg-[#F7EC12] text-center no-reveal-spotlight">
       <div class="max-w-[1120px] mx-auto px-6">
         <h2
           class="text-[#0596B8] text-[32px] md:text-[48px] leading-[58px] font-medium mb-8"
@@ -299,7 +299,7 @@ const logos = [
         >
           Agency Showreel 2026
         </h2>
-        <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-zinc-300 shadow-lg">
+        <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-zinc-300 shadow-lg site-exclude-reveal">
           <iframe
             v-if="isYouTubeUrl(settings.servicesVideoShowreel)"
             :key="'youtube-' + settings.servicesVideoShowreel"

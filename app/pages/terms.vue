@@ -39,7 +39,7 @@ useHead({
       </div>
 
       <!-- Main Title -->
-      <h1 class="text-4xl font-semibold font-fredoka mb-4 text-brand-teal-500">
+      <h1 class="text-4xl font-medium font-fredoka mb-4 text-brand-teal-500">
         Terms &amp; Conditions
       </h1>
       <p class="text-xs text-zinc-500 mb-8">
@@ -57,7 +57,7 @@ useHead({
       <div class="space-y-8 text-zinc-700 leading-relaxed">
         <!-- ABOUT MACAWOO -->
         <section id="about">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             ABOUT MACAWOO
           </h2>
           <p>
@@ -67,7 +67,7 @@ useHead({
 
         <!-- USE OF THE WEBSITE -->
         <section id="usage">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             USE OF THE WEBSITE
           </h2>
           <p class="mb-3">
@@ -83,7 +83,7 @@ useHead({
 
         <!-- INTELLECTUAL PROPERTY -->
         <section id="intellectual-property">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             INTELLECTUAL PROPERTY
           </h2>
           <p>
@@ -93,7 +93,7 @@ useHead({
 
         <!-- ACCURACY OF INFORMATION -->
         <section id="accuracy">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             ACCURACY OF INFORMATION
           </h2>
           <p>
@@ -103,7 +103,7 @@ useHead({
 
         <!-- THIRD-PARTY LINKS -->
         <section id="links">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             THIRD-PARTY LINKS
           </h2>
           <p>
@@ -113,7 +113,7 @@ useHead({
 
         <!-- LIMITATION OF LIABILITY -->
         <section id="liability">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             LIMITATION OF LIABILITY
           </h2>
           <p>
@@ -123,7 +123,7 @@ useHead({
 
         <!-- PRIVACY -->
         <section id="privacy">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             PRIVACY
           </h2>
           <p>
@@ -137,7 +137,7 @@ useHead({
 
         <!-- AMENDMENTS TO THESE TERMS -->
         <section id="amendments">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             AMENDMENTS TO THESE TERMS
           </h2>
           <p>
@@ -147,7 +147,7 @@ useHead({
 
         <!-- GOVERNING LAW -->
         <section id="governing-law">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             GOVERNING LAW
           </h2>
           <p>
@@ -157,7 +157,7 @@ useHead({
 
         <!-- CONTACT US -->
         <section id="contact">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             CONTACT US
           </h2>
           <p>

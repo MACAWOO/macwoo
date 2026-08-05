@@ -269,7 +269,7 @@ const logos = [
     <!-- ═══════════════════════════════════════════
          THE METHODOLOGY
          ═══════════════════════════════════════════ -->
-    <section class="py-16 md:py-20 bg-brand-yellow-500">
+    <section class="py-16 md:py-20 bg-brand-yellow-500 firefox-no-reveal">
       <div class="max-w-[1192px] mx-auto px-6 md:px-8">
         <h2
           class="text-brand-teal-500 text-[36px] md:text-[48px] leading-[58px] font-medium tracking-[-0.48px] mb-10 md:mb-[42px]"

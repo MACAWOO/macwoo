@@ -138,6 +138,7 @@ const syncScroll = () => {
   }
 }
 
+const isFirefox = ref(false)
 const isExcludedSection = ref(false)
 const isCursorHidden = ref(false)
 
@@ -194,10 +195,11 @@ const handleMouseMove = (e) => {
     // Check if hovering over hero section or navbar header
     const insideHero = target.closest('.site-hero-section') !== null
     const insideHeader = target.closest('header, .site-header-section') !== null
-    const insideExclude = target.closest('.site-exclude-reveal') !== null
+    const insideExclude = target.closest('.site-exclude-reveal, iframe, video') !== null
     const insideNoReveal = target.closest('.no-reveal-spotlight') !== null
+    const insideFirefoxNoReveal = isFirefox.value && target.closest('.firefox-no-reveal, .no-reveal-firefox, .no-reveal-spotlight-firefox') !== null
 
-    isExcludedSection.value = insideHero || insideHeader || insideExclude || insideNoReveal
+    isExcludedSection.value = insideHero || insideHeader || insideExclude || insideNoReveal || insideFirefoxNoReveal
     isCursorHidden.value = insideExclude
 
     if (isCursorHidden.value) {
@@ -229,6 +231,31 @@ const handleMouseEnter = () => {
     if (!isCursorHidden.value) {
       document.body.classList.add('custom-cursor-active')
     }
+  }
+}
+
+const handleWindowBlur = () => {
+  isVisible.value = false
+  isCursorHidden.value = true
+  document.body.classList.remove('custom-cursor-active')
+}
+
+const handleDocumentMouseOver = (e) => {
+  if (e.target) {
+    const isIframe = e.target.tagName === 'IFRAME' || (typeof e.target.closest === 'function' && e.target.closest('iframe, .site-exclude-reveal') !== null)
+    if (isIframe) {
+      isCursorHidden.value = true
+      isVisible.value = false
+      document.body.classList.remove('custom-cursor-active')
+    }
+  }
+}
+
+const handleDocumentMouseOut = (e) => {
+  if (!e.relatedTarget || e.relatedTarget.tagName === 'IFRAME' || (typeof e.relatedTarget.closest === 'function' && e.relatedTarget.closest('iframe, .site-exclude-reveal') !== null)) {
+    isVisible.value = false
+    isCursorHidden.value = true
+    document.body.classList.remove('custom-cursor-active')
   }
 }
 
@@ -279,10 +306,10 @@ onMounted(() => {
   isMounted.value = true
   isMobile.value = checkMobile()
   reducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  // Firefox ghosts/doubles the masked clone (see note above). Detect it and
-  // fall back to the cursor ring only. Chromium/WebKit keep the full reveal.
-  const isFirefox = typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('firefox')
-  supportsReveal.value = !isFirefox
+  if (typeof navigator !== 'undefined') {
+    isFirefox.value = /firefox/i.test(navigator.userAgent) || (typeof CSS !== 'undefined' && CSS.supports('-moz-appearance', 'none'))
+  }
+  supportsReveal.value = true
 
   if (!isMobile.value) {
     // Only build/sync the DOM clone where the mask-reveal overlay is reliable.
@@ -308,8 +335,11 @@ onMounted(() => {
     window.addEventListener('mousedown', handleMouseDown, { passive: true })
     window.addEventListener('mouseup', handleMouseUp, { passive: true })
     window.addEventListener('sync-reveal-cursor', syncDOM, { passive: true })
+    window.addEventListener('blur', handleWindowBlur)
     document.addEventListener('mouseleave', handleMouseLeave)
     document.addEventListener('mouseenter', handleMouseEnter)
+    document.addEventListener('mouseover', handleDocumentMouseOver, true)
+    document.addEventListener('mouseout', handleDocumentMouseOut, true)
     window.addEventListener('scroll', syncScroll, { passive: true })
     window.addEventListener('resize', () => {
       isMobile.value = checkMobile()
@@ -338,8 +368,11 @@ onBeforeUnmount(() => {
     window.removeEventListener('mousedown', handleMouseDown)
     window.removeEventListener('mouseup', handleMouseUp)
     window.removeEventListener('sync-reveal-cursor', syncDOM)
+    window.removeEventListener('blur', handleWindowBlur)
     document.removeEventListener('mouseleave', handleMouseLeave)
     document.removeEventListener('mouseenter', handleMouseEnter)
+    document.removeEventListener('mouseover', handleDocumentMouseOver, true)
+    document.removeEventListener('mouseout', handleDocumentMouseOut, true)
     window.removeEventListener('scroll', syncScroll)
     window.removeEventListener('resize', checkMobile)
     document.body.classList.remove('custom-cursor-active')
@@ -351,19 +384,14 @@ const maskStyle = computed(() => {
   const x = currentX.value
   const y = currentY.value
   const r = currentRadius.value
-  const gradient = `radial-gradient(circle ${r}px at 150px 150px, black 0%, black 80%, transparent 100%)`
+  const gradient = `radial-gradient(circle ${r}px at ${x}px ${y}px, black 0%, black 80%, transparent 100%)`
   return {
-    // mask-image + mask-repeat + mask-size are ALL required for Firefox.
-    // Firefox defaults mask-repeat to 'repeat', which tiles the small
-    // radial-gradient spotlight across the entire overlay, making it
-    // permanently visible instead of only at the cursor position.
     '-webkit-mask-image': gradient,
     '-webkit-mask-repeat': 'no-repeat',
     '-webkit-mask-size': '100% 100%',
     'mask-image': gradient,
     'mask-repeat': 'no-repeat',
-    'mask-size': '100% 100%',
-    'transform': `translate3d(${x - 150}px, ${y - 150}px, 0)`
+    'mask-size': '100% 100%'
   }
 })
 
@@ -381,8 +409,6 @@ const lerpDotStyle = computed(() => {
   const press = isPressed.value ? 0.8 : 1 // compress on click
   const scale = base * press
 
-  // Directional squash-stretch: ring elongates along travel direction,
-  // proportional to speed (capped so fast flicks don't distort wildly).
   let rotate = ''
   let axis = 'scale(1)'
   if (!reducedMotion.value) {
@@ -407,11 +433,8 @@ const overlayStyle = computed(() => ({
 }))
 
 const cloneStyle = computed(() => {
-  const x = currentX.value
-  const y = currentY.value
   return {
-    'transform-origin': `${x}px ${y}px`,
-    'transform': `translate3d(${-(x - 150)}px, ${-(y - 150)}px, 0) scale(1.0) translate3d(-${scrollX.value}px, -${scrollY.value}px, 0)`
+    'transform': `translate3d(-${scrollX.value}px, -${scrollY.value}px, 0)`
   }
 })
 </script>
@@ -421,9 +444,7 @@ const cloneStyle = computed(() => {
     v-if="isMounted && !isMobile"
     class="custom-cursor-wrapper"
   >
-    <!-- Overlay Layer for Swapped Colors (Chromium/WebKit only — Firefox
-         cannot composite the masked clone without ghosting, so it falls back
-         to just the cursor ring below) -->
+    <!-- Overlay Layer for Swapped Colors (Chromium/WebKit & Firefox) -->
     <div
       v-if="supportsReveal"
       id="reveal-overlay-wrapper"

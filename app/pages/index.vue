@@ -843,18 +843,16 @@ onUnmounted(() => {
     <WhyMacawoo />
 
     <!-- CTA (Get Started Form & Card ) -->
-    <section class="py-20 md:py-28 bg-[#0596B8] relative overflow-hidden">
+    <section class="py-20 md:py-28 bg-[#0596B8] relative overflow-hidden no-reveal-spotlight">
       <div class="max-w-[1266px] mx-auto px-6 md:px-8">
         <div class="flex flex-col lg:flex-row gap-12 lg:gap-20 items-stretch">
           <!-- Left side: Design card -->
-          <div class="flex-1 rounded-[32px] overflow-hidden relative min-h-[350px] lg:min-h-[500px] flex flex-col justify-end p-8 md:p-12 shadow-xl group">
+          <div class="flex-1 rounded-[32px] overflow-hidden relative min-h-[350px] lg:min-h-[500px] flex flex-col justify-end p-8 md:p-12 shadow-xl group no-reveal-spotlight [transform:translateZ(0)] isolate">
             <!-- Background Image -->
-            <div class="absolute inset-0 bg-[url('/Images/wavy_yellow_teal_bg.png')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" />
+            <div class="absolute inset-0 bg-[url('/Images/wavy_yellow_teal_bg.png')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105 will-change-transform" />
             <!-- Glassmorphism Grid Overlay on the image -->
             <GlassGrid :grids="15" />
             <!-- Gradient Overlay for readability -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10" />
-
             <!-- Text Content -->
             <div class="relative z-20">
               <h2

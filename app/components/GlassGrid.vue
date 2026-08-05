@@ -95,6 +95,7 @@ onUnmounted(() => {
 .glass-blur {
   transform: translateZ(0);
   will-change: transform;
+  isolation: isolate;
   /* Base frosted tint present in EVERY browser. Guarantees the glass never
      reads as fully transparent even when backdrop-filter silently no-ops.
      Subtle enough to layer cleanly under a working blur in Chromium. */

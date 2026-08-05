@@ -156,15 +156,13 @@ body.custom-cursor-active * {
 }
 
 #reveal-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 300px;
-  height: 300px;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
   overflow: hidden;
   user-select: none;
-  will-change: transform;
 
   /* Flatten rendering layers to prevent children from bleeding through parent mask */
   isolation: isolate;
@@ -179,6 +177,10 @@ body.custom-cursor-active * {
   mask-repeat: no-repeat;
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
+  -webkit-mask-mode: alpha;
+  mask-mode: alpha;
+  -webkit-mask-composite: source-over;
+  mask-composite: add;
 
   /* Redefine Tailwind v4 theme variables inside the overlay context */
   --color-brand-yellow-500: #0596B8;
@@ -246,6 +248,8 @@ body.custom-cursor-active * {
     background-color 0.2s ease,
     box-shadow 0.2s ease;
 }
+
+
 
 /* Hovering an interactive element: warm yellow accent + stronger glow */
 .custom-cursor-dot-lerp.is-interactive {

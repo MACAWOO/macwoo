@@ -39,7 +39,7 @@ useHead({
       </div>
 
       <!-- Main Title -->
-      <h1 class="text-4xl font-semibold font-fredoka mb-4 text-brand-teal-500">
+      <h1 class="text-4xl font-medium font-fredoka mb-4 text-brand-teal-500">
         Privacy Policy
       </h1>
       <p class="text-xs text-zinc-500 mb-8">
@@ -57,7 +57,7 @@ useHead({
       <div class="space-y-8 text-zinc-700 leading-relaxed">
         <!-- 1. ABOUT MACAWOO -->
         <section id="about">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             1. ABOUT MACAWOO
           </h2>
           <p>
@@ -67,7 +67,7 @@ useHead({
 
         <!-- 2. Information We Collect -->
         <section id="collect">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             2. Information We Collect
           </h2>
           <p class="mb-3">
@@ -88,7 +88,7 @@ useHead({
 
         <!-- 3. How We Collect Information -->
         <section id="how-collect">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             3. How We Collect Information
           </h2>
           <p class="mb-3">
@@ -107,7 +107,7 @@ useHead({
 
         <!-- 4. HOW WE USE YOUR INFORMATION -->
         <section id="use">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             4. HOW WE USE YOUR INFORMATION
           </h2>
           <p class="mb-3">
@@ -129,7 +129,7 @@ useHead({
 
         <!-- 5. COOKIES AND TRACKING TECHNOLOGIES -->
         <section id="cookies">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             5. COOKIES AND TRACKING TECHNOLOGIES
           </h2>
           <p class="mb-3">
@@ -149,7 +149,7 @@ useHead({
 
         <!-- 6. SHARING YOUR INFORMATION -->
         <section id="sharing">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             6. SHARING YOUR INFORMATION
           </h2>
           <p class="mb-3">
@@ -169,7 +169,7 @@ useHead({
 
         <!-- 7. DATA SECURITY -->
         <section id="security">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             7. DATA SECURITY
           </h2>
           <div class="space-y-2">
@@ -180,7 +180,7 @@ useHead({
 
         <!-- 8. DATA RETENTION -->
         <section id="retention">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             8. DATA RETENTION
           </h2>
           <p class="mb-3">
@@ -198,7 +198,7 @@ useHead({
 
         <!-- 9. YOUR RIGHTS -->
         <section id="rights">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             9. YOUR RIGHTS
           </h2>
           <p class="mb-3">
@@ -217,7 +217,7 @@ useHead({
 
         <!-- 10. THIRD-PARTY LINKS -->
         <section id="links">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             10. THIRD-PARTY LINKS
           </h2>
           <div class="space-y-2">
@@ -228,7 +228,7 @@ useHead({
 
         <!-- 11. INTERNATIONAL CLIENTS -->
         <section id="international">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             11. INTERNATIONAL CLIENTS
           </h2>
           <div class="space-y-2">
@@ -239,7 +239,7 @@ useHead({
 
         <!-- 12. AMENDMENTS TO THIS PRIVACY POLICY -->
         <section id="amendments">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             12. AMENDMENTS TO THIS PRIVACY POLICY
           </h2>
           <div class="space-y-2">
@@ -250,7 +250,7 @@ useHead({
 
         <!-- 13. CONTACT US -->
         <section id="contact">
-          <h2 class="text-xl font-bold font-fredoka text-brand-teal-500 mb-3">
+          <h2 class="text-xl font-medium font-fredoka text-brand-teal-500 mb-3">
             13. CONTACT US
           </h2>
           <p class="mb-4">
