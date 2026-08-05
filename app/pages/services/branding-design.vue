@@ -202,36 +202,38 @@ const logos = [
           <div
             v-for="(s, i) in subServices"
             :key="s.title"
-            class="bg-white rounded-[10px] flex overflow-hidden h-auto md:h-[231px] reveal-card"
+            class="reveal-card"
             :style="{ transitionDelay: (i % 2) * 150 + 'ms' }"
           >
-            <!-- Gradient left strip -->
-            <div
-              class="w-[60px] md:w-[78px] shrink-0 flex items-start justify-center pt-8 md:pt-9"
-              style="background: linear-gradient(180deg, #F7EC12 0%, #0596B8 100%); border-radius: 10px 0 0 10px;"
-            >
-              <NuxtImg
-                :src="s.icon"
-                :alt="s.title"
-                loading="lazy"
-                format="webp"
-                class="w-[34px] h-[34px] md:w-[40px] md:h-[40px] object-contain"
-              />
-            </div>
-            <!-- Content -->
-            <div class="flex-1 flex flex-col justify-start px-5 md:px-9 pt-8 md:pt-9 pb-6">
-              <h3
-                class="text-[#0596B8] text-[24px] md:text-[32px] font-medium leading-[38px] mb-3 md:mb-[19px]"
-                style="font-family: 'Bricolage Grotesque', sans-serif;"
+            <div class="group bg-white hover:bg-[#F7EC12] rounded-[10px] flex overflow-hidden h-auto md:h-[231px] transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.25)]">
+              <!-- Gradient left strip -->
+              <div
+                class="w-[60px] md:w-[78px] shrink-0 flex items-start justify-center pt-8 md:pt-9"
+                style="background: linear-gradient(180deg, #F7EC12 0%, #0596B8 100%); border-radius: 10px 0 0 10px;"
               >
-                {{ s.title }}
-              </h3>
-              <p
-                class="text-black text-[15px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] whitespace-pre-line"
-                style="font-family: 'Bricolage Grotesque', sans-serif;"
-              >
-                {{ s.description }}
-              </p>
+                <NuxtImg
+                  :src="s.icon"
+                  :alt="s.title"
+                  loading="lazy"
+                  format="webp"
+                  class="w-[34px] h-[34px] md:w-[40px] md:h-[40px] object-contain transition-transform duration-300 ease-out group-hover:scale-110"
+                />
+              </div>
+              <!-- Content -->
+              <div class="flex-1 flex flex-col justify-start px-5 md:px-9 pt-8 md:pt-9 pb-6">
+                <h3
+                  class="text-[#0596B8] text-[24px] md:text-[32px] font-medium leading-[38px] mb-3 md:mb-[19px] transition-colors duration-300 group-hover:text-brand-dark"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >
+                  {{ s.title }}
+                </h3>
+                <p
+                  class="text-black text-[15px] md:text-[18px] font-normal leading-[26px] md:leading-[28px] whitespace-pre-line"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >
+                  {{ s.description }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -285,31 +287,35 @@ const logos = [
           <div
             v-for="(step, idx) in steps"
             :key="step.number"
-            class="bg-brand-teal-500 rounded-[8px] p-6 flex flex-col methodology-card"
             :class="idx > 0 ? 'reveal-card' : ''"
-            :style="[idx > 0 ? { transitionDelay: ((idx - 1) * 150) + 'ms' } : {}, { border: '1px solid rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(2px)', minHeight: '218px' }]"
+            :style="idx > 0 ? { transitionDelay: ((idx - 1) * 150) + 'ms' } : {}"
           >
-            <!-- Number -->
-            <p
-              class="text-brand-yellow-500 text-[48px] md:text-[64px] leading-[64px] font-bold"
-              style="font-family: 'Bricolage Grotesque', sans-serif;"
+            <div
+              class="group bg-brand-teal-500 rounded-[8px] p-6 flex flex-col methodology-card h-full transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1.5 hover:shadow-xl hover:shadow-black/25"
+              style="border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(2px); min-height: 218px;"
             >
-              {{ step.number }}
-            </p>
-            <!-- Title -->
-            <h3
-              class="text-white text-[20px] md:text-[24px] leading-[36px] font-medium mt-[8.7px]"
-              style="font-family: 'Bricolage Grotesque', sans-serif;"
-            >
-              {{ step.title }}
-            </h3>
-            <!-- Description -->
-            <p
-              class="text-white text-[14px] md:text-[16px] leading-[26px] font-normal mt-auto"
-              style="font-family: 'Bricolage Grotesque', sans-serif;"
-            >
-              {{ step.description }}
-            </p>
+              <!-- Number -->
+              <p
+                class="text-brand-yellow-500 text-[48px] md:text-[64px] leading-[64px] font-bold transition-transform duration-300 ease-out group-hover:scale-105 origin-left"
+                style="font-family: 'Bricolage Grotesque', sans-serif;"
+              >
+                {{ step.number }}
+              </p>
+              <!-- Title -->
+              <h3
+                class="text-white text-[20px] md:text-[24px] leading-[36px] font-medium mt-[8.7px]"
+                style="font-family: 'Bricolage Grotesque', sans-serif;"
+              >
+                {{ step.title }}
+              </h3>
+              <!-- Description -->
+              <p
+                class="text-white text-[14px] md:text-[16px] leading-[26px] font-normal mt-auto"
+                style="font-family: 'Bricolage Grotesque', sans-serif;"
+              >
+                {{ step.description }}
+              </p>
+            </div>
           </div>
         </div>
       </div>

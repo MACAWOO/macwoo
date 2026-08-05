@@ -224,36 +224,38 @@ const logos = [
           <div
             v-for="(s, i) in subServices"
             :key="s.title"
-            class="bg-white rounded-[10px] flex overflow-hidden h-auto md:h-[231px] reveal-card"
+            class="reveal-card"
             :style="{ transitionDelay: (i % 2) * 150 + 'ms' }"
           >
-            <!-- Gradient left strip -->
-            <div
-              class="w-[60px] md:w-[78px] shrink-0 flex items-start justify-center pt-8 md:pt-9"
-              style="background: linear-gradient(180deg, #F7EC12 0%, #0596B8 100%); border-radius: 10px 0 0 10px;"
-            >
-              <NuxtImg
-                :src="s.icon"
-                :alt="s.title"
-                loading="lazy"
-                format="webp"
-                class="w-[34px] h-[34px] md:w-[40px] md:h-[40px] object-contain"
-              />
-            </div>
-            <!-- Content -->
-            <div class="flex-1 flex flex-col justify-start px-5 md:px-9 pt-8 md:pt-9 pb-6">
-              <h3
-                class="text-[#0596B8] text-[24px] md:text-[32px] font-medium leading-[38px] mb-3 md:mb-[19px]"
-                style="font-family: 'Bricolage Grotesque', sans-serif;"
+            <div class="group bg-white hover:bg-[#F7EC12] rounded-[10px] flex overflow-hidden h-auto md:h-[231px] transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.25)]">
+              <!-- Gradient left strip -->
+              <div
+                class="w-[60px] md:w-[78px] shrink-0 flex items-start justify-center pt-8 md:pt-9"
+                style="background: linear-gradient(180deg, #F7EC12 0%, #0596B8 100%); border-radius: 10px 0 0 10px;"
               >
-                {{ s.title }}
-              </h3>
-              <p
-                class="text-black text-[15px] md:text-[18px] font-normal leading-[26px] md:leading-[28px]"
-                style="font-family: 'Bricolage Grotesque', sans-serif;"
-              >
-                {{ s.description }}
-              </p>
+                <NuxtImg
+                  :src="s.icon"
+                  :alt="s.title"
+                  loading="lazy"
+                  format="webp"
+                  class="w-[34px] h-[34px] md:w-[40px] md:h-[40px] object-contain transition-transform duration-300 ease-out group-hover:scale-110"
+                />
+              </div>
+              <!-- Content -->
+              <div class="flex-1 flex flex-col justify-start px-5 md:px-9 pt-8 md:pt-9 pb-6">
+                <h3
+                  class="text-[#0596B8] text-[24px] md:text-[32px] font-medium leading-[38px] mb-3 md:mb-[19px] transition-colors duration-300 group-hover:text-brand-dark"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >
+                  {{ s.title }}
+                </h3>
+                <p
+                  class="text-black text-[15px] md:text-[18px] font-normal leading-[26px] md:leading-[28px]"
+                  style="font-family: 'Bricolage Grotesque', sans-serif;"
+                >
+                  {{ s.description }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
