@@ -847,7 +847,7 @@ onUnmounted(() => {
       <div class="max-w-[1266px] mx-auto px-6 md:px-8">
         <div class="flex flex-col lg:flex-row gap-12 lg:gap-20 items-stretch">
           <!-- Left side: Design card -->
-          <div class="flex-1 rounded-[32px] overflow-hidden relative min-h-[350px] lg:min-h-[500px] flex flex-col justify-end p-8 md:p-12 shadow-xl group no-reveal-spotlight [transform:translateZ(0)] isolate">
+          <div class="flex-1 rounded-[32px] overflow-hidden relative min-h-[350px] lg:min-h-[500px] flex flex-col justify-end p-8 md:p-12 shadow-xl group [transform:translateZ(0)] isolate">
             <!-- Background Image -->
             <div class="absolute inset-0 bg-[url('/Images/wavy_yellow_teal_bg.png')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105 will-change-transform" />
             <!-- Glassmorphism Grid Overlay on the image -->
@@ -904,7 +904,7 @@ onUnmounted(() => {
                 <!-- Full Name -->
                 <div>
                   <label
-                    class="block text-sm font-semibold text-brand-dark mb-2"
+                    class="block text-sm font-semibold text-white mb-2"
                     style="font-family: 'Bricolage Grotesque', sans-serif;"
                   >Full Name</label>
                   <input
@@ -916,12 +916,12 @@ onUnmounted(() => {
                   >
                 </div>
 
-                <!-- Select Service's -->
+                <!-- Select Services -->
                 <div>
                   <label
-                    class="block text-sm font-semibold text-brand-dark mb-2"
+                    class="block text-sm font-semibold text-white mb-2"
                     style="font-family: 'Bricolage Grotesque', sans-serif;"
-                  >Select Service's</label>
+                  >Select Services</label>
                   <div class="relative">
                     <select
                       v-model="form.service"
@@ -944,9 +944,9 @@ onUnmounted(() => {
                       </option>
                     </select>
                     <!-- Custom Dropdown Icon -->
-                    <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none w-7 h-7 rounded-full border border-brand-dark/30 flex items-center justify-center bg-transparent">
+                    <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none w-7 h-7 rounded-full border border-white/30 flex items-center justify-center bg-transparent">
                       <svg
-                        class="w-4 h-4 text-brand-dark"
+                        class="w-4 h-4 text-white"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -967,7 +967,7 @@ onUnmounted(() => {
                 <!-- Email -->
                 <div>
                   <label
-                    class="block text-sm font-semibold text-brand-dark mb-2"
+                    class="block text-sm font-semibold text-white mb-2"
                     style="font-family: 'Bricolage Grotesque', sans-serif;"
                   >Email</label>
                   <input
@@ -982,7 +982,7 @@ onUnmounted(() => {
                 <!-- Phone Number -->
                 <div>
                   <label
-                    class="block text-sm font-semibold text-brand-dark mb-2"
+                    class="block text-sm font-semibold text-white mb-2"
                     style="font-family: 'Bricolage Grotesque', sans-serif;"
                   >Phone Number</label>
                   <input
@@ -998,7 +998,7 @@ onUnmounted(() => {
               <!-- Message -->
               <div>
                 <label
-                  class="block text-sm font-semibold text-brand-dark mb-2"
+                  class="block text-sm font-semibold text-white mb-2"
                   style="font-family: 'Bricolage Grotesque', sans-serif;"
                 >Message</label>
                 <textarea

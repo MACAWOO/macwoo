@@ -119,8 +119,8 @@ const queueSyncDOM = () => {
 // Scroll Syncing
 const syncScroll = () => {
   if (typeof window !== 'undefined') {
-    const newX = window.scrollX
-    const newY = window.scrollY
+    const newX = Math.round(window.scrollX)
+    const newY = Math.round(window.scrollY)
 
     // If scroll position changed, set isScrolling state
     if (newX !== scrollX.value || newY !== scrollY.value) {
@@ -391,7 +391,9 @@ const maskStyle = computed(() => {
     '-webkit-mask-size': '100% 100%',
     'mask-image': gradient,
     'mask-repeat': 'no-repeat',
-    'mask-size': '100% 100%'
+    'mask-size': '100% 100%',
+    'clip-path': 'url(#spotlight-clip)',
+    '-webkit-clip-path': 'url(#spotlight-clip)'
   }
 })
 
@@ -444,6 +446,25 @@ const cloneStyle = computed(() => {
     v-if="isMounted && !isMobile"
     class="custom-cursor-wrapper"
   >
+    <!-- SVG ClipPath Definition for Firefox & SVG rendering engines -->
+    <svg
+      class="pointer-events-none fixed inset-0 w-0 h-0 opacity-0 overflow-hidden"
+      aria-hidden="true"
+    >
+      <defs>
+        <clipPath
+          id="spotlight-clip"
+          clipPathUnits="userSpaceOnUse"
+        >
+          <circle
+            :cx="currentX"
+            :cy="currentY"
+            :r="currentRadius"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+
     <!-- Overlay Layer for Swapped Colors (Chromium/WebKit & Firefox) -->
     <div
       v-if="supportsReveal"
