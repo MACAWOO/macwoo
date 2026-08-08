@@ -89,4 +89,13 @@ onMounted(() => {
 .turnstile-widget:not(.is-invisible) {
   min-height: 65px;
 }
+.turnstile-widget.is-invisible {
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
 </style>

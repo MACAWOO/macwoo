@@ -67,6 +67,13 @@ const checkMobile = () => {
   return hasCoarsePointer || isNarrowScreen
 }
 
+// Feature detection helper for clip-path: circle()
+const canUseReveal = () => {
+  if (typeof CSS === 'undefined' || !CSS.supports) return false
+  return CSS.supports('clip-path', 'circle(20px at 50% 50%)') ||
+         CSS.supports('-webkit-clip-path', 'circle(20px at 50% 50%)')
+}
+
 // Clone and Sanitize DOM
 const syncDOM = () => {
   if (typeof document === 'undefined') return
@@ -98,6 +105,13 @@ const syncDOM = () => {
   // Remove IDs to avoid duplicates in the DOM
   clone.removeAttribute('id')
   clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'))
+
+  // Neutralize fixed elements inside the clone so they match the clone coordinate space
+  clone.querySelectorAll('header, [class*="fixed"], [style*="fixed"]').forEach((el) => {
+    if (el && el.style) {
+      el.style.position = 'absolute'
+    }
+  })
 
   // Make the entire clone inert so it doesn't accept tab focus or screen reader announcements
   clone.setAttribute('inert', '')
@@ -309,7 +323,7 @@ onMounted(() => {
   if (typeof navigator !== 'undefined') {
     isFirefox.value = /firefox/i.test(navigator.userAgent) || (typeof CSS !== 'undefined' && CSS.supports('-moz-appearance', 'none'))
   }
-  supportsReveal.value = true
+  supportsReveal.value = canUseReveal()
 
   if (!isMobile.value) {
     // Only build/sync the DOM clone where the mask-reveal overlay is reliable.
@@ -384,16 +398,11 @@ const maskStyle = computed(() => {
   const x = currentX.value
   const y = currentY.value
   const r = currentRadius.value
-  const gradient = `radial-gradient(circle ${r}px at ${x}px ${y}px, black 0%, black 80%, transparent 100%)`
+
   return {
-    '-webkit-mask-image': gradient,
-    '-webkit-mask-repeat': 'no-repeat',
-    '-webkit-mask-size': '100% 100%',
-    'mask-image': gradient,
-    'mask-repeat': 'no-repeat',
-    'mask-size': '100% 100%',
-    'clip-path': 'url(#spotlight-clip)',
-    '-webkit-clip-path': 'url(#spotlight-clip)'
+    clipPath: `circle(${r}px at ${x}px ${y}px)`,
+    WebkitClipPath: `circle(${r}px at ${x}px ${y}px)`,
+    pointerEvents: 'none'
   }
 })
 
@@ -434,11 +443,10 @@ const overlayStyle = computed(() => ({
   transition: 'opacity 0.25s ease'
 }))
 
-const cloneStyle = computed(() => {
-  return {
-    'transform': `translate3d(-${scrollX.value}px, -${scrollY.value}px, 0)`
-  }
-})
+const cloneStyle = computed(() => ({
+  transform: `translate3d(${-scrollX.value}px, ${-scrollY.value}px, 0)`,
+  willChange: 'transform'
+}))
 </script>
 
 <template>
@@ -446,25 +454,6 @@ const cloneStyle = computed(() => {
     v-if="isMounted && !isMobile"
     class="custom-cursor-wrapper"
   >
-    <!-- SVG ClipPath Definition for Firefox & SVG rendering engines -->
-    <svg
-      class="pointer-events-none fixed inset-0 w-0 h-0 opacity-0 overflow-hidden"
-      aria-hidden="true"
-    >
-      <defs>
-        <clipPath
-          id="spotlight-clip"
-          clipPathUnits="userSpaceOnUse"
-        >
-          <circle
-            :cx="currentX"
-            :cy="currentY"
-            :r="currentRadius"
-          />
-        </clipPath>
-      </defs>
-    </svg>
-
     <!-- Overlay Layer for Swapped Colors (Chromium/WebKit & Firefox) -->
     <div
       v-if="supportsReveal"

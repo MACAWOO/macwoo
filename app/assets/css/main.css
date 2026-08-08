@@ -149,9 +149,9 @@ body.custom-cursor-active * {
   inset: 0;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
   pointer-events: none;
   z-index: 999998;
-  overflow: hidden;
   user-select: none;
 }
 
@@ -160,35 +160,16 @@ body.custom-cursor-active * {
   inset: 0;
   width: 100vw;
   height: 100vh;
-  pointer-events: none;
   overflow: hidden;
+  pointer-events: none;
   user-select: none;
-
-  /* Flatten rendering layers to prevent children from bleeding through parent mask */
-  isolation: isolate;
-  transform-style: flat;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  will-change: transform, clip-path;
-  contain: paint layout;
-
-  /* Firefox fix: without no-repeat, Firefox tiles the radial-gradient
-     spotlight across the whole overlay, making it always fully visible.
-     mask-size: 100% 100% ensures the gradient fills the element exactly. */
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-mode: alpha;
-  mask-mode: alpha;
-  -webkit-mask-composite: source-over;
-  mask-composite: add;
+  will-change: clip-path;
 
   /* Redefine Tailwind v4 theme variables inside the overlay context */
   --color-brand-yellow-500: #0596B8;
   --color-brand-yellow-400: #0596B8;
   --color-brand-yellow-600: #047E9B;
-  
+
   --color-brand-teal-500: #F7EC12;
   --color-brand-teal-400: #FAE712;
   --color-brand-teal-600: #D8CE0B;
@@ -207,10 +188,10 @@ body.custom-cursor-active * {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
+  min-height: 100%;
   pointer-events: none;
   will-change: transform;
-  transform-style: flat;
 }
 
 .custom-cursor-dot-target {

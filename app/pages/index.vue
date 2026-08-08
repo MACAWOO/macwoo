@@ -847,7 +847,7 @@ onUnmounted(() => {
       <div class="max-w-[1266px] mx-auto px-6 md:px-8">
         <div class="flex flex-col lg:flex-row gap-12 lg:gap-20 items-stretch">
           <!-- Left side: Design card -->
-          <div class="flex-1 rounded-[32px] overflow-hidden relative min-h-[350px] lg:min-h-[500px] flex flex-col justify-end p-8 md:p-12 shadow-xl group [transform:translateZ(0)] isolate">
+          <div class="flex-1 w-full rounded-[32px] overflow-hidden relative min-h-[350px] lg:min-h-[500px] flex flex-col justify-end p-8 md:p-12 shadow-xl group [transform:translateZ(0)] isolate">
             <!-- Background Image -->
             <div class="absolute inset-0 bg-[url('/Images/wavy_yellow_teal_bg.png')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105 will-change-transform" />
             <!-- Glassmorphism Grid Overlay on the image -->
@@ -865,7 +865,7 @@ onUnmounted(() => {
           </div>
 
           <!-- Right side: Form -->
-          <div class="flex-1 flex flex-col justify-center">
+          <div class="flex-1 w-full flex flex-col justify-center lg:min-h-[500px]">
             <div
               v-if="isSubmitted"
               class="bg-brand-yellow-500 rounded-[32px] min-h-[400px] flex flex-col items-start justify-center px-10 py-12 animate-success-pop"
@@ -912,7 +912,7 @@ onUnmounted(() => {
                     type="text"
                     required
                     placeholder="John Doe"
-                    class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 text-base transition-colors"
+                    class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 text-base leading-normal transition-colors"
                   >
                 </div>
 
@@ -926,7 +926,7 @@ onUnmounted(() => {
                     <select
                       v-model="form.service"
                       required
-                      class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white focus:outline-none focus:ring-2 focus:ring-white/50 text-base appearance-none cursor-pointer transition-colors"
+                      class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white focus:outline-none focus:ring-2 focus:ring-white/50 text-base leading-normal appearance-none cursor-pointer transition-colors"
                     >
                       <option
                         value=""
@@ -975,7 +975,7 @@ onUnmounted(() => {
                     type="email"
                     required
                     placeholder="john@gmail.com"
-                    class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 text-base transition-colors"
+                    class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 text-base leading-normal transition-colors"
                   >
                 </div>
 
@@ -990,7 +990,7 @@ onUnmounted(() => {
                     type="tel"
                     required
                     placeholder="+91 00000 00000"
-                    class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 text-base transition-colors"
+                    class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 text-base leading-normal transition-colors"
                   >
                 </div>
               </div>
@@ -1006,7 +1006,7 @@ onUnmounted(() => {
                   required
                   rows="4"
                   placeholder="Tell us about your project, goals, and any specific requirements. We'll get back to you shortly."
-                  class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 text-base transition-colors resize-none"
+                  class="w-full px-5 py-4 rounded-xl border border-brand-dark/30 bg-[#1684A2]/60 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 text-base leading-relaxed h-[130px] transition-colors resize-none"
                 />
               </div>
 

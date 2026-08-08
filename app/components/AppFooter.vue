@@ -10,6 +10,7 @@ const route = useRoute()
 const isCareers = computed(() => route.path === '/careers')
 const isYellowFooter = computed(() => isCareers.value || route.path === '/portfolio' || route.path === '/case-studies')
 
+const isIndexPage = computed(() => route.path === '/')
 const isYellowMode = computed(() => {
   if (props.footerColor) {
     return props.footerColor.includes('yellow')
@@ -19,7 +20,13 @@ const isYellowMode = computed(() => {
 </script>
 
 <template>
-  <footer :class="[bgColor || (isYellowFooter ? 'bg-[#0596B8]' : 'bg-white'), 'px-4 md:px-10 py-16 md:py-24 overflow-hidden']">
+  <footer
+    :class="[
+      bgColor || (isYellowFooter ? 'bg-[#0596B8]' : 'bg-white'),
+      'px-4 md:px-10 py-16 md:py-24 overflow-hidden',
+      { 'firefox-no-reveal': isIndexPage, 'firefox-no-hover-index': isIndexPage }
+    ]"
+  >
     <div
       class="max-w-[1400px] mx-auto rounded-[2.5rem] px-5 pt-10 pb-8 sm:px-8 md:px-16 md:pt-20 md:pb-12 overflow-hidden transition-colors duration-300"
       :class="[footerColor || (isYellowFooter ? 'bg-brand-yellow-500' : 'bg-[#0596B8]'), isYellowMode ? 'text-brand-dark' : 'text-white']"
@@ -272,3 +279,20 @@ const isYellowMode = computed(() => {
     </div>
   </footer>
 </template>
+
+<style scoped>
+@supports (-moz-appearance: none) {
+  footer.firefox-no-hover-index a,
+  footer.firefox-no-hover-index button,
+  footer.firefox-no-hover-index svg {
+    transition: none !important;
+  }
+
+  footer.firefox-no-hover-index a:hover,
+  footer.firefox-no-hover-index button:hover {
+    opacity: 1 !important;
+    text-decoration: none !important;
+    transform: none !important;
+  }
+}
+</style>
