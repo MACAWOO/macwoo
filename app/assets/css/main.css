@@ -177,9 +177,7 @@ body.custom-cursor-active * {
   --color-white: #0596B8;
 }
 
-#reveal-overlay-wrapper .site-hero-section,
-#reveal-overlay-wrapper header,
-#reveal-overlay-wrapper .site-header-section {
+#reveal-overlay-wrapper .site-hero-section {
   opacity: 0 !important;
   visibility: hidden !important;
 }

@@ -149,6 +149,12 @@ const syncScroll = () => {
 
     scrollX.value = newX
     scrollY.value = newY
+
+    // Keep cloned fixed header aligned with original fixed header at all scroll positions
+    const clonedHeader = document.querySelector('#cloned-site header')
+    if (clonedHeader) {
+      clonedHeader.style.transform = `translate3d(0, ${newY}px, 0)`
+    }
   }
 }
 
@@ -206,14 +212,13 @@ const handleMouseMove = (e) => {
       }
     }
 
-    // Check if hovering over hero section or navbar header
+    // Check if hovering over hero section or excluded elements
     const insideHero = target.closest('.site-hero-section') !== null
-    const insideHeader = target.closest('header, .site-header-section') !== null
     const insideExclude = target.closest('.site-exclude-reveal, iframe, video') !== null
     const insideNoReveal = target.closest('.no-reveal-spotlight') !== null
     const insideFirefoxNoReveal = isFirefox.value && target.closest('.firefox-no-reveal, .no-reveal-firefox, .no-reveal-spotlight-firefox') !== null
 
-    isExcludedSection.value = insideHero || insideHeader || insideExclude || insideNoReveal || insideFirefoxNoReveal
+    isExcludedSection.value = insideHero || insideExclude || insideNoReveal || insideFirefoxNoReveal
     isCursorHidden.value = insideExclude
 
     if (isCursorHidden.value) {
@@ -339,7 +344,9 @@ onMounted(() => {
         })
         observer.observe(original, {
           childList: true,
-          subtree: true
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['style', 'class']
         })
       }
     }
