@@ -187,6 +187,50 @@ body.custom-cursor-active * {
   animation: none !important;
 }
 
+/* How We Work cards hover state mirror inside magnifier clone */
+#magnifier-clone .work-card[data-magnifier-hover],
+#magnifier-clone .work-card[data-hovered="true"],
+#magnifier-clone .work-card.is-hovered {
+  background-color: #F7EC12 !important;
+  color: #0A1628 !important;
+  transform: translateY(-8px) !important;
+}
+#magnifier-clone .work-card[data-magnifier-hover] h3,
+#magnifier-clone .work-card[data-hovered="true"] h3,
+#magnifier-clone .work-card.is-hovered h3 {
+  color: #0A1628 !important;
+}
+#magnifier-clone .work-card[data-magnifier-hover] p,
+#magnifier-clone .work-card[data-hovered="true"] p,
+#magnifier-clone .work-card.is-hovered p {
+  color: rgba(10, 22, 40, 0.85) !important;
+}
+#magnifier-clone .work-card[data-magnifier-hover] .rounded-full,
+#magnifier-clone .work-card[data-hovered="true"] .rounded-full,
+#magnifier-clone .work-card.is-hovered .rounded-full {
+  background-color: #F7EC12 !important;
+  border-color: #0596B8 !important;
+  color: #0596B8 !important;
+}
+#magnifier-clone .work-card[data-magnifier-hover] .rounded-full *,
+#magnifier-clone .work-card[data-hovered="true"] .rounded-full *,
+#magnifier-clone .work-card.is-hovered .rounded-full * {
+  color: #0596B8 !important;
+}
+
+/* Service cards hover state mirror inside magnifier clone */
+#magnifier-clone .service-card[data-magnifier-hover],
+#magnifier-clone .service-card[data-hovered="true"],
+#magnifier-clone .service-card.is-hovered {
+  background-color: #F7EC12 !important;
+  transform: translateY(-8px) !important;
+}
+#magnifier-clone .service-card[data-magnifier-hover] h3,
+#magnifier-clone .service-card[data-hovered="true"] h3,
+#magnifier-clone .service-card.is-hovered h3 {
+  color: #0A1628 !important;
+}
+
 .custom-cursor-dot-target {
   position: fixed;
   top: 0;

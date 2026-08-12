@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const hoveredCard = ref<number | null>(null)
+
 const { settings, fetchPromise: settingsPromise } = usePageSettings()
 if (settingsPromise) {
   await settingsPromise
@@ -200,10 +202,24 @@ onUnmounted(() => {
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
             <!-- Strategy Card -->
             <div
-              class="group bg-[#0596B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start transition-all duration-300 hover:-translate-y-2 hover:bg-[#F7EC12] hover:text-[#0A1628] hover:shadow-[0_20px_35px_rgba(10,22,40,0.12)]"
+              class="group work-card rounded-[1.25rem] p-8 md:p-10 flex flex-col items-start transition-all duration-300 cursor-pointer"
+              :class="[
+                hoveredCard === 0
+                  ? 'bg-[#F7EC12] text-[#0A1628] -translate-y-2 shadow-[0_20px_35px_rgba(10,22,40,0.12)]'
+                  : 'bg-[#0596B8] text-white'
+              ]"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
+              @mouseenter="hoveredCard = 0"
+              @mouseleave="hoveredCard = null"
             >
-              <div class="w-12 h-12 rounded-full border border-white/30 group-hover:border-[#0596B8] bg-[#0596B8] group-hover:bg-[#F7EC12] flex items-center justify-center text-[#F7EC12] group-hover:text-[#0596B8] mb-6 relative z-10 transition-all duration-300">
+              <div
+                class="w-12 h-12 rounded-full flex items-center justify-center mb-6 relative z-10 transition-all duration-300"
+                :class="[
+                  hoveredCard === 0
+                    ? 'border border-[#0596B8] bg-[#F7EC12] text-[#0596B8]'
+                    : 'border border-white/30 bg-[#0596B8] text-[#F7EC12]'
+                ]"
+              >
                 <UIcon
                   name="i-lucide-compass"
                   class="w-6 h-6"
@@ -212,17 +228,34 @@ onUnmounted(() => {
               <h3 class="font-medium text-xl md:text-2xl mb-3">
                 Strategy
               </h3>
-              <p class="text-white/90 group-hover:text-[#0A1628]/85 text-sm md:text-base leading-relaxed transition-colors duration-300">
+              <p
+                class="text-sm md:text-base leading-relaxed transition-colors duration-300"
+                :class="hoveredCard === 0 ? 'text-[#0A1628]/85' : 'text-white/90'"
+              >
                 We lay the foundation. Deep research and sharp insights inform every creative decision, ensuring your brand is built to win.
               </p>
             </div>
 
             <!-- Creativity Card -->
             <div
-              class="group bg-[#0596B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start transition-all duration-300 hover:-translate-y-2 hover:bg-[#F7EC12] hover:text-[#0A1628] hover:shadow-[0_20px_35px_rgba(10,22,40,0.12)]"
+              class="group work-card rounded-[1.25rem] p-8 md:p-10 flex flex-col items-start transition-all duration-300 cursor-pointer"
+              :class="[
+                hoveredCard === 1
+                  ? 'bg-[#F7EC12] text-[#0A1628] -translate-y-2 shadow-[0_20px_35px_rgba(10,22,40,0.12)]'
+                  : 'bg-[#0596B8] text-white'
+              ]"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
+              @mouseenter="hoveredCard = 1"
+              @mouseleave="hoveredCard = null"
             >
-              <div class="w-12 h-12 rounded-full border border-white/30 group-hover:border-[#0596B8] bg-[#0596B8] group-hover:bg-[#F7EC12] flex items-center justify-center text-[#F7EC12] group-hover:text-[#0596B8] mb-6 relative z-10 transition-all duration-300">
+              <div
+                class="w-12 h-12 rounded-full flex items-center justify-center mb-6 relative z-10 transition-all duration-300"
+                :class="[
+                  hoveredCard === 1
+                    ? 'border border-[#0596B8] bg-[#F7EC12] text-[#0596B8]'
+                    : 'border border-white/30 bg-[#0596B8] text-[#F7EC12]'
+                ]"
+              >
                 <UIcon
                   name="i-lucide-palette"
                   class="w-6 h-6"
@@ -231,17 +264,34 @@ onUnmounted(() => {
               <h3 class="font-medium text-xl md:text-2xl mb-3">
                 Creativity
               </h3>
-              <p class="text-white/90 group-hover:text-[#0A1628]/85 text-sm md:text-base leading-relaxed transition-colors duration-300">
+              <p
+                class="text-sm md:text-base leading-relaxed transition-colors duration-300"
+                :class="hoveredCard === 1 ? 'text-[#0A1628]/85' : 'text-white/90'"
+              >
                 We bring ideas to life. Bold design, compelling storytelling, and high-fidelity visuals that capture the imagination.
               </p>
             </div>
 
             <!-- Growth Card -->
             <div
-              class="group bg-[#0596B8] rounded-[1.25rem] p-8 md:p-10 text-white flex flex-col items-start transition-all duration-300 hover:-translate-y-2 hover:bg-[#F7EC12] hover:text-[#0A1628] hover:shadow-[0_20px_35px_rgba(10,22,40,0.12)]"
+              class="group work-card rounded-[1.25rem] p-8 md:p-10 flex flex-col items-start transition-all duration-300 cursor-pointer"
+              :class="[
+                hoveredCard === 2
+                  ? 'bg-[#F7EC12] text-[#0A1628] -translate-y-2 shadow-[0_20px_35px_rgba(10,22,40,0.12)]'
+                  : 'bg-[#0596B8] text-white'
+              ]"
               style="font-family: 'Bricolage Grotesque', sans-serif;"
+              @mouseenter="hoveredCard = 2"
+              @mouseleave="hoveredCard = null"
             >
-              <div class="w-12 h-12 rounded-full border border-white/30 group-hover:border-[#0596B8] bg-[#0596B8] group-hover:bg-[#F7EC12] flex items-center justify-center text-[#F7EC12] group-hover:text-[#0596B8] mb-6 relative z-10 transition-all duration-300">
+              <div
+                class="w-12 h-12 rounded-full flex items-center justify-center mb-6 relative z-10 transition-all duration-300"
+                :class="[
+                  hoveredCard === 2
+                    ? 'border border-[#0596B8] bg-[#F7EC12] text-[#0596B8]'
+                    : 'border border-white/30 bg-[#0596B8] text-[#F7EC12]'
+                ]"
+              >
                 <UIcon
                   name="i-lucide-trending-up"
                   class="w-6 h-6"
@@ -250,7 +300,10 @@ onUnmounted(() => {
               <h3 class="font-medium text-xl md:text-2xl mb-3">
                 Growth
               </h3>
-              <p class="text-white/90 group-hover:text-[#0A1628]/85 text-sm md:text-base leading-relaxed transition-colors duration-300">
+              <p
+                class="text-sm md:text-base leading-relaxed transition-colors duration-300"
+                :class="hoveredCard === 2 ? 'text-[#0A1628]/85' : 'text-white/90'"
+              >
                 We scale the impact. Execution that converts, campaigns that sustain, and a brand presence that dominates the market.
               </p>
             </div>

@@ -161,7 +161,15 @@ const collectHoverCss = (rules, parentSel) => {
 
       if (effective.includes(':hover') && rule.style.cssText) {
         const scoped = scopeHoverSelector(effective)
-        if (scoped) css += `${scoped}{${rule.style.cssText}}`
+        if (scoped) {
+          const importantCss = rule.style.cssText.split(';').map(s => {
+            const trimmed = s.trim()
+            if (!trimmed) return ''
+            if (trimmed.includes('!important')) return trimmed
+            return `${trimmed} !important`
+          }).filter(Boolean).join(';')
+          css += `${scoped}{${importantCss}}`
+        }
       }
 
       if (rule.cssRules && rule.cssRules.length) {

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const hoveredCard = ref<number | null>(null)
 const { settings, fetchPromise: settingsPromise } = usePageSettings()
 if (settingsPromise) {
   await settingsPromise
@@ -227,7 +228,16 @@ const logos = [
             class="reveal-card"
             :style="{ transitionDelay: (i % 2) * 150 + 'ms' }"
           >
-            <div class="group bg-white hover:bg-[#F7EC12] rounded-[10px] flex overflow-hidden h-auto md:h-[231px] transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.25)]">
+            <div
+              class="group service-card rounded-[10px] flex overflow-hidden h-auto md:h-[231px] transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer"
+              :class="[
+                hoveredCard === i
+                  ? 'bg-[#F7EC12] -translate-y-2 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.25)]'
+                  : 'bg-white'
+              ]"
+              @mouseenter="hoveredCard = i"
+              @mouseleave="hoveredCard = null"
+            >
               <!-- Gradient left strip -->
               <div
                 class="w-[60px] md:w-[78px] shrink-0 flex items-start justify-center pt-8 md:pt-9"
@@ -238,13 +248,15 @@ const logos = [
                   :alt="s.title"
                   loading="lazy"
                   format="webp"
-                  class="w-[34px] h-[34px] md:w-[40px] md:h-[40px] object-contain transition-transform duration-300 ease-out group-hover:scale-110"
+                  class="w-[34px] h-[34px] md:w-[40px] md:h-[40px] object-contain transition-transform duration-300 ease-out"
+                  :class="hoveredCard === i ? 'scale-110' : ''"
                 />
               </div>
               <!-- Content -->
               <div class="flex-1 flex flex-col justify-start px-5 md:px-9 pt-8 md:pt-9 pb-6">
                 <h3
-                  class="text-[#0596B8] text-[24px] md:text-[32px] font-medium leading-[38px] mb-3 md:mb-[19px] transition-colors duration-300 group-hover:text-brand-dark"
+                  class="text-[24px] md:text-[32px] font-medium leading-[38px] mb-3 md:mb-[19px] transition-colors duration-300"
+                  :class="hoveredCard === i ? 'text-brand-dark' : 'text-[#0596B8]'"
                   style="font-family: 'Bricolage Grotesque', sans-serif;"
                 >
                   {{ s.title }}
