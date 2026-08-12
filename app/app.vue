@@ -69,6 +69,13 @@ useHead({
             'logo': `${siteUrl}/icon-512.png`,
             'email': 'info@macawoo.co',
             'description': 'Macawoo is a full-service creative and strategic branding agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
+            'address': {
+              '@type': 'PostalAddress',
+              'addressLocality': 'Kochi',
+              'addressRegion': 'Kerala',
+              'addressCountry': 'IN'
+            },
+            'areaServed': ['India', 'United Arab Emirates'],
             'knowsAbout': [
               'Creative and Strategic Branding Agency',
               'Brand Strategy',
@@ -78,8 +85,7 @@ useHead({
               'Video Production'
             ],
             'sameAs': [
-              'https://www.linkedin.com/company/macawoo',
-              'https://twitter.com/macawoo',
+              'https://www.linkedin.com/company/macawoo-official',
               'https://www.instagram.com/macawooofficial'
             ]
           },
@@ -132,6 +138,6 @@ const isInnerPage = computed(() => {
       />
       <LazyChatWidget v-if="!isAdmin" />
     </div>
-    <LazyMaskRevealCursor v-if="!isAdmin" />
+    <LazyMagnifyingCursor v-if="!isAdmin" />
   </UApp>
 </template>

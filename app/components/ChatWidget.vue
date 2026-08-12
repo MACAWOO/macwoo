@@ -252,13 +252,13 @@ watch(isOpen, async (val) => {
         <!-- Header -->
         <div class="flex items-center justify-between px-3.5 py-2 border-b border-black/10 shrink-0 bg-[#F7EC12]">
           <div class="flex items-center gap-2">
-            <div class="relative w-7 h-7 bg-[#0596B8] rounded-full flex items-center justify-center border border-black/5 shadow-sm">
+            <div class="relative w-7 h-7 rounded-full flex items-center justify-center border border-black/10 shadow-sm overflow-hidden shrink-0 bg-[#0596B8]">
               <img
-                src="/Images/Logo.png"
-                alt="Macawoo Logo"
-                class="w-4 h-4 object-contain"
+                src="/icon-192.png"
+                alt="Macawoo Assistant"
+                class="w-full h-full object-cover"
               >
-              <span class="absolute bottom-0 right-0 w-1.5 h-1.5 bg-green-500 rounded-full border border-white" />
+              <span class="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full border border-white z-10" />
             </div>
             <div>
               <h3 class="text-xs font-semibold text-black leading-tight">

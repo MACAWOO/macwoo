@@ -107,7 +107,10 @@ export default defineNuxtConfig({
     },
     prerender: {
       crawlLinks: true,
-      routes: ['/admin', '/admin/login', '/robots.txt', '/sitemap.xml']
+      // sitemap.xml is intentionally NOT prerendered — it pulls blog/portfolio/
+      // case-study slugs from Supabase, and a build-time snapshot would miss
+      // content published after deploy.
+      routes: ['/admin', '/admin/login', '/robots.txt']
     }
   },
 
