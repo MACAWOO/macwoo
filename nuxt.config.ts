@@ -33,6 +33,35 @@ export default globalThis.process;
   }
 }
 
+// Content-Security-Policy, shipped in Report-Only first: violations land in the
+// browser console instead of blocking, so a missed source can't break the live
+// site before we've seen it. Once the console is clean, rename the header below
+// from `content-security-policy-report-only` to `content-security-policy`.
+//
+// Caveat worth knowing: Nuxt emits inline <script> blocks (colour mode, site
+// config, runtime config) with no nonce, so `script-src` needs 'unsafe-inline'
+// and therefore will NOT block injected inline script. What it does block is
+// where such a script could send anything — connect-src, img-src and
+// form-action bound the exfiltration paths — plus any external script origin.
+// A nonce-based policy would need the nuxt-security module.
+const SELF = '\'self\''
+const CSP = [
+  `default-src ${SELF}`,
+  `base-uri ${SELF}`,
+  'object-src \'none\'',
+  `form-action ${SELF}`,
+  'frame-ancestors \'none\'',
+  `script-src ${SELF} 'unsafe-inline' https://challenges.cloudflare.com`,
+  `style-src ${SELF} 'unsafe-inline' https://fonts.googleapis.com`,
+  `font-src ${SELF} data: https://fonts.gstatic.com`,
+  `img-src ${SELF} data: blob: https://*.supabase.co`,
+  `media-src ${SELF} blob: https://*.supabase.co`,
+  `connect-src ${SELF} https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com`,
+  'frame-src https://challenges.cloudflare.com https://www.youtube.com https://www.youtube-nocookie.com',
+  `worker-src ${SELF} blob:`,
+  `manifest-src ${SELF}`
+].join('; ')
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
@@ -95,6 +124,17 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    // Security headers applied to every route.
+    '/**': {
+      headers: {
+        'x-content-type-options': 'nosniff',
+        'x-frame-options': 'DENY',
+        'referrer-policy': 'strict-origin-when-cross-origin',
+        'strict-transport-security': 'max-age=31536000; includeSubDomains',
+        'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=()',
+        'content-security-policy-report-only': CSP
+      }
+    },
     // Homepage hero/featured content comes from Supabase at request time.
     '/': { prerender: false, headers: { 'cache-control': 's-maxage=60, stale-while-revalidate=300' } },
     // Cache static assets aggressively

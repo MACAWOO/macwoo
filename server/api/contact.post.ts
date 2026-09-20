@@ -1,17 +1,6 @@
 import { defineEventHandler, readBody, createError } from 'h3'
 import { createClient } from '@supabase/supabase-js'
-
-// Escape user input before interpolating into the HTML email body. Prevents the
-// submitter from injecting markup/links (phishing) into the mail we receive.
-const escapeHtml = (s: unknown): string =>
-  String(s ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+import { escapeHtml, EMAIL_RE, verifyTurnstile } from '../utils/form-security'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
@@ -28,42 +17,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Verify Cloudflare Turnstile token
-  const turnstileSecret = config.turnstileSecretKey || process.env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA'
-  if (!token) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Security verification is required (missing Turnstile token).'
-    })
-  }
-
-  try {
-    const verifyResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: new URLSearchParams({
-        secret: turnstileSecret,
-        response: token
-      })
-    })
-
-    const verifyResult = await verifyResponse.json()
-    if (!verifyResult.success) {
-      console.error('Turnstile verification failed for contact form:', verifyResult)
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Security verification failed. Please try again.'
-      })
-    }
-  } catch (err: any) {
-    console.error('Turnstile verification request failed:', err)
-    if (err.statusCode) throw err
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Error performing security verification.'
-    })
-  }
+  await verifyTurnstile(token, config.turnstileSecretKey || process.env.TURNSTILE_SECRET_KEY, 'contact')
 
   // Validate email format and bound input sizes (cheap abuse guard).
   if (typeof email !== 'string' || !EMAIL_RE.test(email) || email.length > 320) {
@@ -167,7 +121,7 @@ export default defineEventHandler(async (event) => {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
       console.error('Resend API response error:', errorData)
-      throw new Error(errorData.message || `Failed with status ${response.status}`)
+      throw new Error(`Resend responded with status ${response.status}`)
     }
 
     const data = await response.json()

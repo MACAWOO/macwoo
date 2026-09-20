@@ -132,9 +132,10 @@ const uploadFile = async (file: File) => {
     return
   }
 
-  // File extension validation
+  // File extension validation. SVG is excluded deliberately — see the matching
+  // rejection in server/api/media/upload.post.ts.
   const ext = file.name.split('.').pop()?.toLowerCase() || ''
-  const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'mp4', 'webm', 'mov', 'ogg']
+  const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'mp4', 'webm', 'mov', 'ogg']
   if (!allowedExtensions.includes(ext)) {
     errorMessage.value = `Unsupported file extension. Allowed: ${allowedExtensions.join(', ')}`
     return

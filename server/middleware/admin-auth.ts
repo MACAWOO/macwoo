@@ -1,11 +1,20 @@
-import { defineEventHandler, getCookie, deleteCookie, sendRedirect, getRequestHeader } from 'h3'
+import { defineEventHandler, getCookie, deleteCookie, sendRedirect } from 'h3'
 
+// Secondary gate for /admin requests that reach the Worker.
+//
+// NOTE: `/admin` and `/admin/login` are prerendered and listed in the generated
+// `_routes.json` exclude list, so Cloudflare Pages serves those two as static
+// assets and this middleware never runs for them. That is fine — they are
+// `ssr: false` shells with no server-rendered data. Real authorization is
+// enforced by Supabase RLS on every read and write; this only covers any other
+// /admin/* path that does hit the Worker.
 export default defineEventHandler(async (event) => {
   const path = event.path
 
-  // Skip during build-time prerendering
-  const isPrerender = getRequestHeader(event, 'x-nitro-prerender')
-  if (isPrerender) return
+  // Skip during build-time prerendering. `import.meta.prerender` is set by
+  // Nitro at build time — the previous check read an `x-nitro-prerender`
+  // request header, which any caller could set to skip this gate.
+  if (import.meta.prerender) return
 
   // Target any request to /admin (excluding login and static files/assets)
   const isAdminRoute = /^\/admin(\/|$)/i.test(path)

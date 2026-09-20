@@ -51,9 +51,16 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Invalid file type. Only image and video files are permitted.' })
   }
 
+  // SVG is a script-bearing document, not an inert image. The bucket is public,
+  // so an uploaded SVG carrying <script> would execute for anyone who opens its
+  // storage URL directly. Rejected by both MIME type and extension.
+  if (/^image\/svg/i.test(contentType)) {
+    throw createError({ statusCode: 400, statusMessage: 'SVG uploads are not permitted. Use PNG or WebP instead.' })
+  }
+
   // File extension validation
   const ext = filename.split('.').pop()?.toLowerCase() || ''
-  const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'mp4', 'webm', 'mov', 'ogg']
+  const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'mp4', 'webm', 'mov', 'ogg']
   if (!allowedExtensions.includes(ext)) {
     throw createError({ statusCode: 400, statusMessage: `Unsupported file extension. Allowed: ${allowedExtensions.join(', ')}` })
   }
