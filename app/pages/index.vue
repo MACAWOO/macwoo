@@ -9,6 +9,58 @@ useSeoMeta({
   ogDescription: 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.'
 })
 
+// The Organization + WebSite nodes live in app.vue and cover every route; this
+// adds the home-page node itself plus the service list it links out to.
+const siteUrl = 'https://macawoo.co'
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: ldJson({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'WebPage',
+            '@id': `${siteUrl}/#webpage`,
+            'url': siteUrl,
+            'name': 'Macawoo — Creative & Strategy Branding Agency in Kochi',
+            'description': 'We are a creative & strategy agency. We blend raw creative energy with executive-level precision to craft brands that command attention and drive growth.',
+            'inLanguage': 'en',
+            'isPartOf': { '@id': `${siteUrl}/#website` },
+            'about': { '@id': `${siteUrl}/#organization` },
+            'primaryImageOfPage': `${siteUrl}/og-image.png`
+          },
+          {
+            '@type': 'ItemList',
+            '@id': `${siteUrl}/#services`,
+            'name': 'Macawoo Services',
+            'itemListElement': [
+              {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Branding & Design',
+                'url': `${siteUrl}/services/branding-design`
+              },
+              {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': 'Digital Marketing',
+                'url': `${siteUrl}/services/digital-marketing`
+              },
+              {
+                '@type': 'ListItem',
+                'position': 3,
+                'name': 'Video Production',
+                'url': `${siteUrl}/services/video-production`
+              }
+            ]
+          }
+        ]
+      })
+    }
+  ]
+})
+
 const { settings, fetchPromise: settingsPromise } = usePageSettings()
 
 await (settingsPromise || Promise.resolve())

@@ -234,7 +234,8 @@ const careerForm = ref({
   location: 'Kochi',
   type: 'Full-Time',
   experience: '4+ Years Experience',
-  applyUrl: ''
+  applyUrl: '',
+  description: ''
 })
 
 // Media Picker integration states
@@ -360,7 +361,8 @@ const openAddForm = (model: ModelType) => {
       location: 'Kochi',
       type: 'Full-Time',
       experience: '',
-      applyUrl: ''
+      applyUrl: '',
+      description: ''
     }
   }
 }
@@ -3281,6 +3283,21 @@ const filteredCareers = computed(() => {
                     >
                     <p class="text-[10px] text-zinc-400">
                       External job posting link — visitors clicking this role will be redirected here.
+                    </p>
+                  </div>
+                </div>
+                <!-- Row: Description -->
+                <div class="flex flex-col md:flex-row p-4 gap-4 items-start">
+                  <label class="w-full md:w-48 text-xs font-bold text-zinc-700 pt-2 shrink-0">Role description:</label>
+                  <div class="flex-1 w-full space-y-1">
+                    <textarea
+                      v-model="careerForm.description"
+                      rows="5"
+                      placeholder="What the role involves, responsibilities, requirements…"
+                      class="w-full max-w-xl px-3 py-1.5 border border-zinc-300 rounded text-xs bg-zinc-50 focus:outline-none focus:border-[#0596B8]"
+                    />
+                    <p class="text-[10px] text-zinc-400">
+                      Used for the JobPosting structured data Google Jobs reads. Leave blank and a short summary is generated from the fields above.
                     </p>
                   </div>
                 </div>

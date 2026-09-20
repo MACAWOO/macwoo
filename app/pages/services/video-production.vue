@@ -49,7 +49,7 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      innerHTML: JSON.stringify({
+      innerHTML: ldJson({
         '@context': 'https://schema.org',
         '@graph': [
           {

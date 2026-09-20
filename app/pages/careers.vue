@@ -15,19 +15,121 @@ useSeoMeta({
 })
 
 const siteUrl = 'https://macawoo.co'
+
+// Schema.org employmentType is a fixed vocabulary; the CMS `type` column is
+// free text, so map the values we actually use and drop anything unrecognised
+// rather than emitting an invalid enum.
+const EMPLOYMENT_TYPES: Record<string, string> = {
+  'full-time': 'FULL_TIME',
+  'part-time': 'PART_TIME',
+  'contract': 'CONTRACTOR',
+  'freelance': 'CONTRACTOR',
+  'internship': 'INTERN',
+  'intern': 'INTERN',
+  'temporary': 'TEMPORARY',
+  'volunteer': 'VOLUNTEER',
+  'per-diem': 'PER_DIEM'
+}
+
+const jobPostings = computed(() =>
+  jobs.value.map((job) => {
+    const isRemote = /remote/i.test(job.location || '')
+    return {
+      '@type': 'JobPosting',
+      '@id': `${siteUrl}/careers#job-${job.id}`,
+      'url': `${siteUrl}/careers#job-${job.id}`,
+      'title': job.title,
+      // Google requires a description; fall back to the structured fields so a
+      // role without CMS copy still validates.
+      'description': job.description
+        || `${job.title} at Macawoo — ${job.department} team, based in ${job.location}. ${job.type}, ${job.experience}.`,
+      'identifier': {
+        '@type': 'PropertyValue',
+        'name': 'Macawoo',
+        'value': job.id
+      },
+      'datePosted': job.datePosted || undefined,
+      'employmentType': EMPLOYMENT_TYPES[(job.type || '').trim().toLowerCase()] || undefined,
+      'occupationalCategory': job.department || undefined,
+      'experienceRequirements': job.experience || undefined,
+      'directApply': !job.applyUrl,
+      'hiringOrganization': {
+        '@type': 'Organization',
+        '@id': `${siteUrl}/#organization`,
+        'name': 'Macawoo',
+        'url': siteUrl,
+        'logo': `${siteUrl}/icon-512.png`
+      },
+      'jobLocationType': isRemote ? 'TELECOMMUTE' : undefined,
+      'applicantLocationRequirements': isRemote
+        ? { '@type': 'Country', 'name': 'India' }
+        : undefined,
+      'jobLocation': isRemote
+        ? undefined
+        : {
+            '@type': 'Place',
+            'address': {
+              '@type': 'PostalAddress',
+              'addressLocality': job.location || 'Kochi',
+              'addressRegion': 'Kerala',
+              'addressCountry': 'IN'
+            }
+          }
+    }
+  })
+)
+
 useHead({
   script: [
     {
       type: 'application/ld+json',
-      innerHTML: JSON.stringify({
+      innerHTML: computed(() => ldJson({
         '@context': 'https://schema.org',
-        '@type': 'AboutPage',
-        '@id': `${siteUrl}/careers#webpage`,
-        'url': `${siteUrl}/careers`,
-        'name': 'Careers at Macawoo — Join Our Creative & Strategy Team',
-        'description': 'Build your future with Macawoo. Join us in crafting digital experiences that demand attention and drive transformation.',
-        'isPartOf': { '@id': `${siteUrl}/#website` }
-      })
+        '@graph': [
+          {
+            '@type': ['AboutPage', 'CollectionPage'],
+            '@id': `${siteUrl}/careers#webpage`,
+            'url': `${siteUrl}/careers`,
+            'name': 'Careers at Macawoo — Join Our Creative & Strategy Team',
+            'description': 'Build your future with Macawoo. Join us in crafting digital experiences that demand attention and drive transformation.',
+            'inLanguage': 'en',
+            'isPartOf': { '@id': `${siteUrl}/#website` },
+            'about': { '@id': `${siteUrl}/#organization` },
+            'mainEntity': { '@id': `${siteUrl}/careers#open-roles` }
+          },
+          {
+            '@type': 'ItemList',
+            '@id': `${siteUrl}/careers#open-roles`,
+            'name': 'Open Roles at Macawoo',
+            'numberOfItems': jobs.value.length,
+            'itemListElement': jobs.value.map((job, i) => ({
+              '@type': 'ListItem',
+              'position': i + 1,
+              'name': job.title,
+              'url': `${siteUrl}/careers#job-${job.id}`
+            }))
+          },
+          {
+            '@type': 'BreadcrumbList',
+            '@id': `${siteUrl}/careers#breadcrumb`,
+            'itemListElement': [
+              {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Home',
+                'item': siteUrl
+              },
+              {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': 'Careers',
+                'item': `${siteUrl}/careers`
+              }
+            ]
+          },
+          ...jobPostings.value
+        ]
+      }))
     }
   ]
 })
@@ -156,6 +258,7 @@ const handleJobClick = (job: typeof jobs.value[number]) => {
         <div class="border-t border-brand-yellow-500">
           <div
             v-for="job in jobs"
+            :id="`job-${job.id}`"
             :key="job.id"
             class="border-b border-brand-yellow-500 py-8 px-6 md:px-8 flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer group transition-all duration-300 ease-out hover:bg-[#F7EC12] hover:rounded-[12px] hover:border-b-transparent"
             @click="handleJobClick(job)"

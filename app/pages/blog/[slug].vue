@@ -49,7 +49,7 @@ useHead({
       type: 'application/ld+json',
       innerHTML: computed(() => {
         if (!post.value) return ''
-        return JSON.stringify({
+        return ldJson({
           '@context': 'https://schema.org',
           '@graph': [
             {

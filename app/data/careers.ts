@@ -6,6 +6,10 @@ export interface JobListing {
   type: string
   experience: string
   applyUrl: string
+  /** Long-form role summary. Feeds the JobPosting JSON-LD on /careers. */
+  description?: string
+  /** ISO date the row was created; used as JobPosting.datePosted. */
+  datePosted?: string
 }
 
 export const jobs: JobListing[] = [
@@ -37,4 +41,3 @@ export const jobs: JobListing[] = [
     applyUrl: ''
   }
 ]
-

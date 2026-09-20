@@ -15,7 +15,7 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      innerHTML: JSON.stringify({
+      innerHTML: ldJson({
         '@context': 'https://schema.org',
         '@type': 'ContactPage',
         '@id': `${siteUrl}/contact#webpage`,

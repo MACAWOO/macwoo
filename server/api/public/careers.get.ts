@@ -23,6 +23,8 @@ export default defineEventHandler(async (event) => {
     location: d.location,
     type: d.type,
     experience: d.experience,
-    applyUrl: d.apply_url || ''
+    applyUrl: d.apply_url || '',
+    description: d.description || '',
+    datePosted: d.created_at || ''
   }))
 })

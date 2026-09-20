@@ -36,7 +36,7 @@ useHead({
       type: 'application/ld+json',
       innerHTML: computed(() => {
         if (!project.value) return ''
-        return JSON.stringify({
+        return ldJson({
           '@context': 'https://schema.org',
           '@graph': [
             {
