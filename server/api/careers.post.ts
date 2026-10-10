@@ -6,6 +6,28 @@ import { escapeHtml, EMAIL_RE, verifyTurnstile } from '../utils/form-security'
 const MAX_RESUME_BASE64_CHARS = 7_200_000 // ~5MB once decoded
 const ALLOWED_RESUME_EXTENSIONS = ['pdf', 'doc', 'docx']
 
+// Leading bytes of each allowed format, so a renamed executable or HTML file
+// can't ride into the inbox under a .pdf name. DOCX is a ZIP container; legacy
+// DOC is an OLE2 compound file.
+const RESUME_SIGNATURES: Record<string, number[]> = {
+  pdf: [0x25, 0x50, 0x44, 0x46], // %PDF
+  docx: [0x50, 0x4B, 0x03, 0x04], // PK\x03\x04
+  doc: [0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1]
+}
+
+function resumeMatchesExtension(ext: string, base64: string): boolean {
+  const signature = RESUME_SIGNATURES[ext]
+  if (!signature) return false
+  let head: string
+  try {
+    // 12 base64 chars decode to 9 bytes — enough for the longest signature.
+    head = atob(base64.slice(0, 12))
+  } catch {
+    return false
+  }
+  return signature.every((byte, i) => head.charCodeAt(i) === byte)
+}
+
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
   const body = await readBody(event)
@@ -46,6 +68,9 @@ export default defineEventHandler(async (event) => {
         statusCode: 400,
         statusMessage: `Unsupported resume format. Allowed: ${ALLOWED_RESUME_EXTENSIONS.join(', ')}.`
       })
+    }
+    if (!/^[A-Za-z0-9+/]+={0,2}$/.test(resume) || !resumeMatchesExtension(ext, resume)) {
+      throw createError({ statusCode: 400, statusMessage: 'The attached resume does not look like a valid PDF or Word document.' })
     }
     // Strip path separators and anything exotic so the filename that reaches
     // the mail provider (and our inbox) is a plain flat name.

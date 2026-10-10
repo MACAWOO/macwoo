@@ -27,6 +27,18 @@ export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
  * missing environment variable in production used to disable bot protection on
  * both public forms with no visible symptom.
  */
+// Hostnames a Turnstile token may have been solved on. Without this check a
+// token minted on any other site sharing the sitekey would be accepted.
+const TURNSTILE_HOSTNAMES = ['macawoo.co', 'www.macawoo.co', 'macawoo.pages.dev']
+
+function isAllowedTurnstileHostname(hostname: unknown): boolean {
+  if (import.meta.dev) return true
+  if (typeof hostname !== 'string') return false
+  const host = hostname.toLowerCase()
+  // Cloudflare Pages preview deployments: <hash>.macawoo.pages.dev
+  return TURNSTILE_HOSTNAMES.includes(host) || host.endsWith('.macawoo.pages.dev')
+}
+
 export async function verifyTurnstile(token: unknown, secret: string | undefined, formName: string) {
   if (!secret) {
     console.error(`TURNSTILE_SECRET_KEY is not configured; refusing the ${formName} submission.`)
@@ -43,7 +55,7 @@ export async function verifyTurnstile(token: unknown, secret: string | undefined
     })
   }
 
-  let verifyResult: { success?: boolean }
+  let verifyResult: { success?: boolean, hostname?: string }
   try {
     const verifyResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
@@ -66,6 +78,14 @@ export async function verifyTurnstile(token: unknown, secret: string | undefined
 
   if (!verifyResult?.success) {
     console.error(`Turnstile verification failed for ${formName} form:`, verifyResult)
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Security verification failed. Please try again.'
+    })
+  }
+
+  if (!isAllowedTurnstileHostname(verifyResult.hostname)) {
+    console.error(`Turnstile token for ${formName} form was solved on an unexpected hostname:`, verifyResult.hostname)
     throw createError({
       statusCode: 400,
       statusMessage: 'Security verification failed. Please try again.'

@@ -33,10 +33,14 @@ export default globalThis.process;
   }
 }
 
-// Content-Security-Policy, shipped in Report-Only first: violations land in the
-// browser console instead of blocking, so a missed source can't break the live
-// site before we've seen it. Once the console is clean, rename the header below
-// from `content-security-policy-report-only` to `content-security-policy`.
+// Content-Security-Policy. Enforced in production builds; `nuxt dev` keeps it
+// Report-Only because Vite's HMR client needs ws://localhost and eval-style
+// module loading that the production policy (rightly) forbids.
+//
+// Every origin below was checked against the code and the CMS content: all
+// stored media lives on *.supabase.co, video embeds are YouTube, and the only
+// third-party script is Turnstile. If a new embed or asset host is added,
+// extend the matching directive here or the browser will block it.
 //
 // Caveat worth knowing: Nuxt emits inline <script> blocks (colour mode, site
 // config, runtime config) with no nonce, so `script-src` needs 'unsafe-inline'
@@ -56,11 +60,16 @@ const CSP = [
   `font-src ${SELF} data: https://fonts.gstatic.com`,
   `img-src ${SELF} data: blob: https://*.supabase.co`,
   `media-src ${SELF} blob: https://*.supabase.co`,
-  `connect-src ${SELF} https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com`,
+  // api.iconify.design: @nuxt/icon's fallback for any icon not in the bundled
+  // lucide / simple-icons collections.
+  `connect-src ${SELF} https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com https://api.iconify.design`,
   'frame-src https://challenges.cloudflare.com https://www.youtube.com https://www.youtube-nocookie.com',
   `worker-src ${SELF} blob:`,
   `manifest-src ${SELF}`
 ].join('; ')
+const CSP_HEADER = process.env.NODE_ENV === 'development'
+  ? 'content-security-policy-report-only'
+  : 'content-security-policy'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -94,6 +103,8 @@ export default defineNuxtConfig({
     resendApiKey: process.env.RESEND_API_KEY || '',
     contactRecipientEmail: process.env.CONTACT_RECIPIENT_EMAIL || '',
     turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY || '',
+    // Server-only. Bypasses RLS — never move this under `public`.
+    supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
     public: {
       supabaseUrl: process.env.SUPABASE_URL || 'https://vewmzejakdfsgsyxdlpa.supabase.co',
       supabaseKey: process.env.SUPABASE_KEY || 'sb_publishable_SjN1foafYhhbb3k-DI82Aw_xsjStWt_',
@@ -132,7 +143,7 @@ export default defineNuxtConfig({
         'referrer-policy': 'strict-origin-when-cross-origin',
         'strict-transport-security': 'max-age=31536000; includeSubDomains',
         'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=()',
-        'content-security-policy-report-only': CSP
+        [CSP_HEADER]: CSP
       }
     },
     // Homepage hero/featured content comes from Supabase at request time.

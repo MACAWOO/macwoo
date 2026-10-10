@@ -23,24 +23,38 @@ export default defineEventHandler(async (event) => {
   if (typeof email !== 'string' || !EMAIL_RE.test(email) || email.length > 320) {
     throw createError({ statusCode: 400, statusMessage: 'Please provide a valid email address.' })
   }
-  if (String(name).length > 200 || String(message).length > 5000) {
+  // Limits mirror the CHECK constraints on contact_submissions.
+  if (
+    String(name).length > 200
+    || String(message).length > 5000
+    || String(phone ?? '').length > 50
+    || String(service ?? '').length > 100
+  ) {
     throw createError({ statusCode: 400, statusMessage: 'Input exceeds the allowed length.' })
   }
 
-  // Insert submission into Supabase contact_submissions table
+  // Insert submission into Supabase contact_submissions table. Prefer the
+  // service-role key: once it is configured the anon INSERT policy can be
+  // dropped, so the only way into this table is through the Turnstile check
+  // above rather than a direct REST call with the public key.
   const supabaseUrl = process.env.SUPABASE_URL || 'https://vewmzejakdfsgsyxdlpa.supabase.co'
-  const supabaseKey = process.env.SUPABASE_KEY || 'sb_publishable_SjN1foafYhhbb3k-DI82Aw_xsjStWt_'
-  const supabase = createClient(supabaseUrl, supabaseKey)
+  const supabaseKey = config.supabaseServiceRoleKey
+    || process.env.SUPABASE_SERVICE_ROLE_KEY
+    || process.env.SUPABASE_KEY
+    || 'sb_publishable_SjN1foafYhhbb3k-DI82Aw_xsjStWt_'
+  const supabase = createClient(supabaseUrl, supabaseKey, {
+    auth: { persistSession: false, autoRefreshToken: false }
+  })
 
   try {
     const { error: dbError } = await supabase
       .from('contact_submissions')
       .insert({
-        name,
+        name: String(name),
         email,
-        phone: phone || null,
-        service: service || 'General Inquiry',
-        message,
+        phone: phone ? String(phone) : null,
+        service: service ? String(service) : 'General Inquiry',
+        message: String(message),
         status: 'new'
       })
     if (dbError) {
