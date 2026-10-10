@@ -55,14 +55,16 @@ const CSP = [
   'object-src \'none\'',
   `form-action ${SELF}`,
   'frame-ancestors \'none\'',
-  `script-src ${SELF} 'unsafe-inline' https://challenges.cloudflare.com`,
+  // static.cloudflareinsights.com: Cloudflare Web Analytics beacon, injected
+  // by the edge (not in our HTML). It reports to cloudflareinsights.com.
+  `script-src ${SELF} 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com`,
   `style-src ${SELF} 'unsafe-inline' https://fonts.googleapis.com`,
   `font-src ${SELF} data: https://fonts.gstatic.com`,
   `img-src ${SELF} data: blob: https://*.supabase.co`,
   `media-src ${SELF} blob: https://*.supabase.co`,
   // api.iconify.design: @nuxt/icon's fallback for any icon not in the bundled
   // lucide / simple-icons collections.
-  `connect-src ${SELF} https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com https://api.iconify.design`,
+  `connect-src ${SELF} https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com https://api.iconify.design https://cloudflareinsights.com`,
   'frame-src https://challenges.cloudflare.com https://www.youtube.com https://www.youtube-nocookie.com',
   `worker-src ${SELF} blob:`,
   `manifest-src ${SELF}`
