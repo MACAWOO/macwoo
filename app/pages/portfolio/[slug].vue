@@ -81,6 +81,14 @@ useHead({
   ]
 })
 
+// Next two projects after this one, wrapping around, so detail pages link to
+// each other instead of dead-ending.
+const moreProjects = computed(() => {
+  const list = projects.value
+  const i = list.findIndex(p => p.slug === slug)
+  return [...list.slice(i + 1), ...list.slice(0, i)].slice(0, 2)
+})
+
 const galleryIndex = ref(0)
 
 watch(galleryIndex, () => {
@@ -513,6 +521,49 @@ const isVideoUrl = (url?: string) => {
             <RightArrow class="w-5 h-5 text-brand-dark" />
           </button>
         </template>
+      </div>
+    </div>
+
+    <!-- ── More Projects ── -->
+    <div
+      v-if="moreProjects.length"
+      class="bg-[#0596B8] px-6 md:px-[120px] py-16"
+    >
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+        <h2
+          class="font-fredoka font-medium text-[40px] md:text-[48px] text-brand-yellow-500 leading-tight"
+          style="font-variation-settings: 'wdth' 100"
+        >
+          More Projects
+        </h2>
+        <div class="flex flex-wrap gap-x-6 gap-y-2 text-white text-lg font-medium">
+          <NuxtLink
+            to="/portfolio"
+            class="underline underline-offset-4 hover:text-brand-yellow-500 transition-colors"
+          >
+            View all work
+          </NuxtLink>
+          <NuxtLink
+            to="/case-studies"
+            class="underline underline-offset-4 hover:text-brand-yellow-500 transition-colors"
+          >
+            Read our case studies
+          </NuxtLink>
+          <NuxtLink
+            to="/contact"
+            class="underline underline-offset-4 hover:text-brand-yellow-500 transition-colors"
+          >
+            Start your project
+          </NuxtLink>
+        </div>
+      </div>
+      <div class="flex flex-col md:flex-row gap-10 items-start">
+        <PortfolioCard
+          v-for="more in moreProjects"
+          :key="more.slug"
+          :project="more"
+          size="small"
+        />
       </div>
     </div>
   </div>

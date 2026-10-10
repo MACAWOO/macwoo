@@ -110,7 +110,14 @@ useHead({
   ]
 })
 
-const recommended = computed(() => posts.value.filter(p => p.slug !== slug).slice(0, 3))
+// The next three posts after this one, wrapping around. Taking the first three
+// of the list sent every article's links to the same three posts and left the
+// rest with a single inbound link.
+const recommended = computed(() => {
+  const list = posts.value
+  const i = list.findIndex(p => p.slug === slug)
+  return [...list.slice(i + 1), ...list.slice(0, i)].slice(0, 3)
+})
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()

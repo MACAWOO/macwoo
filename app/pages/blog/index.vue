@@ -7,8 +7,20 @@ await Promise.all([
   settingsPromise || Promise.resolve()
 ])
 
+// Pagination is driven by `?page=N` and rendered as real links. It used to be
+// client-side buttons, which left every post past the first page with no
+// crawlable inbound link.
+const POSTS_PER_PAGE = 6
+const route = useRoute()
+const totalPages = computed(() => Math.max(1, Math.ceil(posts.value.length / POSTS_PER_PAGE)))
+const currentPage = computed(() => {
+  const n = Number.parseInt(String(route.query.page ?? '1'), 10)
+  return Number.isFinite(n) ? Math.min(Math.max(n, 1), totalPages.value) : 1
+})
+const pageLink = (n: number) => n <= 1 ? { path: '/blog' } : { path: '/blog', query: { page: n } }
+
 useSeoMeta({
-  title: 'Blog & Insights — Creative and Strategic Branding Agency | Macawoo',
+  title: () => `Blog & Insights${currentPage.value > 1 ? ` (Page ${currentPage.value})` : ''} — Creative and Strategic Branding Agency | Macawoo`,
   description: 'Ideas, insights, and expert perspectives on branding strategy, creative direction, and digital marketing from Macawoo.',
   keywords: 'creative and strategic branding agency, brand strategy blog, design strategy, creative agency journal',
   ogTitle: 'Blog & Insights — Creative and Strategic Branding Agency | Macawoo',
@@ -76,9 +88,6 @@ useHead({
   ]
 })
 
-const POSTS_PER_PAGE = 6
-const currentPage = ref(1)
-const totalPages = computed(() => Math.ceil(posts.value.length / POSTS_PER_PAGE))
 const paginatedPosts = computed(() => {
   const start = (currentPage.value - 1) * POSTS_PER_PAGE
   return posts.value.slice(start, start + POSTS_PER_PAGE)
@@ -175,10 +184,12 @@ function formatDate(dateStr: string) {
           v-if="totalPages > 1"
           class="flex items-center justify-end gap-[10px] mt-14"
         >
-          <button
-            :disabled="currentPage === 1"
-            class="w-[41px] h-[41px] rounded-full border border-[#F7EC12] flex items-center justify-center text-[#F7EC12] disabled:opacity-40 hover:bg-[#F7EC12]/10 transition-colors cursor-pointer"
-            @click="currentPage = Math.max(1, currentPage - 1)"
+          <NuxtLink
+            :to="pageLink(currentPage - 1)"
+            aria-label="Previous page"
+            :aria-disabled="currentPage === 1"
+            class="w-[41px] h-[41px] rounded-full border border-[#F7EC12] flex items-center justify-center text-[#F7EC12] hover:bg-[#F7EC12]/10 transition-colors cursor-pointer"
+            :class="{ 'opacity-40 pointer-events-none': currentPage === 1 }"
           >
             <svg
               width="14"
@@ -194,14 +205,16 @@ function formatDate(dateStr: string) {
                 stroke-linejoin="round"
               />
             </svg>
-          </button>
+          </NuxtLink>
           <span class="text-[18px] font-medium text-white whitespace-nowrap">
             Page: {{ String(currentPage).padStart(2, '0') }}
           </span>
-          <button
-            :disabled="currentPage === totalPages"
-            class="w-[41px] h-[41px] rounded-full border border-[#F7EC12] flex items-center justify-center text-[#F7EC12] disabled:opacity-40 hover:bg-[#F7EC12]/10 transition-colors cursor-pointer"
-            @click="currentPage = Math.min(totalPages, currentPage + 1)"
+          <NuxtLink
+            :to="pageLink(Math.min(totalPages, currentPage + 1))"
+            aria-label="Next page"
+            :aria-disabled="currentPage === totalPages"
+            class="w-[41px] h-[41px] rounded-full border border-[#F7EC12] flex items-center justify-center text-[#F7EC12] hover:bg-[#F7EC12]/10 transition-colors cursor-pointer"
+            :class="{ 'opacity-40 pointer-events-none': currentPage === totalPages }"
           >
             <svg
               width="14"
@@ -217,7 +230,7 @@ function formatDate(dateStr: string) {
                 stroke-linejoin="round"
               />
             </svg>
-          </button>
+          </NuxtLink>
         </div>
       </div>
     </section>

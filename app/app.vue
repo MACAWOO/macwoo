@@ -8,6 +8,15 @@ const siteUrl = 'https://macawoo.co'
 // touch devices entirely.
 const isDesktopPointer = useDesktopPointer()
 
+// Paginated listings (/blog?page=2) are distinct pages: give them a
+// self-referencing canonical so Google crawls the posts they link to instead
+// of folding them into page 1.
+const canonicalUrl = computed(() => {
+  const cleanPath = route.path === '/' ? '' : route.path.replace(/\/$/, '')
+  const page = Number.parseInt(String(route.query.page ?? ''), 10)
+  return `${siteUrl}${cleanPath}${page > 1 ? `?page=${page}` : ''}`
+})
+
 useHead({
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
@@ -27,10 +36,7 @@ useHead({
     },
     {
       rel: 'canonical',
-      href: computed(() => {
-        const cleanPath = route.path === '/' ? '' : route.path.replace(/\/$/, '')
-        return `${siteUrl}${cleanPath}`
-      })
+      href: canonicalUrl
     }
   ],
   htmlAttrs: {
@@ -51,10 +57,7 @@ useSeoMeta({
   ogImageHeight: 630,
   ogImageType: 'image/png',
   ogLocale: 'en_US',
-  ogUrl: computed(() => {
-    const cleanPath = route.path === '/' ? '' : route.path.replace(/\/$/, '')
-    return `${siteUrl}${cleanPath}`
-  }),
+  ogUrl: canonicalUrl,
   twitterCard: 'summary_large_image',
   twitterImage: `${siteUrl}/og-image.png`
 })
